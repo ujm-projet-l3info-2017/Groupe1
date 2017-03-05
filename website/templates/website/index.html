@@ -2,30 +2,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-      <meta charset="UTF-8">
-      <link rel="stylesheet" type="text/css" href="{% static "website/css/index.css" %}">
-      <script type="text/javascript" src="{% static "website/js/scriptyskippy.js"%}" ></script>
-      <script type="text/javascript" src="{% static "website/js/jquery.js"%}" ></script>
-      <title>MOOC</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static "website/css/index.css" %}">
+    <script type="text/javascript" src="{% static "website/js/scriptyskippy.js"%}" ></script>
+    <script type="text/javascript" src="{% static "website/js/jquery.js"%}" ></script>
+    <title>MOOC</title>
   </head>
 
   <body>
-      <div id="input_output">
+    <div id="input_output">
       <table>
-	  <tr>
-	      <td id="input">
-		  <form>
-		      <textarea>Tapez votre requete ici ...</textarea>
-		      <input type="button" onclick="sayHello()" value="Envoyer" />
-		  </form>
-	      </td>
-	      <td id="output_request">
-		  <p>La reponse</p>
-	      </td>
-	      <td id="expected_request">
-		  <p>La requete attendue</p>
-	      </td>
-	  </tr>
+	<tr>
+	  <td id="input">
+	    <form>
+	      {% csrf_token %}
+	      <textarea>Tapez votre requete ici ...</textarea>
+	      <input type="button" onclick="post_ajax()" value="Envoyer" /> 
+	    </form>
+	  </td>
+	  <td id="output_request">
+	    <p>La reponse</p>
+	  </td>
+	  <td id="expected_request">
+	    <p>La requete attendue</p>
+	  </td>
+	</tr>
       </table>
   </body>
 

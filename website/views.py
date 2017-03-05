@@ -6,8 +6,7 @@ from django.db import connection
 
 def index(request):
     template = loader.get_template('website/index.html')
-    context={}
-    return HttpResponse(template.render(context, request))
+    return HttpResponse(template.render(None, request))
 
 def request(request):
     # Ajouter un argument "contenu requete"

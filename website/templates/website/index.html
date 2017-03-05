@@ -1,12 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <title>MOOC</title>
+      <meta charset="UTF-8">
+      <link rel="stylesheet" type="text/css" href="{% static "website/css/index.css" %}">
+      <title>MOOC</title>
   </head>
 
   <body>
-    touch my body
+      <div id="input_output">
+      <table>
+	  <tr>
+	      <td id="input">
+		  <form>
+		      <textarea>Tapez votre requete ici ...</textarea>
+		      <input type="button" value="Envoyer">
+		  </form>
+	      </td>
+	      <td id="output_request">
+		  <p>La reponse</p>
+	      </td>
+	      <td id="expected_request">
+		  <p>La requete attendue</p>
+	      </td>
+	  </tr>
+      </table>
   </body>
 
 </html> 

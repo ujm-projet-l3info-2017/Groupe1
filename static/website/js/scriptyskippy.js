@@ -9,7 +9,6 @@ function get_token(){
     return(token);
 }
 function post_ajax() {    
-    $("#output_request").html( "Next Step..." );   
     get_token();
     $.ajax({
 	url : '/request/', 
@@ -17,6 +16,12 @@ function post_ajax() {
 	headers: {
             'X-CSRFToken': get_token()
 	},
+	success : function(data, status){
+	    if (status ==="success")
+		$("#output_request").html( data );
+	}
     });
+
+    
     
 }

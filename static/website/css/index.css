@@ -1,3 +1,7 @@
 body {
     background: #FFFFCC;
 }
+
+#input_output table {
+    margin: 0 auto;
+}

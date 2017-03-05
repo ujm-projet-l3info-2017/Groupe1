@@ -15,7 +15,7 @@ function post_ajax() {
 	url : '/request/', 
 	type : 'POST' ,
 	headers: {
-            'X_CSRF_TOKEN': get_token()
+            'X-CSRFToken': get_token()
 	},
     });
     

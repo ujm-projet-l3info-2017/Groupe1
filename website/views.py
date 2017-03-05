@@ -11,17 +11,26 @@ def index(request):
 def request(request):
     # Ajouter un argument "contenu requete"
     # Recupere a l'nevoie de la requete par l'utilisateur
+    requete = request.POST.get('query');
+    print(requete)
+        
     
     template = loader.get_template('website/request.html')
     with connection.cursor() as cursor:
         
-        cursor.execute('SELECT * FROM website_contient')
+        #cursor.execute('SELECT * FROM website_contient')
+        try:
+            cursor.execute(requete)
+            column_name = [col[0] for col in cursor.description]
+            row = cursor.fetchall()
+            context= {
+                'row': row,
+                'column_name': column_name
+            }
+        except:
+            template = loader.get_template('website/error_request.html')
+            context = None
 
-        column_name = [col[0] for col in cursor.description]
-        row = cursor.fetchall()
-    context= {
-        'row': row,
-        'column_name': column_name
-    }
-    return HttpResponse(template.render(context, request))
+        
+        return HttpResponse(template.render(context, request))
     

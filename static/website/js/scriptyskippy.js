@@ -16,12 +16,10 @@ function post_ajax() {
 	headers: {
             'X-CSRFToken': get_token()
 	},
+	data : { query : $("#input textarea").val()},	
 	success : function(data, status){
 	    if (status ==="success")
 		$("#output_request").html( data );
 	}
-    });
-
-    
-    
+    });   
 }

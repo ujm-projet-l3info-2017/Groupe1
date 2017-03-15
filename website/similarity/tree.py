@@ -42,7 +42,6 @@ class Tree():
         root = self.rotate_right(father)
         return root
 
-
     def insert(self, element):
         return self._insert(self, element)
         
@@ -126,6 +125,29 @@ class Tree():
             root = self.rotate_left_right(father, root)
         return root
 
+    def __getitem__(self, key):
+        if(self.element == key):
+            return self.element
+        else:
+            if(self.element < key):
+                if(self.right != None):
+                   return self.right.__getitem__(key)
+            else:
+                if(self.left != None):
+                   return self.left.__getitem__(key)
+            return None 
+
+    def __setitem__(self, key, value):
+        if(self.element == key):
+            self.element = value
+        else:
+            if(self.element < key):
+                if(self.right != None):
+                    self.right.__setitem__(key)
+            else:
+                if(self.left != None):
+                    self.left.__setitem__(key)
+                
     def __str__(self):
         s = str(self.element)+"("+str(self.balance)+"):"
         if(self.left != None):
@@ -140,12 +162,3 @@ class Tree():
         if(self.right != None):
             s += self.right.__str__()
         return s
-
-def convert_table_tree(table):
-    if(table != None and len(table) > 0):
-        tree = Tree(table[0])
-        print(str(tree)+"---")
-        for i in range(1, len(table)):
-            tree = tree.insert(table[i])
-            print(str(tree)+"---")
-        return tree

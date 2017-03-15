@@ -7,7 +7,9 @@ class Tree():
     def __init__(self, element):
         self.element = element
 
-    def rotate_left(self, father):
+    def rotate_left(self, father, root):
+        if(self == root):
+            root = self.right
         tmp = self.right.left
         if(father != self):
             if(father.right == self):
@@ -16,8 +18,11 @@ class Tree():
                 father.left = self.right
         self.right.left = self
         self.right = tmp
+        return root
 
-    def rotate_right(self, father):
+    def rotate_right(self, father, root):
+        if(self == root):
+            root = self.left
         tmp = self.left.right
         if(father.right == self):
             father.right = self.left
@@ -25,91 +30,109 @@ class Tree():
             father.left = self.left
         self.left.right = self
         self.left = tmp
+        return root
 
-    def rotate_right_left(self, father):
-        self.right.rotate_right(self)
-        self.rotate_left(father)
+    def rotate_right_left(self, father, root):
+        root = self.right.rotate_right(self)
+        root = self.rotate_left(father)
+        return root
 
-    def rotate_left_right(self, father):
-        self.left.rotate_left(self)
-        self.rotate_right(father)
+    def rotate_left_right(self, father, root):
+        root = self.left.rotate_left(self)
+        root = self.rotate_right(father)
+        return root
 
 
     def insert(self, element):
-        self._insert(self, element)
+        return self._insert(self, element)
         
     def _insert(self, root, element):
         if(element < self.element):
             # We go to the left
             if(self.left != None):
                 # There are an element
-                self.left._insert(root, element)
+                return self.left._insert(root, element)
             else:
                 # We can insert !
                 self.left = Tree(element)
                 # And we want to have a balanced tree
-                root.compute_balance()
-                root._balance(root)
-                print("--")
+                root = root._balance(root, root)
+                return root
 
         else:
             # We go to the right
             if(self.right != None):
                 # There are an element
-                self.right._insert(root, element)
+                return self.right._insert(root, element)
             else:
                 # We can insert !
                 self.right = Tree(element)
                 # And we want to have a balanced tree
-                root.compute_balance()
-                root._balance(root)
+                root = root._balance(root, root)
+                return root
 
     def compute_balance(self):
         if(self.left != None):
             self.left.compute_balance()
-            left_balance = abs(self.left.balance)+1
+            left_balance = self.left.height()+1
         else:
             left_balance = 0
         if(self.right != None):
             self.right.compute_balance()
-            right_balance = abs(self.right.balance)+1
+            right_balance = self.right.height()+1
         else:
             right_balance = 0
         self.balance = left_balance - right_balance
 
-
+    def height(self):
+        if(self == None):
+            return 0
         
-    def _balance(self, father):
-        print(self)
-        print("balance: "+str(self.balance))
-        if(self.balance < -1 or self.balance > 1):
-            self._balance_sub(father)
+        if(self.left != None):
+            height_left = self.left.height()+1
         else:
-            if(self.left != None):
-                self.left._balance(self)
-            if(self.right != None):
-                self.right._balance(self)
+            height_left = 0
+        if(self.right != None):
+            height_right = self.right.height()+1
+        else:
+            height_right = 0
+        if(height_left > height_right):
+            return height_left
+        else:
+            return height_right
         
-    def _balance_sub(self, father):
+    def _balance(self, father, root):
+        if(self == root):
+            self.compute_balance()
+        if(self.left != None):
+            root = self.left._balance(self, root)
+        if(self.right != None):
+            root = self.right._balance(self, root)
+
+        if(self.balance < -1 or self.balance > 1):
+            root = self._balance_sub(father, root)
+            root.compute_balance()
+        return root
+        
+        
+    def _balance_sub(self, father, root):
         if(self.balance == -2 and self.right.balance == -1):
-            print("rotate_left")
-            self.rotate_left(father)
+            root = self.rotate_left(father, root)
         elif(self.balance == 2 and self.left.balance == 1):
-            print("rotate_right")
-            self.rotate_right(father)
-        elif(self.balance == -2 and self.left.balance == -1):
-            print("rotate_right_left")
-            self.rotate_right_left(father)
-        elif(self.balance == -2 and self.right.balance == 1):
-            print("rotate_left_right")
-            self.rotate_left_right(father)
+            root = self.rotate_right(father, root)
+        elif(self.balance == -2 and (self.right.balance == 1 or self.right.balance == 0)):
+            root = self.rotate_right_left(father, root)
+        elif(self.balance == 2 and (self.right.balance == -1 or self.right.balance == 0)):
+            root = self.rotate_left_right(father, root)
+        return root
 
     def __str__(self):
-        s = str(self.element)+"("+str(self.balance)+"): "
+        s = str(self.element)+"("+str(self.balance)+"):"
         if(self.left != None):
-            s += "g="+str(self.left.element)
+            s += " g="+str(self.left.element)
         if(self.right != None):
-            s += "d="+str(self.right.element)+"\n"
+            s += " d="+str(self.right.element)
+        s += "\n"
         
         
         if(self.left != None):
@@ -118,7 +141,11 @@ class Tree():
             s += self.right.__str__()
         return s
 
-t = Tree(1)
-t.insert(2)
-t.insert(3)
-print(t)
+def convert_table_tree(table):
+    if(table != None and len(table) > 0):
+        tree = Tree(table[0])
+        print(str(tree)+"---")
+        for i in range(1, len(table)):
+            tree = tree.insert(table[i])
+            print(str(tree)+"---")
+        return tree

@@ -156,7 +156,6 @@ class Tree():
             s += " d="+str(self.right.element)
         s += "\n"
         
-        
         if(self.left != None):
             s += self.left.__str__()
         if(self.right != None):

@@ -1,5 +1,9 @@
 from tree import Tree
 
+GREEN = 0
+ORANGE = 1
+RED = 2
+
 class Element():
     # An Element is composed of the content of the line (value) and where the content is
     # (with an array of numbers of line). 
@@ -46,6 +50,9 @@ class Element():
             return False
         except ValueError:
             return False
+
+    def get_line(self):
+        return self.line
     
 def convert_column_tree(column):
     # Convert a column in a single tree (an AVL tree)
@@ -68,10 +75,40 @@ def convert_table_tree(rows, column_name):
         table[column_name[i]] = convert_column_tree(column)
     return table
 
+def exist_line(table_expected, table_result, column_expected, column_result, number_line):
+    trees = convert_table_tree(table_expected, column_expected)
+    count_line = [0 for i in range(len(table_expected))]
+    length_expected = len(column_expected)
+    for i in range(len(table_result[number_line])):
+        elem = table_result[number_line][i]
+        try:
+            # Use the right tree
+            tree = trees[column_result[j]]
+            if(tree[elem] != None):
+                line = tree[elem].get_line()
+                for e in line:
+                    count_line[e] += 1
+            # column exist but not the element
+            else:
+                # here, RED means that we compute it later
+                return RED
+        # column doesn't exist
+        except KeyError:
+            # here, RED means that we compute it later
+            return RED
+    if(count_line[number_line] == length_expected):
+        # the line is at the right place
+        return GREEN
+    else:
+        for number in count_line:
+            if(number == length_expected):
+                # the line isn't at the right place
+                return ORANGE
+        # the line doesn't exist
+        return RED
+            
+
 def compare_table(table_expected, table_result, column_expected, column_result):
-    GREEN = 0
-    ORANGE = 1
-    RED = 2
     length_expected = len(column_expected)
     color_column = []
     color_table = []
@@ -93,12 +130,18 @@ def compare_table(table_expected, table_result, column_expected, column_result):
                 # Use the right tree
                 tree = trees[column_result[j]]
                 # Check if the element exist in the tree
+                # if tree[elem] doesn't exist, we go to the exception
                 if(tree[elem] != None and tree[elem].exist_line(i)):
-                    color_table_row.insert(j, GREEN)
+                    if(color_column[j] == GREEN):
+                        color_table_row.insert(j, GREEN)
+                    else:
+                        color_table_row.insert(j, ORANGE)
+                    
                 else:
                     color_table_row.insert(j, RED)
             except KeyError:
                 # The column doesn't exist
+                color_table_row.insert(j, RED)
                 color_column[j] = RED
         color_table.insert(i, color_table_row)
     return (color_column, color_table)

@@ -38,9 +38,14 @@ class Element():
         # in the array of the object
         self.line.append(line)
 
-    def get_line(self):
-        # Get the array of numbers of lines
-        return self.line
+    def exist_line(self, number):
+        # Test if the number of the line is in the list
+        try:
+            if(self.line.index(number) >= 0):
+                return True
+            return False
+        except ValueError:
+            return False
     
 def convert_column_tree(column):
     # Convert a column in a single tree (an AVL tree)
@@ -69,46 +74,50 @@ def compare_table(table_expected, table_result, column_expected, column_result):
     RED = 2
     length_expected = len(column_expected)
     color_column = []
-    color_table = [][]
+    color_table = []
     trees = convert_table_tree(table_expected, column_expected)
     # Attribute a color to a column :
     #    GREEN if it's ok
     #    ORANGE if it's not at the right place
     for i in range(len(column_result)):
         if(i < length_expected and column_expected[i] == column_result[i]):
-            color_column[i] = GREEN
+            color_column.insert(i, GREEN)
         else:
-            color_column[i] = ORANGE
+            color_column.insert(i, ORANGE)
     # Attribute a color at each cellule of the table
     for i in range(len(table_result)):
+        color_table_row = []
         for j in range(len(table_result[i])):
             elem = table_result[i][j]
             try:
                 # Use the right tree
                 tree = trees[column_result[j]]
                 # Check if the element exist in the tree
-                if(tree[elem] != None):
-                    color_table[i][j] = GREEN
+                if(tree[elem] != None and tree[elem].exist_line(i)):
+                    color_table_row.insert(j, GREEN)
                 else:
-                    color_table[i][j] = RED
+                    color_table_row.insert(j, RED)
             except KeyError:
                 # The column doesn't exist
-                color_column[i] = RED
-
+                color_column[j] = RED
+        color_table.insert(i, color_table_row)
+    return (color_column, color_table)
                 
 #===================================================#
 #                       Tests                       #
 #===================================================#
-column_name = ["C1", "C2", "C3", "C4"]
-row = [["1", "3", "A", "B"],
+
+column_name1 = ["C1", "C2", "C3", "C4"]
+row1 = [["1", "3", "A", "B"],
        ["2", "4", "7", "D"],
        ["T", "z", "e", "T"],
-       ["Z", "e", "A", "T"],
-       ["hey", "12/12", "g", "SELECT *"]]
-table = convert_table_tree(row, column_name)
-print(table["C1"])
-print(table["C2"])
-print(table["C3"])
-print(table["C4"])
-table["C4"]["D"] = "coucou"
-print(table["C4"]["D"])
+       ["Z", "e", "A", "T"]]
+
+column_name2 = ["C1", "C4"]
+row2 = [["1", "B"],
+       ["T", "D"],
+       ["T", "Tada"]]
+
+t1, t2 = compare_table(row1, row2, column_name1, column_name2)
+print(t1)
+print(t2)

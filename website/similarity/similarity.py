@@ -108,42 +108,29 @@ def exist_line(table_expected, table_result, column_expected, column_result, num
         return RED
             
 
-def compare_table(table_expected, table_result, column_expected, column_result):
-    length_expected = len(column_expected)
-    color_column = []
-    color_table = []
-    trees = convert_table_tree(table_expected, column_expected)
-    # Attribute a color to a column :
-    #    GREEN if it's ok
-    #    ORANGE if it's not at the right place
-    for i in range(len(column_result)):
-        if(i < length_expected and column_expected[i] == column_result[i]):
-            color_column.insert(i, GREEN)
-        else:
-            color_column.insert(i, ORANGE)
+def compare_column(table_expected, table_result, column_expected, column_result, tree, color_column, number_line):
     # Attribute a color at each cellule of the table
-    for i in range(len(table_result)):
-        color_table_row = []
-        for j in range(len(table_result[i])):
-            elem = table_result[i][j]
-            try:
-                # Use the right tree
-                tree = trees[column_result[j]]
-                # Check if the element exist in the tree
-                # if tree[elem] doesn't exist, we go to the exception
-                if(tree[elem] != None and tree[elem].exist_line(i)):
-                    if(color_column[j] == GREEN):
-                        color_table_row.insert(j, GREEN)
-                    else:
-                        color_table_row.insert(j, ORANGE)
-                    
+    color_table_row = []
+    for j in range(len(table_result[number_line])):
+        elem = table_result[number_line][j]
+        try:
+            # Use the right tree
+            tree = trees[column_result[j]]
+            # Check if the element exist in the tree
+            # if tree[elem] doesn't exist, we go to the exception
+            if(tree[elem] != None and tree[elem].exist_line(number_line)):
+                if(color_column[j] == GREEN):
+                    color_table_row.insert(j, GREEN)
                 else:
-                    color_table_row.insert(j, RED)
-            except KeyError:
-                # The column doesn't exist
+                    color_table_row.insert(j, ORANGE)
+            else:
                 color_table_row.insert(j, RED)
-                color_column[j] = RED
-        color_table.insert(i, color_table_row)
+        except KeyError:
+            # The column doesn't exist
+            color_table_row.insert(j, RED)
+            color_column[j] = RED
+
+    color_table.insert(number_line, color_table_row)
     return (color_column, color_table)
                 
 #===================================================#

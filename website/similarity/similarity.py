@@ -106,9 +106,35 @@ def exist_line(table_expected, table_result, column_expected, column_result, num
                 return ORANGE
         # the line doesn't exist
         return RED
-            
 
 def compare_table(table_expected, table_result, column_expected, column_result):
+    length_expected = len(column_expected)
+    color_column = []
+    color_table = []
+    trees = convert_table_tree(table_expected, column_expected)
+    # Attribute a color to a column :
+    #    GREEN if it's ok
+    #    ORANGE if it's not at the right place
+    for i in range(len(column_result)):
+        if(i < length_expected and column_expected[i] == column_result[i]):
+            color_column.insert(i, GREEN)
+        else:
+            color_column.insert(i, ORANGE)
+
+    for i in range(len(table_expected)):
+        color = exist_line(table_expected, table_result, column_expected, column_result, i)
+        color_table_row = []
+        if(color != RED):
+             for j in range(len(table_result[i])):
+                 color_table_row.insert(j, color)
+        else:
+            color_table_row = compare_column(table_expected, table_result, column_expected, column_result, trees, i)
+        color_table.insert(i, color_table_row)
+    return color_table
+                 
+            
+
+def compare_column(table_expected, table_result, column_expected, column_result):
     length_expected = len(column_expected)
     color_column = []
     color_table = []

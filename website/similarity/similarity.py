@@ -75,15 +75,14 @@ def convert_table_tree(rows, column_name):
         table[column_name[i]] = convert_column_tree(column)
     return table
 
-def exist_line(table_expected, table_result, column_expected, column_result, number_line):
-    trees = convert_table_tree(table_expected, column_expected)
+def exist_line(table_expected, table_result, column_expected, column_result, trees, number_line):
     count_line = [0 for i in range(len(table_expected))]
     length_expected = len(column_expected)
-    for i in range(len(table_result[number_line])):
+    for i in range(len(column_result)):
         elem = table_result[number_line][i]
         try:
             # Use the right tree
-            tree = trees[column_result[j]]
+            tree = trees[column_result[i]]
             if(tree[elem] != None):
                 line = tree[elem].get_line()
                 for e in line:
@@ -121,21 +120,21 @@ def compare_table(table_expected, table_result, column_expected, column_result):
         else:
             color_column.insert(i, ORANGE)
 
-    for i in range(len(table_expected)):
-        color = exist_line(table_expected, table_result, column_expected, column_result, i)
+    for i in range(len(table_result)):
+        color = exist_line(table_expected, table_result, column_expected, column_result, trees, i)
         color_table_row = []
         if(color != RED):
              for j in range(len(table_result[i])):
                  color_table_row.insert(j, color)
         else:
-            color_table_row = compare_column(table_expected, table_result, column_expected, column_result, trees, i)
+            color_table_row = compare_column(table_expected, table_result, column_expected, column_result, color_column, trees, i)
         color_table.insert(i, color_table_row)
     return color_table
                  
-def compare_column(table_expected, table_result, column_expected, column_result, trees, color_column, number_line):
+def compare_column(table_expected, table_result, column_expected, column_result, color_column, trees, number_line):
     # Attribute a color at each cellule of the table
     color_table_row = []
-    for j in range(len(table_result[number_line])):
+    for j in range(len(column_result)):
         elem = table_result[number_line][j]
         try:
             # Use the right tree
@@ -170,6 +169,5 @@ row2 = [["1", "B"],
        ["T", "D"],
        ["T", "Tada"]]
 
-t1, t2 = compare_table(row1, row2, column_name1, column_name2)
+t1 = compare_table(row1, row2, column_name1, column_name2)
 print(t1)
-print(t2)

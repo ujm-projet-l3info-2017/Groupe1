@@ -169,5 +169,5 @@ row2 = [["1", "B"],
        ["T", "D"],
        ["T", "Tada"]]
 
-t1 = compare_table(row1, row2, column_name1, column_name2)
+t1= compare_table(row1, row2, column_name1, column_name2)
 print(t1)

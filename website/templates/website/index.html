@@ -18,17 +18,18 @@ table, th, td {
     <div id="input_output">
       <table>
 	<tr>
-	    <td id="exercise_selection" onclick="get_question()" rowspan="2">
-	    {{exercice |safe}}
-	    </br>
-	    </br>
-	    {{question |safe}}
+	    <td id="exercise">
+	    {{exercice | safe}}
+	    </td>
 	  </td>
-	  <td name="question_label" colspan="3">
-	    Question label goes here.
+	  <td id="question_label" colspan="3">
+	      {{label | safe}}
 	  </td>
 	</tr>
-	<tr>	  
+	<tr>
+	    <td id="question">
+		{{question | safe}}
+	    </td>
 	  <td id="input">
 	    <form>
 	      <textarea>Tapez votre requete ici ...</textarea>

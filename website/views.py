@@ -9,10 +9,12 @@ def index(request):
     template = loader.get_template('website/index.html')
     exercice = load_exercise(request).content
     question = load_question(request).content
+    label = load_label(request).content
 
     context = {
         'exercice': exercice,
-        'question': question
+        'question': question,
+        'label': label
     }
     return HttpResponse(template.render(context, request))
 
@@ -65,9 +67,13 @@ def load_tables():
             print("lolillo la table existe deja ou on est des merdes !")
 
 def load_label(request):
-    exercice_no  = request.POST.get('exercice_no')
+    exercice_no  = request.POST.get('exercise_no')
+    if(exercice_no == None):
+        exercice_no = "1"
     question_no  = request.POST.get('question_no')
-    requete = "SELECT intitule FROM website_question,website_contient_exercice_question,website_exercice WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND exercice.id ="+exercice_no+" AND question.id ="+question_no
+    if(question_no == None):
+        question_no = "1"
+    requete = "SELECT intitule FROM website_question,website_contient_exercice_question,website_exercice WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND website_exercice.id ="+exercice_no+" AND website_question.id ="+question_no
     with connection.cursor() as cursor:
         try:
             cursor.execute(requete)
@@ -108,7 +114,7 @@ def load_question(request):
 def load_exercise(request):
     template = loader.get_template('website/exercise.html')
     
-    requete = "SELECT numero FROM website_contient_exercice_question, website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice"
+    requete = "SELECT numero FROM website_exercice"
     with connection.cursor() as cursor:
         try:
             cursor.execute(requete)

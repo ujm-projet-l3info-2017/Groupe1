@@ -5,6 +5,7 @@ from django.db import connection
 # Create your views here.
 
 def index(request):
+    load_tables()
     template = loader.get_template('website/index.html')
     return HttpResponse(template.render(None, request))
 
@@ -34,3 +35,37 @@ def request(request):
         
         return HttpResponse(template.render(context, request))
     
+def load_tables():
+    # On charge les donnees de l'exercice > a passer en argument POST (formulaire)
+
+    #CECI
+    #NE
+    #FONCTIONNE
+    #PAS
+    #(mais c'est joli)
+    
+    with connection.cursor() as cursor:
+        print("YOYOYYOO1")
+        try:
+            cursor.execute('select * from website_table')
+            row=cursor.fetchall()    
+            print("YOYOYYOO3 ")
+            
+            tableau=[]
+            for line in row:
+                i=0
+                for l in line:
+                    tableau.append(l)
+                    print (i, l)
+                    i+=1
+            print (tableau)
+            print ("\n"*5)
+            print
+            cursor.execute('create table '+line[0]+' '+line[1])
+            print("YOYOYYOO5")
+                #row[2].split(' ')
+                #for insertline in row[2]:
+                #    cursor.execute('insert into '+line[0]+insertline)
+        except:
+            print("lolillo")
+

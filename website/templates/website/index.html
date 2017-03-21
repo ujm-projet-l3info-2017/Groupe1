@@ -2,6 +2,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+table, th, td {
+    border: 1px solid black;
+}
+</style>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static "website/css/index.css" %}">
     <script type="text/javascript" src="{% static "website/js/scriptyskippy.js"%}" ></script>
@@ -13,6 +18,25 @@
     <div id="input_output">
       <table>
 	<tr>
+	  <td id="input_exercise_selection" rowspan="2">
+	    <select name="exercise">
+	      <option value="Exercice1"selected>Exercice 1</option> 
+	      <option value="Exercice2">Exercice 2</option>
+	      <option value="Exercice3">Exercice 3</option>
+	    </select>
+	    </br>
+	    </br>
+	    <select name="question">
+	      <option value="Question1"selected>Question 1</option> 
+	      <option value="Question2">Question 2</option>
+	      <option value="Question3">Question 3</option>
+	    </select>	    
+	  </td>
+	  <td colspan="3">
+	    Question label goes here.
+	  </td>
+	</tr>
+	<tr>	  
 	  <td id="input">
 	    <form>
 	      <textarea>Tapez votre requete ici ...</textarea>

@@ -61,7 +61,7 @@ def load_tables():
 def load_question(request):
     exercice_no  = request.POST.get('exercice_no')
     question_no  = request.POST.get('question_no')
-    requete = "SELECT intitule FROM website_question WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND exercice.id ="+exercice_no+" AND question.id ="+question_no
+    requete = "SELECT intitule FROM website_question,website_contient_exercice_question,website_exercice WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND exercice.id ="+exercice_no+" AND question.id ="+question_no
     with connection.cursor() as cursor:
         try:
             cursor.execute(requete)
@@ -78,4 +78,17 @@ def load_select(request):
 #    with connection.cursor() as cursor:
         
         #cursor.execute('SELECT * FROM website_contient')
-    
+
+def load_exercise_question(request):
+    exercice_no  = request.POST.get('exercice_no')
+    requete = "SELECT numero FROM website_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute(requete)
+            row = cursor.fetchall()
+        except:
+            template = loader.get_template('website/error_request.html')
+            context = None
+            return HttpResponse(template.render(context, request))
+
+        return  HttpResponse("<p>"+ row +"</p>")

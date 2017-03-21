@@ -8,8 +8,8 @@ function get_token(){
     }
     return(token);
 }
-function post_ajax() {    
-    get_token();
+
+function get_request() {    
     $.ajax({
 	url : '/request/', 
 	type : 'POST' ,
@@ -20,6 +20,21 @@ function post_ajax() {
 	success : function(data, status){
 	    if (status ==="success")
 		$("#output_request").html( data );
+	}
+    });   
+}
+
+function get_question() {    
+    $.ajax({
+	url : '/question/', 
+	type : 'POST' ,
+	headers: {
+            'X-CSRFToken': get_token()
+	},
+	data : { exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val() },	
+	success : function(data, status){
+	    if (status ==="success")
+		$("#question_label").html( data );
 	}
     });   
 }

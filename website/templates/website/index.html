@@ -18,7 +18,7 @@ table, th, td {
     <div id="input_output">
       <table>
 	<tr>
-	  <td id="input_exercise_selection" rowspan="2">
+	    <td id="exercise_selection" onclick="get_question()" rowspan="2">
 	    <select name="exercise">
 	      <option value="Exercice1"selected>Exercice 1</option> 
 	      <option value="Exercice2">Exercice 2</option>
@@ -26,13 +26,13 @@ table, th, td {
 	    </select>
 	    </br>
 	    </br>
-	    <select name="question">
+	    <select id="question_selection" onclick="get_question()">
 	      <option value="Question1"selected>Question 1</option> 
 	      <option value="Question2">Question 2</option>
 	      <option value="Question3">Question 3</option>
 	    </select>	    
 	  </td>
-	  <td colspan="3">
+	  <td name="question_label" colspan="3">
 	    Question label goes here.
 	  </td>
 	</tr>
@@ -40,7 +40,7 @@ table, th, td {
 	  <td id="input">
 	    <form>
 	      <textarea>Tapez votre requete ici ...</textarea>
-	      <input type="button" onclick="post_ajax()" value="Envoyer" /> 
+	      <input type="button" onclick="get_request()" value="Envoyer" /> 
 	    </form>
 	  </td>
 	  <td id="output_request">

@@ -19,8 +19,6 @@ def request(request):
     
     template = loader.get_template('website/request.html')
     with connection.cursor() as cursor:
-        
-        #cursor.execute('SELECT * FROM website_contient')
         try:
             cursor.execute(requete)
             column_name = [col[0] for col in cursor.description]
@@ -60,3 +58,24 @@ def load_tables():
         except:
             print("lolillo la table existe deja ou on est des merdes !")
 
+def load_question(request):
+    exercice_no  = request.POST.get('exercice_no')
+    question_no  = request.POST.get('question_no')
+    requete = "SELECT intitule FROM website_question WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND exercice.id ="+exercice_no+" AND question.id ="+question_no
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute(requete)
+            row = cursor.fetchone()[0]
+        except:
+            template = loader.get_template('website/error_request.html')
+            context = None
+            return HttpResponse(template.render(context, request))
+
+        return  HttpResponse("<p>"+ row +"</p>")
+
+def load_select(request):
+    template = loader.get_template('website/request.html')
+#    with connection.cursor() as cursor:
+        
+        #cursor.execute('SELECT * FROM website_contient')
+    

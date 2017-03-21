@@ -7,6 +7,7 @@ class Exercice(models.Model):
     
 class Question(models.Model):
     #id (ajoute automatiquement)
+    numero = models.IntegerField()
     intitule = models.TextField()
     requete = models.TextField()
 

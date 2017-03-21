@@ -24,9 +24,9 @@ function get_request() {
     });   
 }
 
-function get_question() {    
+function get_label() {    
     $.ajax({
-	url : '/question/', 
+	url : '/label/', 
 	type : 'POST' ,
 	headers: {
             'X-CSRFToken': get_token()

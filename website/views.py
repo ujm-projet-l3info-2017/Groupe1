@@ -5,10 +5,16 @@ from django.db import connection
 # Create your views here.
 
 def index(request):
-    load_tables()
-    template = loader.get_template('website/index.html')
     #load_tables()
-    return HttpResponse(template.render(None, request))
+    template = loader.get_template('website/index.html')
+    exercice = load_exercise(request).content
+    question = load_question(request).content
+
+    context = {
+        'exercice': exercice,
+        'question': question
+    }
+    return HttpResponse(template.render(context, request))
 
 def request(request):
     # Ajouter un argument "contenu requete"
@@ -58,7 +64,7 @@ def load_tables():
         except:
             print("lolillo la table existe deja ou on est des merdes !")
 
-def load_question(request):
+def load_label(request):
     exercice_no  = request.POST.get('exercice_no')
     question_no  = request.POST.get('question_no')
     requete = "SELECT intitule FROM website_question,website_contient_exercice_question,website_exercice WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND exercice.id ="+exercice_no+" AND question.id ="+question_no
@@ -79,16 +85,40 @@ def load_select(request):
         
         #cursor.execute('SELECT * FROM website_contient')
 
-def load_exercise_question(request):
+def load_question(request):
+    template = loader.get_template('website/question.html')
     exercice_no  = request.POST.get('exercice_no')
-    requete = "SELECT numero FROM website_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no
+    if(exercice_no == None):
+        exercice_no = "1"
+    requete = "SELECT website_question.numero FROM website_contient_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no
     with connection.cursor() as cursor:
         try:
             cursor.execute(requete)
-            row = cursor.fetchall()
+            row =cursor.fetchall()
+            context= {
+                'row': row
+            }
         except:
             template = loader.get_template('website/error_request.html')
             context = None
             return HttpResponse(template.render(context, request))
 
-        return  HttpResponse("<p>"+ row +"</p>")
+        return HttpResponse(template.render(context, request))
+
+def load_exercise(request):
+    template = loader.get_template('website/exercise.html')
+    
+    requete = "SELECT numero FROM website_contient_exercice_question, website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice"
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute(requete)
+            row =cursor.fetchall()
+            context= {
+                'row': row
+            }
+        except:
+            template = loader.get_template('website/error_request.html')
+            context = None
+            return HttpResponse(template.render(context, request))
+
+        return HttpResponse(template.render(context, request))

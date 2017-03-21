@@ -1,0 +1,9 @@
+{% if row %}
+<select id="question_selection" onclick="get_label()">
+  {% for line in row %}  
+  {% for value in line %}
+  <option value={{value}}>Question {{value}}</option>
+  {% endfor %}
+  {% endfor %}
+</select>
+{% endif %}

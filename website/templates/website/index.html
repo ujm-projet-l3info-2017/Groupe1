@@ -19,18 +19,10 @@ table, th, td {
       <table>
 	<tr>
 	    <td id="exercise_selection" onclick="get_question()" rowspan="2">
-	    <select name="exercise">
-	      <option value="Exercice1"selected>Exercice 1</option> 
-	      <option value="Exercice2">Exercice 2</option>
-	      <option value="Exercice3">Exercice 3</option>
-	    </select>
+	    {{exercice |safe}}
 	    </br>
 	    </br>
-	    <select id="question_selection" onclick="get_question()">
-	      <option value="Question1"selected>Question 1</option> 
-	      <option value="Question2">Question 2</option>
-	      <option value="Question3">Question 3</option>
-	    </select>	    
+	    {{question |safe}}
 	  </td>
 	  <td name="question_label" colspan="3">
 	    Question label goes here.

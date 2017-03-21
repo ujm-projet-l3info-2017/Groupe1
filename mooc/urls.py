@@ -21,5 +21,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
     url(r'^request/', views.request),
-    url(r'^question/', views.load_question),
+    url(r'^label/', views.load_label),
+    url(r'^exercise/', views.load_exercise),
+    url(r'^question/', views.load_question)
 ]

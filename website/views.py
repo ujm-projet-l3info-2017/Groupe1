@@ -5,6 +5,7 @@ from django.db import connection
 # Create your views here.
 
 def index(request):
+    load_tables()
     template = loader.get_template('website/index.html')
     #load_tables()
     return HttpResponse(template.render(None, request))
@@ -59,4 +60,3 @@ def load_tables():
         except:
             print("lolillo la table existe deja ou on est des merdes !")
 
-        

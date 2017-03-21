@@ -1,6 +1,6 @@
 from django.db import models
 
-class Exercice():
+class Exercice(models.Model):
     #id
     titre = models.TextField()
     numero = models.IntegerField()
@@ -10,9 +10,9 @@ class Question(models.Model):
     intitule = models.TextField()
     requete = models.TextField()
 
-class Contient_Question_Table(models.Model):
+class Contient_Exercice_Table(models.Model):
     #id
-    idQuestion = models.IntegerField()
+    idExercice = models.IntegerField()
     idTable = models.IntegerField()
 
 class Table(models.Model):

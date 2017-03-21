@@ -1,3 +1,22 @@
+INSERT INTO website_exercice (titre, numero) VALUES ("Exo1",1);
+INSERT INTO website_exercice (titre, numero) VALUES ("Exo2",2);
+
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,1);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,2);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,3);
+
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,1);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,2);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,3);
+
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,1);
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,2);
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,3);
+
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,1); 
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,3);
+
+
 INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 (
 	"article",
@@ -35,6 +54,7 @@ INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 
 INSERT INTO website_question (intitule,requete) VALUES
 (
+	1,
 	"numéros et libellés des articles dont le stock est inférieur à 10 ?",
 	"SELECT NOART, LIBELLE FROM ARTICLES WHERE STOCK<10;"
 );
@@ -42,6 +62,7 @@ INSERT INTO website_question (intitule,requete) VALUES
 
 INSERT INTO website_question (intitule,requete) VALUES
 (
+	2,
 	"Liste des articles dont le prix d'inventaire est compris entre 100 et 300 ?",
 	"SELECT * FROM ARTICLES WHERE PRIXINVENT BETWEEN 100 AND 300;"
 );
@@ -49,6 +70,7 @@ INSERT INTO website_question (intitule,requete) VALUES
 
 INSERT INTO website_question (intitule,requete) VALUES
 (
+	3,
 	"Liste des fournisseurs dont on ne connaît pas l'adresse ?",
 	"SELECT * FROM FOURNISSEURS WHERE ADRFOUR IS NULL;"
 );

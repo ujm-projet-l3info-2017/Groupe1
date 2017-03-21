@@ -7,6 +7,7 @@ from django.db import connection
 def index(request):
     load_tables()
     template = loader.get_template('website/index.html')
+    load_tables()
     return HttpResponse(template.render(None, request))
 
 def request(request):
@@ -37,35 +38,25 @@ def request(request):
     
 def load_tables():
     # On charge les donnees de l'exercice > a passer en argument POST (formulaire)
-
-    #CECI
-    #NE
-    #FONCTIONNE
-    #PAS
-    #(mais c'est joli)
     
     with connection.cursor() as cursor:
-        print("YOYOYYOO1")
         try:
             cursor.execute('select * from website_table')
-            row=cursor.fetchall()    
-            print("YOYOYYOO3 ")
-            
-            tableau=[]
+            row=cursor.fetchall()
             for line in row:
-                i=0
+                tableau=[]
                 for l in line:
                     tableau.append(l)
-                    print (i, l)
-                    i+=1
-            print (tableau)
-            print ("\n"*5)
-            print
-            cursor.execute('create table '+line[0]+' '+line[1])
-            print("YOYOYYOO5")
-                #row[2].split(' ')
-                #for insertline in row[2]:
-                #    cursor.execute('insert into '+line[0]+insertline)
+                print(tableau)
+                tableau[0]=str(tableau[0])
+                tableau[1]=str(tableau[1]) # NOM de la table
+                tableau[2]=str(tableau[2])
+                tableau[3]=str(tableau[3])
+                cursor.execute('create table '+tableau[1]+' '+tableau[2])
+    
+                tableau[3]=tableau[3].split('\n')
+                for insertline in tableau[3]:
+                    cursor.execute('insert into '+tableau[1]+insertline)
         except:
-            print("lolillo")
+            print("lolillo la table existe deja ou on est des merdes !")
 

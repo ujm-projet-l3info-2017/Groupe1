@@ -75,9 +75,10 @@ def convert_table_tree(rows, column_name):
         table[column_name[i]] = convert_column_tree(column)
     return table
 
-def exist_line(table_expected, table_result, column_expected, column_result, trees, number_line):
+def compare_line(table_expected, table_result, column_expected, column_result, color_column, trees, number_line):
     count_line = [0 for i in range(len(table_expected))]
     length_expected = len(column_expected)
+    color_table_row = []
     for i in range(len(column_result)):
         elem = table_result[number_line][i]
         try:
@@ -97,12 +98,19 @@ def exist_line(table_expected, table_result, column_expected, column_result, tre
             return RED
     if(count_line[number_line] == length_expected):
         # the line is at the right place
-        return GREEN
+        for j in range(len(table_result[i])):
+            if(color_column[j] == GREEN):
+                color_table_row.insert(j, GREEN)
+            else:
+                color_table_row.insert(j, ORANGE)
+        return color_table_row
     else:
         for number in count_line:
             if(number == length_expected):
                 # the line isn't at the right place
-                return ORANGE
+                for j in range(len(table_result[i])):
+                    color_table_row.insert(j, ORANGE)
+                return color_table_row
         # the line doesn't exist
         return RED
 
@@ -121,12 +129,8 @@ def compare_table(table_expected, table_result, column_expected, column_result):
             color_column.insert(i, ORANGE)
 
     for i in range(len(table_result)):
-        color = exist_line(table_expected, table_result, column_expected, column_result, trees, i)
-        color_table_row = []
-        if(color != RED):
-             for j in range(len(table_result[i])):
-                 color_table_row.insert(j, color)
-        else:
+        color_table_row = compare_line(table_expected, table_result, column_expected, column_result, color_column, trees, i)
+        if(color_table_row == RED):
             color_table_row = compare_column(table_expected, table_result, column_expected, column_result, color_column, trees, i)
         color_table.insert(i, color_table_row)
     return color_table

@@ -7,7 +7,7 @@ from django.db import connection
 def index(request):
     load_tables()
     template = loader.get_template('website/index.html')
-    load_tables()
+    #load_tables()
     return HttpResponse(template.render(None, request))
 
 def request(request):

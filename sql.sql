@@ -1,3 +1,22 @@
+INSERT INTO website_exercice (titre, numero) VALUES ("Exo1",1);
+INSERT INTO website_exercice (titre, numero) VALUES ("Exo2",2);
+
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,1);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,2);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,3);
+
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,1);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,2);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,3);
+
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,1);
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,2);
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,3);
+
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,1); 
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,3);
+
+
 INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 (
 	"article",

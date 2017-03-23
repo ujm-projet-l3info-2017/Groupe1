@@ -76,7 +76,7 @@ def convert_table_tree(rows, column_name):
     return table
 
 def compare_line(table_expected, table_result, column_expected, column_result, color_column, trees, number_line):
-    count_line = [0 for i in range(len(table_expected))]
+    count_line = [0 for i in range(len(table_result))]
     length_expected = len(column_expected)
     color_table_row = []
     for i in range(len(column_result)):

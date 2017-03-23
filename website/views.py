@@ -44,6 +44,28 @@ def request(request):
 
     return HttpResponse(template.render(context, request))
     
+        
+def expected_request(request):
+    exercice_no  = request.POST.get('exercise_no')
+    if(exercice_no == None):
+        exercice_no = "1"
+    question_no  = request.POST.get('question_no')
+    if(question_no == None):
+        question_no = "1"
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("select requete from website_question,website_contient_exercice_question,website_exercice where website_question.numero="+question_no+" AND website_question.id=idQuestion AND idExercice=website_exercice.id AND website_exercice.numero="+exercice_no)
+            column_name = [col[0] for col in cursor.description]
+            row = cursor.fetchall()
+            return (column_name,row)
+        except:
+            template = loader.get_template('website/error_request.html')
+            context=None
+
+def display_expected_request(request):
+    column_name,row=expected_request(request)
+    #blblbl
+            
 def load_tables():
     # On charge les donnees de l'exercice > a passer en argument POST (formulaire)
     
@@ -95,7 +117,7 @@ def load_select(request):
 
 def load_question(request):
     template = loader.get_template('website/question.html')
-    exercice_no  = request.POST.get('exercice_no')
+    exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
         exercice_no = "1"
     requete = "SELECT website_question.numero FROM website_contient_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no

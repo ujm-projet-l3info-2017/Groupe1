@@ -5,10 +5,10 @@
     <td> {{cn}} </td>
     {% endfor  %}
   </tr>
-  {% for i in len(row) %}
+  {% for i in row|length %}
   <tr>
-    {% for j in len(row[i]) %}
-    <td id="{{color_table[i][j]}}">{{row[i][j]}}</td>
+    {% for j in row.i|length %}
+    <td id="{{color_table.i.j}}">{{row.i.j}}</td>
     {% endfor %}
   </tr>
   {% endfor %}

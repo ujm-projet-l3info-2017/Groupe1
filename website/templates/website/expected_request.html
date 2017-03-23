@@ -1,0 +1,16 @@
+{% if row %}
+<table>
+  <tr>
+    {% for cn in column_name %}
+    <td> {{cn}} </td>
+    {% endfor  %}
+  </tr>
+  {% for line in row %}
+  <tr>
+    {% for l in line %} 
+    <td>{{l}}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}

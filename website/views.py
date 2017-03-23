@@ -114,7 +114,7 @@ def load_select(request):
 
 def load_question(request):
     template = loader.get_template('website/question.html')
-    exercice_no  = request.POST.get('exercice_no')
+    exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
         exercice_no = "1"
     requete = "SELECT website_question.numero FROM website_contient_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no

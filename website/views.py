@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.db import connection
+from .similarity import similarity
 # Create your views here.
 
 def index(request):
@@ -23,7 +24,7 @@ def request(request):
     # Recupere a l'envoi de la requete par l'utilisateur
     requete = request.POST.get('query');
     print(requete)
-    
+    column_expected, table_expected = expected_request(request)
     
     template = loader.get_template('website/request.html')
     with connection.cursor() as cursor:
@@ -31,16 +32,17 @@ def request(request):
             cursor.execute(requete)
             column_name = [col[0] for col in cursor.description]
             row = cursor.fetchall()
+            color_table =compare_table(table_expected, row, column_expected, column_name)
             context= {
                 'row': row,
-                'column_name': column_name
+                'column_name': column_name,
+                'color_table': color_table
             }
         except:
             template = loader.get_template('website/error_request.html')
             context = None
 
-        
-        return HttpResponse(template.render(context, request))
+    return HttpResponse(template.render(context, request))
     
 def load_tables():
     # On charge les donnees de l'exercice > a passer en argument POST (formulaire)

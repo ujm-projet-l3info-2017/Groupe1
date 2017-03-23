@@ -11,11 +11,13 @@ def index(request):
     exercice = load_exercise(request).content
     question = load_question(request).content
     label = load_label(request).content
-
+    expected_request=load_expected_request(request).content
+    
     context = {
         'exercice': exercice,
         'question': question,
-        'label': label
+        'label': label,
+        'expected_request': expected_request
     }
     return HttpResponse(template.render(context, request))
 
@@ -74,7 +76,7 @@ def expected_request(request):
             template = loader.get_template('website/error_request.html')
             context=None
             
-def display_expected_request(request):
+def load_expected_request(request):
     column_name,row=expected_request(request)
         
     template = loader.get_template('website/expected_request.html')

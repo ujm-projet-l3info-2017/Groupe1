@@ -5,3 +5,15 @@ body {
 #input_output table {
     margin: 0 auto;
 }
+
+.color-0 {
+    background: green;
+}
+
+.color-1 {
+    background: orange;
+}
+
+.color-2 {
+    background: red;
+}

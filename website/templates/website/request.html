@@ -1,14 +1,14 @@
-{% if row %}
+{% if table %}
 <table>
   <tr>
     {% for cn in column_name %}
     <td> {{cn}} </td>
     {% endfor  %}
   </tr>
-  {% for i in row|length %}
+  {% for line in table %}
   <tr>
-    {% for j in row.i|length %}
-    <td id="{{color_table.i.j}}">{{row.i.j}}</td>
+    {% for col in line %}
+    <td class="color-{{col.0}}">{{col.1}}</td>
     {% endfor %}
   </tr>
   {% endfor %}

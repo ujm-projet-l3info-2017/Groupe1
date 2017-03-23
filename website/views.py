@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.db import connection
-from .similarity import similarity
+from .similarity.similarity import compare_table
 # Create your views here.
 
 def index(request):
@@ -25,22 +25,24 @@ def request(request):
     requete = request.POST.get('query');
     print(requete)
     column_expected, table_expected = expected_request(request)
-    
+    print(column_expected)
+    print(table_expected)
     template = loader.get_template('website/request.html')
     with connection.cursor() as cursor:
-        try:
-            cursor.execute(requete)
-            column_name = [col[0] for col in cursor.description]
-            row = cursor.fetchall()
-            color_table =compare_table(table_expected, row, column_expected, column_name)
-            context= {
-                'row': row,
-                'column_name': column_name,
-                'color_table': color_table
-            }
-        except:
-            template = loader.get_template('website/error_request.html')
-            context = None
+    # try:
+        cursor.execute(requete)
+        column_name = [col[0] for col in cursor.description]
+        row = cursor.fetchall()
+        print("AH")
+        color_table =compare_table(table_expected, row, column_expected, column_name)
+        table = [[[color_table[i][j], row[i][j]] for j in range(len(row[i]))] for i in range(len(row))]
+        context= {
+            'column_name': column_name,
+            'table': table
+        }
+            #  except:
+            #    template = loader.get_template('website/error_request.html')
+            #    context = None
 
     return HttpResponse(template.render(context, request))
     
@@ -66,6 +68,7 @@ def expected_request(request):
             cursor.execute(expected_request)
             column_name = [col[0] for col in cursor.description]
             row = cursor.fetchall()
+            row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
             return (column_name,row)
         except:
             template = loader.get_template('website/error_request.html')

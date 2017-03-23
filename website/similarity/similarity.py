@@ -35,7 +35,7 @@ class Element():
             return self.value == other.value
 
     def __str__(self):
-        return self.value+"("+str(self.line)+")"
+        return str(self.value)+"("+str(self.line)+")"
     
     def add_line(self, line):
         # If the element exists in the tree, we have to add the number of the line
@@ -157,21 +157,3 @@ def compare_column(table_expected, table_result, column_expected, column_result,
             color_table_row.insert(j, RED)
             color_column[j] = RED
     return color_table_row
-                
-#===================================================#
-#                       Tests                       #
-#===================================================#
-
-column_name1 = ["C1", "C2", "C3", "C4"]
-row1 = [["1", "3", "A", "B"],
-       ["2", "4", "7", "D"],
-       ["T", "z", "e", "T"],
-       ["Z", "e", "A", "T"]]
-
-column_name2 = ["C1", "C5"]
-row2 = [["1", "B"],
-       ["T", "D"],
-       ["T", "Tada"]]
-
-t1= compare_table(row1, row2, column_name1, column_name2)
-print(t1)

@@ -46,14 +46,14 @@ class Tree():
 
     def rotate_right_left(self, father, root):
         # Another case of rotation which use rotate_right and rotate_left
-        root = self.right.rotate_right(self)
-        root = self.rotate_left(father)
+        root = self.right.rotate_right(self, root)
+        root = self.rotate_left(father, root)
         return root
 
     def rotate_left_right(self, father, root):
         # The last case !
-        root = self.left.rotate_left(self)
-        root = self.rotate_right(father)
+        root = self.left.rotate_left(self, root)
+        root = self.rotate_right(father, root)
         return root
 
     def insert(self, element):
@@ -155,7 +155,7 @@ class Tree():
             root = self.rotate_right(father, root)
         elif(self.balance == -2 and (self.right.balance == 1 or self.right.balance == 0)):
             root = self.rotate_right_left(father, root)
-        elif(self.balance == 2 and (self.right.balance == -1 or self.right.balance == 0)):
+        elif(self.balance == 2 and (self.left.balance == -1 or self.left.balance == 0)):
             root = self.rotate_left_right(father, root)
         return root
 

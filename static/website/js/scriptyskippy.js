@@ -24,6 +24,21 @@ function get_request() {
     });
 }
 
+function get_expected_request() {    
+    $.ajax({
+	url : '/expected_request/', 
+	type : 'POST' ,
+	headers: {
+            'X-CSRFToken': get_token()
+	},
+	data : { query : $("#input textarea").val(),exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val() },	
+	success : function(data, status){
+	    if (status ==="success")
+		$("#expected_request").html( data );
+	}
+    });   
+}
+
 function get_label() {
     $.ajax({
 	url : '/label/', 

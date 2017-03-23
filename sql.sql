@@ -56,7 +56,7 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	1,
 	"numéros et libellés des articles dont le stock est inférieur à 10 ?",
-	"SELECT NOART, LIBELLE FROM ARTICLES WHERE STOCK<10;"
+	"SELECT NOART, LIBELLE FROM ARTICLE WHERE STOCK<10;"
 );
 
 
@@ -64,7 +64,7 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	2,
 	"Liste des articles dont le prix d'inventaire est compris entre 100 et 300 ?",
-	"SELECT * FROM ARTICLES WHERE PRIXINVENT BETWEEN 100 AND 300;"
+	"SELECT * FROM ARTICLE WHERE PRIXINVENT BETWEEN 100 AND 300;"
 );
 
 

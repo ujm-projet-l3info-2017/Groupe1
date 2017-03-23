@@ -35,6 +35,9 @@ def request(request):
         cursor.execute(requete)
         column_name = [col[0] for col in cursor.description]
         row = cursor.fetchall()
+        print(row)
+        row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
+        print(row)
         print("AH")
         color_table =compare_table(table_expected, row, column_expected, column_name)
         table = [[[color_table[i][j], row[i][j]] for j in range(len(row[i]))] for i in range(len(row))]
@@ -171,4 +174,4 @@ def load_exercise(request):
             context = None
             return HttpResponse(template.render(context, request))
 
-        return HttpResponse(template.render(context, request))
+    return HttpResponse(template.render(context, request))

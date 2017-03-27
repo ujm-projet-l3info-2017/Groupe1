@@ -25,29 +25,23 @@ def request(request):
     # Ajouter un argument "contenu requete"
     # Recupere a l'envoi de la requete par l'utilisateur
     requete = request.POST.get('query');
-    print(requete)
     column_expected, table_expected = expected_request(request)
-    print(column_expected)
-    print(table_expected)
     template = loader.get_template('website/request.html')
     with connection.cursor() as cursor:
-    # try:
-        cursor.execute(requete)
-        column_name = [col[0] for col in cursor.description]
-        row = cursor.fetchall()
-        print(row)
-        row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
-        print(row)
-        print("AH")
-        color_table =compare_table(table_expected, row, column_expected, column_name)
-        table = [[[color_table[i][j], row[i][j]] for j in range(len(row[i]))] for i in range(len(row))]
-        context= {
-            'column_name': column_name,
-            'table': table
-        }
-            #  except:
-            #    template = loader.get_template('website/error_request.html')
-            #    context = None
+        try:
+            cursor.execute(requete)
+            column_name = [col[0] for col in cursor.description]
+            row = cursor.fetchall()
+            row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
+            color_table =compare_table(table_expected, row, column_expected, column_name)
+            table = [[[color_table[i][j], row[i][j]] for j in range(len(row[i]))] for i in range(len(row))]
+            context= {
+                'column_name': column_name,
+                'table': table
+            }
+        except:
+            template = loader.get_template('website/error_request.html')
+            context = None
 
     return HttpResponse(template.render(context, request))
     
@@ -61,7 +55,6 @@ def expected_request(request):
         question_no = "1"
     with connection.cursor() as cursor:
         try:
-            print(question_no,exercice_no)
             cursor.execute("select requete from website_question,website_contient_exercice_question,website_exercice where website_question.numero="+question_no+" AND website_question.id=idQuestion AND idExercice=website_exercice.id AND website_exercice.numero="+exercice_no)
             expected_request = str(cursor.fetchone()[0])
 
@@ -111,7 +104,7 @@ def load_tables():
                 for insertline in tableau[3]:
                     cursor.execute('insert into '+tableau[1]+insertline)
         except:
-            print("lolillo la table existe deja ou on est des merdes !")
+            print("Erreur: la table existe deja !")
 
 def load_label(request):
     exercice_no  = request.POST.get('exercise_no')

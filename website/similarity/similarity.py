@@ -77,7 +77,7 @@ def convert_table_tree(rows, column_name):
 
 def compare_line(table_expected, table_result, column_expected, column_result, color_column, trees, number_line):
     count_line = [0 for i in range(len(table_result))]
-    length_expected = len(column_expected)
+    length_expected = len(column_result)
     color_table_row = []
     for i in range(len(column_result)):
         elem = table_result[number_line][i]
@@ -88,28 +88,41 @@ def compare_line(table_expected, table_result, column_expected, column_result, c
                 line = tree[elem].get_line()
                 for e in line:
                     count_line[e] += 1
-            # column exist but not the element
-            else:
-                # here, RED means that we compute it later
-                return RED
-        # column doesn't exist
-        except KeyError:
-            # here, RED means that we compute it later
-            return RED
-    if(count_line[number_line] == length_expected):
+        except:
+            # We don't have the column, so we decrement length_expected
+            length_expected -= 1
+
+    if(count_line[number_line] == length_expected and length_expected > 0):
         # the line is at the right place
         for j in range(len(table_result[i])):
-            if(color_column[j] == GREEN):
-                color_table_row.insert(j, GREEN)
-            else:
-                color_table_row.insert(j, ORANGE)
+            try:
+                if(trees[column_result[j]] != None):
+                    # The column exist in the tree : we had its color
+                    if(color_column[j] == GREEN):
+                        color_table_row.insert(j, GREEN)
+                    else:
+                        color_table_row.insert(j, ORANGE)
+                else:
+                    # If the column doesn't exist: we use the red
+                    color_table_row.insert(j, RED)
+            except:
+                color_table_row.insert(j, RED)
         return color_table_row
     else:
         for number in count_line:
-            if(number == length_expected):
+            if(number == length_expected and length_expected > 0):
                 # the line isn't at the right place
                 for j in range(len(table_result[i])):
-                    color_table_row.insert(j, ORANGE)
+                    try:
+                        if(trees[column_result[j]] != None):
+                            # The column exist in the tree : we had its color
+                            color_table_row.insert(j, ORANGE)
+                        else:
+                            # If the column doesn't exist: we use the red
+                            color_table_row.insert(j, RED)
+                    except:
+                        # If the column doesn't exist: we use the red
+                        color_table_row.insert(j, RED)
                 return color_table_row
         # the line doesn't exist
         return RED

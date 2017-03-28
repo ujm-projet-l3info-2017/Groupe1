@@ -76,7 +76,10 @@ def convert_table_tree(rows, column_name):
     return table
 
 def compare_line(table_expected, table_result, column_expected, column_result, color_column, trees, number_line):
-    count_line = [0 for i in range(len(table_result))]
+    if(len(table_expected) > len(table_result)):
+        count_line = [0 for i in range(len(table_expected))]
+    else:
+        count_line = [0 for i in range(len(table_result))]
     length_expected = len(column_result)
     color_table_row = []
     for i in range(len(column_result)):
@@ -94,7 +97,7 @@ def compare_line(table_expected, table_result, column_expected, column_result, c
 
     if(count_line[number_line] == length_expected and length_expected > 0):
         # the line is at the right place
-        for j in range(len(table_result[i])):
+        for j in range(len(table_result[number_line])):
             try:
                 if(trees[column_result[j]] != None):
                     # The column exist in the tree : we had its color
@@ -112,7 +115,7 @@ def compare_line(table_expected, table_result, column_expected, column_result, c
         for number in count_line:
             if(number == length_expected and length_expected > 0):
                 # the line isn't at the right place
-                for j in range(len(table_result[i])):
+                for j in range(len(table_result[number_line])):
                     try:
                         if(trees[column_result[j]] != None):
                             # The column exist in the tree : we had its color

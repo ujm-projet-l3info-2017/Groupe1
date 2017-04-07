@@ -75,7 +75,7 @@ class SQLSyntaxParser(SyntaxParser):
             if(self.get_lookahead() == self.lexical._from):
                 self.shift()
                 tree_from = AbstractTree(self.lexical._from)
-                tree_name = self.name_list()
+                tree_name = self.column_list()
                 tree_next = self.query_next()
                 tree_from.concatenate_father_son(tree_name)
                 tree_from.concatenate_father_brother(tree_next)
@@ -386,6 +386,7 @@ class SQLSyntaxParser(SyntaxParser):
         else:
             self.parse_error()
 
-p = SQLSyntaxParser("SELECT * FROM t1 WHERE t1 = t2.coucou OR t2.coucou = t3 AND x = u")
+            
+p = SQLSyntaxParser("SELECT * FROM t1.b,t1.a,t1.b  WHERE t1 = t2.coucou")
 tree = p.parse()
 print(tree)

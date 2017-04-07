@@ -1,5 +1,6 @@
 from lexical import *
 from abstract import AbstractTree
+from transformation import *
 
 class SyntaxParser():
 
@@ -242,7 +243,12 @@ class SQLSyntaxParser(SyntaxParser):
     def condition(self):
         tree_test = self.test()
         tree_condition = self.condition_next()
-        tree_test.concatenate_father_brother(tree_condition)
+
+        # We have to test if we have an and or an or
+        if(tree_condition != None):
+            tree_test.concatenate_father_brother(tree_condition.get_son())
+            tree_condition.concatenate_father_son(tree_test)
+            return tree_condition
         return tree_test
 
     def condition_next(self):
@@ -380,6 +386,6 @@ class SQLSyntaxParser(SyntaxParser):
         else:
             self.parse_error()
 
-p = SQLSyntaxParser("SELECT * FROM t1 WHERE t1 = t2.coucou")
+p = SQLSyntaxParser("SELECT * FROM t1 WHERE t1 = t2.coucou OR t2.coucou = t3 AND x = u")
 tree = p.parse()
 print(tree)

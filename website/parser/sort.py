@@ -49,6 +49,5 @@ def sort(self, size):
 
 def sort_from(self):
     #executing bubble sort on the -FROM- branch of the query tree
-    if (self.left.right.left != None):
-        sort(self.left.right.left,brothers(self.left.right.left))
-
+    if (self.get_son() != None):
+        sort(self.get_son(),brothers(self.get_son()))

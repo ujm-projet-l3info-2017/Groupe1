@@ -1,6 +1,6 @@
 from lexical import *
 from abstract import AbstractTree
-from transformation import *
+from sort import *
 
 class SyntaxParser():
 
@@ -248,6 +248,7 @@ class SQLSyntaxParser(SyntaxParser):
         if(tree_condition != None):
             tree_test.concatenate_father_brother(tree_condition.get_son())
             tree_condition.concatenate_father_son(tree_test)
+            sort_from(tree_condition)
             return tree_condition
         return tree_test
 
@@ -289,6 +290,9 @@ class SQLSyntaxParser(SyntaxParser):
             tree_test_next = self.test_next()
             tree_column.concatenate_father_brother(tree_test_next)
             tree_op.concatenate_father_son(tree_column)
+            if(tree_op.element == SQLLexicalParser._equal or tree_op.element == SQLLexicalParser._not_equal):
+                # Sort the tree if we have an (non-)equality
+                sort_from(tree_op)
             return tree_op
 
     def test_other(self):
@@ -387,6 +391,6 @@ class SQLSyntaxParser(SyntaxParser):
             self.parse_error()
 
             
-p = SQLSyntaxParser("SELECT * FROM t1.b,t1.a,t1.b  WHERE t1 = t2.coucou")
+p = SQLSyntaxParser("SELECT * FROM t1.b,t1.a,t1.b  WHERE t1 = t2.coucou AND qui.qui = truc OR machin = bidule")
 tree = p.parse()
 print(tree)

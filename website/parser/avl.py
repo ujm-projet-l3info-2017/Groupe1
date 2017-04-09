@@ -1,7 +1,12 @@
+from tree import Tree 
 class AVL(Tree):
 
     # We have an AVL, so we have to add the balance of the tree
-    balance = 0
+    def __init__(self, element):
+        self.element = element
+        self.left = None
+        self.right = None
+        self.balance = 0
 
     def rotate_left(self, father, root):
         # We rotate the sub tree if the tree isn't well-balanced
@@ -60,7 +65,7 @@ class AVL(Tree):
                 return self.left._insert(root, element)
             else:
                 # We can insert !
-                self.left = Tree(element)
+                self.left = AVL(element)
                 # And we want to have a balanced tree
                 root = root._balance(root, root)
                 return root
@@ -72,7 +77,7 @@ class AVL(Tree):
                 return self.right._insert(root, element)
             else:
                 # We can insert !
-                self.right = Tree(element)
+                self.right = AVL(element)
                 # And we want to have a balanced tree
                 root = root._balance(root, root)
                 return root

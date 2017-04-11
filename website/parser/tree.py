@@ -1,13 +1,12 @@
 class Tree():
     # We have a binary tree
     # with a left tree and a right tree
-    left = None
-    right = None
     # We have an element on the tree
-    element = None
 
     def __init__(self, element):
         self.element = element
+        self.left = None
+        self.right = None
 
     def height(self):
         # If the tree is empty, the height will be 0

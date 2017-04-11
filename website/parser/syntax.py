@@ -1,14 +1,13 @@
 from lexical import *
 from abstract import AbstractTree
-
+from sort import *
+from bdd import *
 class SyntaxParser():
-
-    lexical = None
-    lookahead = None
     
     def __init__(self, sentence):
         self.lexical = LexicalParser(sentence)
-
+        self.lookahead = None
+        
     def get_lookahead(self):
         return self.lookahead
 
@@ -26,7 +25,9 @@ class SQLSyntaxParser(SyntaxParser):
 
     def __init__(self, sentence):
         self.lexical = SQLLexicalParser(sentence)
-    
+        self.select_column = []
+        self.table_tree = None
+        
     def parse(self):
         self.shift()
         return self.query_list()
@@ -75,6 +76,22 @@ class SQLSyntaxParser(SyntaxParser):
                 self.shift()
                 tree_from = AbstractTree(self.lexical._from)
                 tree_name = self.name_list()
+
+                # We have to create the tree of tables
+                tables = []
+                tmp = tree_name
+                while(tmp != None):
+                    # It's just the column: we have to transform the tree
+                    tables.append(tmp.element)
+                    tmp = tmp.get_brother()
+                
+                # We can now construct the table tree
+                self.table_tree = create_table_tree(tables)
+
+                # We can transform the column of the SELECT
+                for col in self.select_column:
+                    modify_tree_column(self.table_tree, col)
+                
                 tree_next = self.query_next()
                 tree_from.concatenate_father_son(tree_name)
                 tree_from.concatenate_father_brother(tree_next)
@@ -98,6 +115,14 @@ class SQLSyntaxParser(SyntaxParser):
             return tree_star
         else:
             tree = self.column_select_list()
+
+            # Insert the subtree to transform the column when we have tables
+            tmp = tree
+            while(tmp != None):
+                if(tmp.get_son() == None):
+                    # It's just the column: we have to transform the tree
+                    self.select_column.append(tmp)
+                tmp = tmp.get_brother()
             return tree
 
     def column(self):
@@ -199,6 +224,15 @@ class SQLSyntaxParser(SyntaxParser):
         if(self.get_lookahead() == self.lexical._group_by):
             self.shift()
             tree_column = self.column_list()
+
+            # We have to transform the column list
+            tmp = tree_column
+            while(tmp != None):
+                if(tmp.get_son() == None):
+                    # It's just the column: we have to transform the tree
+                    modify_tree_column(self.table_tree, tmp)
+                tmp = tmp.get_brother()
+                
             tree_having = self.having()
             tree_group_by = AbstractTree(self.lexical._group_by)
             tree_group_by.concatenate_father_son(tree_column)
@@ -224,6 +258,15 @@ class SQLSyntaxParser(SyntaxParser):
         if(self.get_lookahead() == self.lexical._order_by):
             self.shift()
             tree_column = self.column_list()
+
+            # We have to transform the column list
+            tmp = tree_column
+            while(tmp != None):
+                if(tmp.get_son() == None):
+                    # It's just the column: we have to transform the tree
+                    modify_tree_column(self.table_tree, tmp)
+                tmp = tmp.get_brother()
+                
             tree_order_op = self.order_op()
             tree_order_by = AbstractTree(self.lexical._order_by)
             tree_order_by.concatenate_father_son(tree_column)
@@ -242,7 +285,13 @@ class SQLSyntaxParser(SyntaxParser):
     def condition(self):
         tree_test = self.test()
         tree_condition = self.condition_next()
-        tree_test.concatenate_father_brother(tree_condition)
+
+        # We have to test if we have an and or an or
+        if(tree_condition != None):
+            tree_test.concatenate_father_brother(tree_condition.get_son())
+            tree_condition.concatenate_father_son(tree_test)
+            sort_from(tree_condition)
+            return tree_condition
         return tree_test
 
     def condition_next(self):
@@ -283,6 +332,9 @@ class SQLSyntaxParser(SyntaxParser):
             tree_test_next = self.test_next()
             tree_column.concatenate_father_brother(tree_test_next)
             tree_op.concatenate_father_son(tree_column)
+            if(tree_op.element == SQLLexicalParser._equal or tree_op.element == SQLLexicalParser._not_equal):
+                # Sort the tree if we have an (non-)equality
+                sort_from(tree_op)
             return tree_op
 
     def test_other(self):
@@ -380,6 +432,7 @@ class SQLSyntaxParser(SyntaxParser):
         else:
             self.parse_error()
 
-p = SQLSyntaxParser("SELECT * FROM t1 WHERE t1 = t2.coucou")
+            
+p = SQLSyntaxParser("SELECT x,y,z FROM t1  WHERE t1 = t2.coucou AND qui.qui = truc OR machin = bidule GROUP BY tade")
 tree = p.parse()
 print(tree)

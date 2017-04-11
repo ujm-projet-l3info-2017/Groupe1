@@ -23,7 +23,7 @@ class Graph:
         self.matrix = dict()
 
     def insert_vertex(self, vertex):
-        if vertex in self.matrix:
+        if not(vertex in self.matrix):
             print("coucou")
             self.matrix[vertex] = {key:-1 for key in self.matrix.keys()}
             for key in self.matrix.keys():

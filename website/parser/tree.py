@@ -8,7 +8,7 @@ class Tree():
         self.left = None
         self.right = None
         self.depth = None
-        self.name = None
+        self.bijection = None
 
     def height(self):
         # If the tree is empty, the height will be 0
@@ -36,6 +36,9 @@ class Tree():
     def depth(self):
         return self.depth
 
+    def bijection(self):
+        return self.bijection()
+    
     def compute_depth(self):
         self.compute_depth_bis(0)
 

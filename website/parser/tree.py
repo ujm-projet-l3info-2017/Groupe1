@@ -7,6 +7,7 @@ class Tree():
         self.element = element
         self.left = None
         self.right = None
+        self.depth = None
 
     def height(self):
         # If the tree is empty, the height will be 0
@@ -30,7 +31,20 @@ class Tree():
             return height_left
         else:
             return height_right
-                
+
+    def depth(self):
+        return self.depth
+
+    def compute_depth(self):
+        self.compute_depth_bis(0)
+
+    def compute_depth_bis(self, n):
+        self.depth = n
+        if(self.right != None):
+            self.right.compute_depth_bis(n+1)
+        if(self.left != None):
+            self.left.compute_depth_bis(n+1)
+
     def __str__(self):
         s = str(self.element)+":"
         if(self.left != None):

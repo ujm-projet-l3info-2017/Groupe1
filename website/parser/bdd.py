@@ -1,6 +1,6 @@
 from abstract import AbstractTree
 from lexical import SQLLexicalParser
-from django.db import connection
+#from django.db import connection
 from avl import AVL
 
 class TableTreeElement():

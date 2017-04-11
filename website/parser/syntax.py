@@ -30,7 +30,9 @@ class SQLSyntaxParser(SyntaxParser):
         
     def parse(self):
         self.shift()
-        return self.query_list()
+        tree =  self.query_list()
+        tree.compute_depth()
+        return tree
 
     def query_list(self):
         if(self.get_lookahead() == self.lexical._opening):

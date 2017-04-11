@@ -8,6 +8,7 @@ class Tree():
         self.left = None
         self.right = None
         self.depth = None
+        self.name = None
 
     def height(self):
         # If the tree is empty, the height will be 0
@@ -45,6 +46,17 @@ class Tree():
         if(self.left != None):
             self.left.compute_depth_bis(n+1)
 
+    def compute_bijection(self):
+        self.compute_bijection_bis(0)
+
+    def compute_bijection_bis(self, n):
+        self.name = n
+        if(self.left != None):
+            n = self.left.compute_bijection_bis(n+1)
+        if(self.right != None):
+            n = self.right.compute_bijection_bis(n+1)
+        return n
+        
     def __str__(self):
         s = str(self.element)+":"
         if(self.left != None):

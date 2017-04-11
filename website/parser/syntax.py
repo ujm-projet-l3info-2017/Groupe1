@@ -32,6 +32,7 @@ class SQLSyntaxParser(SyntaxParser):
         self.shift()
         tree =  self.query_list()
         tree.compute_depth()
+        tree.compute_bijection()
         return tree
 
     def query_list(self):

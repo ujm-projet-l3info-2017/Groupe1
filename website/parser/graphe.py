@@ -19,15 +19,26 @@ class Graph:
     matrix = None
     vertices = []
 
-    def __init__(self, nb_line_column):
-        self.matrix = [[-1]*nb_line_column for i in range(nb_line_column)]
+    def __init__(self):
+        self.matrix = dict()
 
+    def insert_vertex(self, vertex):
+        if vertex in self.matrix:
+            print("coucou")
+            self.matrix[vertex] = {key:-1 for key in self.matrix.keys()}
+            for key in self.matrix.keys():
+                self.matrix[key][vertex] = -1
+        else:
+            print("connard")    
+        
     def insert_edge(self, edge):
+        print(self.matrix)
+        self.insert_vertex(edge.start)
+        self.insert_vertex(edge.end)
         self.matrix[edge.start][edge.end] = edge
-        self.vertices.append(edge)
 
     def delete_edge(self, edge):
-        self.matrix[edge.start][edge.end] = None
+        self.matrix[edge.start][edge.end] = -1
 
     def successor(self, vertice):
         succ = []
@@ -36,8 +47,8 @@ class Graph:
                 succ.append(self.matrix[vertice][i])
         return succ
 
-    def allVertices(self):
-        return self.vertices
+    def all_vertices(self):
+        return self.matrix.keys()
     
     def __str__(self):
         s = ""
@@ -105,7 +116,7 @@ j = Edge(9,4,6)
 k = Edge(1,5,6)
 l = Edge(7,3,7)
 m = Edge(2,6,7)
-gr = Graph(8)
+gr = Graph()
 gr.insert_edge(a)
 gr.insert_edge(b)
 gr.insert_edge(c)
@@ -122,7 +133,7 @@ gr.insert_edge(m)
 #print(str(len(gr)))
 print(gr)
 #print(gr.successor(0))
-l = list(gr.allVertices())
+l = list(gr.all_vertices())
 
 
 chemin = dijkstra(gr, 0,7)

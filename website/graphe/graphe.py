@@ -1,6 +1,6 @@
 import math
 
-class Arc:
+class Edge:
     start = None
     end = None
     weight = None
@@ -22,12 +22,12 @@ class Graph:
     def __init__(self, nb_line_column):
         self.matrix = [[-1]*nb_line_column for i in range(nb_line_column)]
 
-    def insert_arc(self, arc):
-        self.matrix[arc.start][arc.end] = arc
-        self.vertices.append(arc)
+    def insert_edge(self, edge):
+        self.matrix[edge.start][edge.end] = edge
+        self.vertices.append(edge)
 
-    def delete_arc(self, arc):
-        self.matrix[arc.start][arc.end] = None
+    def delete_edge(self, edge):
+        self.matrix[edge.start][edge.end] = None
 
     def successor(self, vertice):
         succ = []
@@ -44,7 +44,7 @@ class Graph:
         for i in range (len(self.matrix)):
             for j in range(len(self.matrix[i])):
                 if(self.matrix[i][j] == -1):
-                    # if no arc 
+                    # if no edge 
                     s+= ".   "
                 else:
                     s+= str(self.matrix[i][j].weight)+"  "
@@ -92,33 +92,33 @@ def dijkstra(graph, start, end):
                 prev[succ.end] = vertex    
             
     
-a = Arc(2,0,1)
-b = Arc(6,0,2)
-c = Arc(8,0,3)
-d = Arc(1,1,4)
-e = Arc(2,4,2)
-f = Arc(4,2,5)
-g = Arc(2,2,3)
-h = Arc(8,4,5)
-i = Arc(3,3,5)
-j = Arc(9,4,6)
-k = Arc(1,5,6)
-l = Arc(7,3,7)
-m = Arc(2,6,7)
+a = Edge(2,0,1)
+b = Edge(6,0,2)
+c = Edge(8,0,3)
+d = Edge(1,1,4)
+e = Edge(2,4,2)
+f = Edge(4,2,5)
+g = Edge(2,2,3)
+h = Edge(8,4,5)
+i = Edge(3,3,5)
+j = Edge(9,4,6)
+k = Edge(1,5,6)
+l = Edge(7,3,7)
+m = Edge(2,6,7)
 gr = Graph(8)
-gr.insert_arc(a)
-gr.insert_arc(b)
-gr.insert_arc(c)
-gr.insert_arc(d)
-gr.insert_arc(e)
-gr.insert_arc(f)
-gr.insert_arc(g)
-gr.insert_arc(h)
-gr.insert_arc(i)
-gr.insert_arc(j)
-gr.insert_arc(k)
-gr.insert_arc(l)
-gr.insert_arc(m)
+gr.insert_edge(a)
+gr.insert_edge(b)
+gr.insert_edge(c)
+gr.insert_edge(d)
+gr.insert_edge(e)
+gr.insert_edge(f)
+gr.insert_edge(g)
+gr.insert_edge(h)
+gr.insert_edge(i)
+gr.insert_edge(j)
+gr.insert_edge(k)
+gr.insert_edge(l)
+gr.insert_edge(m)
 #print(str(len(gr)))
 print(gr)
 #print(gr.successor(0))

@@ -24,12 +24,9 @@ class Graph:
 
     def insert_vertex(self, vertex):
         if not(vertex in self.matrix):
-            print("coucou")
             self.matrix[vertex] = {key:-1 for key in self.matrix.keys()}
             for key in self.matrix.keys():
                 self.matrix[key][vertex] = -1
-        else:
-            print("connard")    
         
     def insert_edge(self, edge):
         print(self.matrix)

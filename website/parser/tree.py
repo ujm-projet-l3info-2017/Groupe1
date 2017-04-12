@@ -9,7 +9,7 @@ class Tree():
         self.right = None
         self.depth = None
         self.bijection = None
-
+        
     def height(self):
         # If the tree is empty, the height will be 0
         if(self == None):
@@ -33,11 +33,26 @@ class Tree():
         else:
             return height_right
 
+    def element(self):
+        return self.element
+        
     def depth(self):
         return self.depth
 
     def bijection(self):
         return self.bijection()
+
+    def create_node_list(self):
+        node_list = {}
+        self.create_node_list_bis(node_list)
+        return node_list
+
+    def create_node_list_bis(self, node_list):
+        node_list[self.bijection()] = self
+        if(self.right != None):
+            create_node_list_bis(self.right, node_list)
+        if(self.left != None):
+            create_node_list_bis(self.left, node_list)
     
     def compute_depth(self):
         self.compute_depth_bis(0)
@@ -50,7 +65,7 @@ class Tree():
             self.left.compute_depth_bis(n+1)
 
     def compute_bijection(self):
-        self.compute_bijection_bis(0)
+        self.compute_bijection_bis(1)
 
     def compute_bijection_bis(self, n):
         self.name = n

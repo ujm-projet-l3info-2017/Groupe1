@@ -33,6 +33,9 @@ class Tree():
         else:
             return height_right
 
+    def element(self):
+        return self.element
+        
     def depth(self):
         return self.depth
 

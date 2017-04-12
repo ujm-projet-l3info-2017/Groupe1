@@ -20,7 +20,8 @@ class Graph:
     vertices = []
 
     def __init__(self, nb_line_column):
-        self.matrix = [[-1]*nb_line_column for i in range(nb_line_column)]
+        #self.matrix = [[-1]*nb_line_column for i in range(nb_line_column)]
+        self.matrix = {}
 
     def insert_edge(self, edge):
         self.matrix[edge.start][edge.end] = edge

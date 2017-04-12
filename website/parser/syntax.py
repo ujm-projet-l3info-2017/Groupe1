@@ -2,6 +2,7 @@ from lexical import *
 from abstract import AbstractTree
 from sort import *
 from bdd import *
+from similarity_graph import SimilarityGraph
 class SyntaxParser():
     
     def __init__(self, sentence):
@@ -436,6 +437,11 @@ class SQLSyntaxParser(SyntaxParser):
             self.parse_error()
 
             
-p = SQLSyntaxParser("SELECT x,y,z FROM t1  WHERE t1 = t2.coucou AND qui.qui = truc OR machin = bidule GROUP BY tade")
-tree = p.parse()
-print(tree)
+p = SQLSyntaxParser("SELECT x,y,z FROM t1")
+t1 = p.parse()
+p = SQLSyntaxParser("SELECT x FROM t1")
+t2 = p.parse()
+sim = SimilarityGraph(t1, t2)
+sim.create_graph()
+mapping = sim.mapping()
+print(mapping)

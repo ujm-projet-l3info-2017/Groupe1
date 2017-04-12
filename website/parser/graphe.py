@@ -1,6 +1,4 @@
-import math
-
-class Edge:
+class Edge():
     start = None
     end = None
     weight = None
@@ -15,9 +13,8 @@ class Edge:
         return s
 
 
-class Graph:
+class Graph():
     matrix = None
-    vertices = []
 
     def __init__(self):
         self.matrix = dict()
@@ -29,7 +26,6 @@ class Graph:
                 self.matrix[key][vertex] = -1
         
     def insert_edge(self, edge):
-        print(self.matrix)
         self.insert_vertex(edge.start)
         self.insert_vertex(edge.end)
         self.matrix[edge.start][edge.end] = edge
@@ -39,18 +35,49 @@ class Graph:
 
     def successor(self, vertice):
         succ = []
-        for i in range(len(self.matrix[vertice])):
+        for i in self.matrix[vertice].keys():
             if(self.matrix[vertice][i] != -1):
                 succ.append(self.matrix[vertice][i])
         return succ
 
     def all_vertices(self):
         return self.matrix.keys()
+
+    def __len__():
+        return len(self.matrix.keys())
+
+    def dijkstra(self, start, end):
+        # vertices we need to test
+        v = [key for key in self.matrix.keys()]
+        dist = {key: float("inf") for key in self.matrix.keys()}
+        prev = {key: None for key in self.matrix.keys()}
+        dist[start] = 0
+
+        while(v):
+            vertex = argmin(dist, v)
+            v.remove(vertex)
+            
+            for succ in self.successor(vertex):
+                old = dist[vertex] + succ.weight
+                if old < dist[succ.end]:
+                    dist[succ.end] = old
+                    prev[succ.end] = vertex
+
+        way = list()
+        vertex = end
+        while(prev[vertex] != None):
+            way.append(vertex)
+            vertex = prev[vertex]
+        way.append(vertex)
+        way.reverse()
+        return way
+            
     
     def __str__(self):
         s = ""
-        for i in range (len(self.matrix)):
-            for j in range(len(self.matrix[i])):
+        print(len(self.matrix))
+        for i in self.matrix.keys():
+            for j in self.matrix[i].keys():
                 if(self.matrix[i][j] == -1):
                     # if no edge 
                     s+= ".   "
@@ -64,55 +91,30 @@ class Graph:
         return len(self.matrix)
 
 
-#return the range of the min
-def min_list(l):
-    min = 0
-    for i in range(len(l)):
-        if(l[i] < min):
-            min = i
-    return min
+# argmin for a dict which contains integers
+# Note: the element in l must be in s
+def argmin(l, s):
+    m = float("inf")
+    arg = None
+    for key in l.keys():
+        if(l[key] < m and key in s):
+            m = l[key]
+            arg = key
+    return arg
 
-def dijkstra(graph, start, end):
-    # vertices we need to test
-    v = [i for i in range(len(graph))]
-    dist = [math.inf for i in range(len(graph))]
-    prev = [None for i in range(len(graph))]
-
-    dist[start] = 0
-
-    while(v):
-        vertex = v[min_list(dist)]
-        v.remove(vertex)
-        if(vertex == end):
-            way = list()
-            while(prev[vertex] != None):
-                way.append(vertex)
-                vertex = prev[vertex]
-            way.append(vertex)
-            way.reverse()
-            return way
-                
-                
-        for succ in graph.successor(vertex):
-            old = dist[vertex] + succ.weight
-            if old < dist[succ.end]:
-                dist[succ.end] = old
-                prev[succ.end] = vertex    
-            
-    
-a = Edge(2,0,1)
-b = Edge(6,0,2)
-c = Edge(8,0,3)
-d = Edge(1,1,4)
-e = Edge(2,4,2)
-f = Edge(4,2,5)
-g = Edge(2,2,3)
-h = Edge(8,4,5)
-i = Edge(3,3,5)
-j = Edge(9,4,6)
-k = Edge(1,5,6)
-l = Edge(7,3,7)
-m = Edge(2,6,7)
+a = Edge(2,"E", "B")
+b = Edge(6,"E","A")
+c = Edge(8,"E","C")
+d = Edge(1,"B","D")
+e = Edge(2,"D","A")
+f = Edge(4,"A","F")
+g = Edge(2,"A","C")
+h = Edge(8,"D","F")
+i = Edge(3,"F","C")
+j = Edge(9,"D","G")
+k = Edge(1,"F","G")
+l = Edge(7,"C","H")
+m = Edge(2,"G","H")
 gr = Graph()
 gr.insert_edge(a)
 gr.insert_edge(b)
@@ -133,8 +135,8 @@ print(gr)
 l = list(gr.all_vertices())
 
 
-chemin = dijkstra(gr, 0,7)
-#print(len(chemin))
-for v in chemin:
-    print(v)
+chemin = gr.dijkstra("E","H")
+print(chemin)
+#for v in chemin:
+#    print(v)
  

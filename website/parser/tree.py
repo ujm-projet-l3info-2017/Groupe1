@@ -33,26 +33,18 @@ class Tree():
         else:
             return height_right
 
-    def element(self):
-        return self.element
-        
-    def depth(self):
-        return self.depth
-
-    def bijection(self):
-        return self.bijection()
-
     def create_node_list(self):
-        node_list = {}
+        node_list = list()
+        node_list.append(None)
         self.create_node_list_bis(node_list)
         return node_list
 
     def create_node_list_bis(self, node_list):
-        node_list[self.bijection()] = self
+        node_list.append(self)
         if(self.right != None):
-            create_node_list_bis(self.right, node_list)
+            self.right.create_node_list_bis(node_list)
         if(self.left != None):
-            create_node_list_bis(self.left, node_list)
+            self.left.create_node_list_bis(node_list)
     
     def compute_depth(self):
         self.compute_depth_bis(0)
@@ -68,7 +60,7 @@ class Tree():
         self.compute_bijection_bis(1)
 
     def compute_bijection_bis(self, n):
-        self.name = n
+        self.bijection = n
         if(self.left != None):
             n = self.left.compute_bijection_bis(n+1)
         if(self.right != None):

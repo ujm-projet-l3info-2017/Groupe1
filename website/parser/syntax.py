@@ -437,11 +437,21 @@ class SQLSyntaxParser(SyntaxParser):
             self.parse_error()
 
             
-p = SQLSyntaxParser("SELECT x,y,z FROM t1")
+p = SQLSyntaxParser("SELECT a,b,c FROM t1")
 t1 = p.parse()
-p = SQLSyntaxParser("SELECT x FROM t1")
+p = SQLSyntaxParser("SELECT c,a FROM t1")
 t2 = p.parse()
 sim = SimilarityGraph(t1, t2)
 sim.create_graph()
-mapping = sim.mapping()
+mapping, l = sim.mapping()
 print(mapping)
+print (l)
+
+for i in range (0 , len(l)):
+    edge = l[i].start.bijection
+    end =  l[i].end.bijection
+
+    print ( str(edge) + " - " + str(end) )
+   
+    #    print ( i)
+   

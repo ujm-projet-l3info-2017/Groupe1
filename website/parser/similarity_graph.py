@@ -40,6 +40,7 @@ class SimilarityGraph(Graph):
         # L is a list of the couples of the similarity graph
         L = self.dijkstra((None, None), (T1_list[len(T1_list)-1], T2_list[len(T2_list)-1]))
         gr = Graph()
+        la = list()
         for node in T1_list:
             gr.insert_vertex(node)
         for node in T2_list:
@@ -59,5 +60,9 @@ class SimilarityGraph(Graph):
             if(currentCouple[0] != None): c_b_c1 = currentCouple[1].bijection
             
             if (( c_b_t0 +1 == c_b_c0 ) and ( c_b_t1 +1 == c_b_c1 )):
-                gr.insert_edge(Edge(0,currentCouple[0],currentCouple[1]))
-        return gr
+                e = Edge(0,currentCouple[0],currentCouple[1])
+                gr.insert_edge(e)
+                la.append(e) 
+        return gr,la
+
+    

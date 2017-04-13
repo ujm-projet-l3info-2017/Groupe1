@@ -48,8 +48,6 @@ class SimilarityGraph(Graph):
         for i in range(1, len(T2_list)):
             s += str(T2_list[i].element)+" "
         print(s)
-        print("T1: "+str(T1_list[6].element))
-        print("T2: "+str(T2_list[4].element))
         gr = Graph()
         la = list()
         for node in T1_list:

@@ -16,8 +16,8 @@ class SimilarityGraph(Graph):
     def create_graph(self):
         T1_list = self.T1.create_node_list()
         T2_list = self.T2.create_node_list()
-        T1_list[0] = None
-        T2_list[0] = None
+        print(T1_list)
+        print(T2_list)
 
         for i in range(1, len(T1_list)):
             for j in range(1, len(T2_list)):
@@ -27,10 +27,10 @@ class SimilarityGraph(Graph):
                     self.insert_edge(edge)
                 error = 1
                 if(T1_list[i].depth >= T2_list[j].depth):
-                    edge = Edge(1, (T1_list[i-1], T2_list[j-1]), (T1_list[i], T2_list[j-1]))
+                    edge = Edge(1, (T1_list[i-1], T2_list[j]), (T1_list[i], T2_list[j]))
                     self.insert_edge(edge)
                 if(T1_list[i].depth <= T2_list[j].depth):
-                    edge = Edge(1, (T1_list[i-1], T2_list[j-1]), (T1_list[i-1], T2_list[j]))
+                    edge = Edge(1, (T1_list[i], T2_list[j-1]), (T1_list[i], T2_list[j]))
                     self.insert_edge(edge)
 
     def mapping(self):

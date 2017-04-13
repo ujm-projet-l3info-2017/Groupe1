@@ -52,11 +52,12 @@ class Graph():
         dist = {key: float("inf") for key in self.matrix.keys()}
         prev = {key: None for key in self.matrix.keys()}
         dist[start] = 0
-
+        
         while(v):
             vertex = argmin(dist, v)
+            print(v)
             v.remove(vertex)
-            
+            print(dist)
             for succ in self.successor(vertex):
                 old = dist[vertex] + succ.weight
                 if old < dist[succ.end]:
@@ -101,7 +102,7 @@ def argmin(l, s):
     m = float("inf")
     arg = None
     for key in l.keys():
-        if(l[key] < m and key in s):
+        if(l[key] <= m and key in s):
             m = l[key]
             arg = key
     return arg

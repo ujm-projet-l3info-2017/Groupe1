@@ -437,7 +437,7 @@ class SQLSyntaxParser(SyntaxParser):
             self.parse_error()
 
             
-p = SQLSyntaxParser("SELECT a,b FROM t1")
+p = SQLSyntaxParser("SELECT a,b FROM t1, t2, t7")
 t1 = p.parse()
 p = SQLSyntaxParser("SELECT b,a FROM t1")
 t2 = p.parse()

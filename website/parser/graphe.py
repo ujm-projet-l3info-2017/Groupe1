@@ -55,9 +55,8 @@ class Graph():
         
         while(v):
             vertex = argmin(dist, v)
-            print(v)
             v.remove(vertex)
-            print(dist)
+
             for succ in self.successor(vertex):
                 old = dist[vertex] + succ.weight
                 if old < dist[succ.end]:

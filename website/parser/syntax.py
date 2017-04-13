@@ -66,51 +66,48 @@ class SQLSyntaxParser(SyntaxParser):
             return tree
 
     def query(self):
-        if(self.get_lookahead() == self.lexical._select):
+        tree = self.select_mode()
+        tree_select = self.select()
+        tree.concatenate_father_son(tree_select)
+        if(self.get_lookahead() == self.lexical._from):
             self.shift()
-            tree = AbstractTree(self.lexical._select)
-            tree_mode = self.select_mode()
-            tree_select = self.select()
-            if(tree_mode == None):
-                tree.concatenate_father_son(tree_select)
-            else:
-                tree.concatenate_father_son(tree_mode)
-                tree_mode.concatenate_father_son(tree_select)
-            if(self.get_lookahead() == self.lexical._from):
-                self.shift()
-                tree_from = AbstractTree(self.lexical._from)
-                tree_name = self.name_list()
-
-                # We have to create the tree of tables
-                tables = []
-                tmp = tree_name
-                while(tmp != None):
-                    # It's just the column: we have to transform the tree
-                    tables.append(tmp.element)
-                    tmp = tmp.get_brother()
+            tree_from = AbstractTree(self.lexical._from)
+            tree_name = self.name_list()
+            
+            # We have to create the tree of tables
+            tables = []
+            tmp = tree_name
+            while(tmp != None):
+                # It's just the column: we have to transform the tree
+                tables.append(tmp.element)
+                tmp = tmp.get_brother()
                 
-                # We can now construct the table tree
-                self.table_tree = create_table_tree(tables)
+            # We can now construct the table tree
+            self.table_tree = create_table_tree(tables)
 
-                # We can transform the column of the SELECT
-                for col in self.select_column:
-                    modify_tree_column(self.table_tree, col)
+            # We can transform the column of the SELECT
+            for col in self.select_column:
+                modify_tree_column(self.table_tree, col)
                 
-                tree_next = self.query_next()
-                tree_from.concatenate_father_son(tree_name)
-                tree_from.concatenate_father_brother(tree_next)
-                tree.concatenate_father_brother(tree_from)
-                return tree
-            else:
-                self.parse_error()
+            tree_next = self.query_next()
+            tree_from.concatenate_father_son(tree_name)
+            tree_from.concatenate_father_brother(tree_next)
+            tree.concatenate_father_brother(tree_from)
+            return tree
         else:
             self.parse_error()
 
     def select_mode(self):
-        if(self.get_lookahead() == self.lexical._distinct):
+        if(self.get_lookahead() == self.lexical._select_distinct):
             self.shift()
-            tree_disctinct = AbstractTree(self.lexical._stardistinct)
-            return tree_disctinct
+            tree_mode = AbstractTree(self.lexical._select_distinct)
+            return tree_mode
+        elif(self.get_lookahead() == self.lexical._select):
+            self.shift()
+            tree_mode = AbstractTree(self.lexical._select)
+            return tree_mode
+        else:
+            self.parse_error()
 
     def select(self):
         if(self.get_lookahead() == self.lexical._star):
@@ -436,24 +433,93 @@ class SQLSyntaxParser(SyntaxParser):
         else:
             self.parse_error()
 
+def compare_added(l_t1, l_t2):
+    l_t1.sort()
+    l_t2.sort()
+    s = ""
+    for t in l_t1:
+        s += str(t.element)+" "
+    print(s)
+    s = ""
+    for t in l_t2:
+        s += str(t.element)+" "
+    print(s)
+    l_order = []
+    while(l_t1 and l_t2):
+        if(l_t1[0] < l_t2[0]):
+            e = l_t1.pop(0)
+            print(str(e.element)+" must be added")
+        elif(l_t1[0] > l_t2[0]):
+            e = l_t2.pop(0)
+            print(str(e.element)+" must be removed")
+        else:
+            e = l_t1.pop(0)
+            l_order.append(e)
+            l_t2.pop(0)
+
+    while(l_t1):
+        e = l_t1.pop(0)
+        print(str(e.element)+" must be added")
+    while(l_t2):
+        e = l_t2.pop(0)
+        print(str(e.element)+" must be removed")
+
+    for e in l_order:
+        print(str(e.element)+" must be in the right order")
             
-p = SQLSyntaxParser("SELECT a,b FROM t1, t2, t7")
+p = SQLSyntaxParser("SELECT distinct a,b,c FROM t1, t2, t7")
 t1 = p.parse()
 p = SQLSyntaxParser("SELECT b,a FROM t1")
 t2 = p.parse()
 sim = SimilarityGraph(t1, t2)
 sim.create_graph()
 mapping, l = sim.mapping()
+
+
+
 print(mapping)
 print (l)
 
+T1_list = t1.create_node_list()
+T2_list = t2.create_node_list()
+l_add_t1 = []
+l_add_t2 = []
 for i in range (0 , len(l)):
+    edge = l[i]
+    edge_i = edge.start.bijection
+    edge_j = edge.end.bijection
 
-    edge = l[i].start.bijection
-    end =  l[i].end.bijection
+    if(i != 0):
+        edge_prec = l[i-1]
+        offset_i = edge.start.bijection - edge_prec.start.bijection
+        offset_j = edge.end.bijection - edge_prec.end.bijection
+    else:
+        offset_i = 1
+        offset_j = 1
 
-    offset1= l[i].start.bijection - l[i-1].start.bijection - 1
-    offset2= l[i].end.bijection   - l[i-1].end.bijection   - 1
-    print(str(offset1)+"-"+str(offset2))
-    #    print ( i)
-   
+    if(offset_i == 1 and offset_j == 1 and edge.weight == 0):
+        # if there are a mapping and no errors
+        print("Sim: "+str(edge.start.element))
+    elif(offset_i == 1 and offset_j == 1 and edge.weight == 1):
+        # if there are a mapping and but errors
+        print("No sim: "+str(edge.start.element)+" - "+str(edge.end.element))
+        l_add_t1.append(edge.start)
+        l_add_t2.append(edge.end)
+    else:
+        if(offset_i > offset_j):
+            # The user must add elements (there are less elements in his query)
+            for j in range(edge.start.bijection-offset_i+1, edge.start.bijection):
+                l_add_t1.append(T1_list[j])
+
+        elif(offset_i < offset_j):
+            for j in range(edge.end.bijection-offset_j+1, edge.end.bijection):
+                l_add_t2.append(T2_list[j])
+        compare_added(l_add_t1, l_add_t2)
+
+
+for j in range(edge.start.bijection-offset_i+1, len(T1_list)):
+    l_add_t1.append(T1_list[j])
+
+for j in range(edge.end.bijection-offset_j+1, len(T2_list)):
+    l_add_t2.append(T2_list[j])
+compare_added(l_add_t1, l_add_t2)

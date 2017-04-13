@@ -45,9 +45,9 @@ class SQLLexicalParser(LexicalParser):
     _less = 12
     _greater = 13
 
-    _select = 14
-    _from = 15
-    _distinct = 16
+    _select_distinct = 14
+    _select = 15
+    _from = 16
     _as = 17
     _where = 18
     _group_by = 19
@@ -79,9 +79,9 @@ class SQLLexicalParser(LexicalParser):
         if self.match("<") : return self._less
         if self.match(">") : return self._greater
 
+        if self.match("(SELECT|select)[ ]+(DISTINCT|distinct)") : return self._select_distinct
         if self.match("SELECT|select") : return self._select
         if self.match("FROM|from") : return self._from
-        if self.match("DISTINCT|distinct") : return self._distinct
         if self.match("AS|as") : return self._as
         if self.match("WHERE|where") : return self._where
         if self.match("(GROUP|group)[ ]+(BY|by)") : return self._group_by

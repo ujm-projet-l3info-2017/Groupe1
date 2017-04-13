@@ -66,7 +66,21 @@ class Tree():
         if(self.right != None):
             n = self.right.compute_bijection_bis(n+1)
         return n
-        
+
+
+    def __eq__(self, other):
+        if(other == None):
+            return False
+        return str(self.element) == str(other.element)
+
+    def __lt__(self, other):
+        if(other == None):
+            return False
+        return str(self.element) < str(other.element)
+
+    def __hash__(self):
+        return hash((self.element, self.left, self.right, self.depth, self.bijection))
+    
     def __str__(self):
         s = str(self.element)+":"
         if(self.left != None):

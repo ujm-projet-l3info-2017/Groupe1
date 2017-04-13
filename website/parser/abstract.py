@@ -12,3 +12,4 @@ class AbstractTree(Tree):
 
     def get_brother(self):
         return self.right
+        

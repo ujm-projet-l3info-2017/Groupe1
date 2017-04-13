@@ -64,15 +64,17 @@ class Graph():
                     prev[succ.end] = vertex
 
         way = list()
+        way_weight = list()
         vertex = end
         while(prev[vertex] != None):
-            weight = self.matrix[vertex].weight
-            way.append((vertex, weight))
+            way.append(vertex)
             vertex = prev[vertex]
-        weight = self.matrix[vertex].weight
-        way.append((vertex, weight))
+        way.append(vertex)
         way.reverse()
-        return way
+        for i in range(len(way)-1):
+            weight = self.matrix[way[i]][way[i+1]].weight
+            way_weight.append(weight)
+        return way, way_weight
             
     
     def __str__(self):

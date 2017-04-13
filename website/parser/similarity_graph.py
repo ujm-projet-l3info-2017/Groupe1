@@ -38,7 +38,18 @@ class SimilarityGraph(Graph):
         T2_list = self.T2.create_node_list()
         
         # L is a list of the couples of the similarity graph
-        L = self.dijkstra((None, None), (T1_list[len(T1_list)-1], T2_list[len(T2_list)-1]))
+        L, Weight = self.dijkstra((None, None), (T1_list[len(T1_list)-1], T2_list[len(T2_list)-1]))
+
+        s = ""
+        for i in range(1, len(T1_list)):
+            s += str(T1_list[i].element)+" "
+        print(s)
+        s= ""
+        for i in range(1, len(T2_list)):
+            s += str(T2_list[i].element)+" "
+        print(s)
+        print("T1: "+str(T1_list[6].element))
+        print("T2: "+str(T2_list[4].element))
         gr = Graph()
         for node in T1_list:
             gr.insert_vertex(node)
@@ -46,8 +57,8 @@ class SimilarityGraph(Graph):
             gr.insert_vertex(node)
         
         for i in range (1,len(L)):
-            tmpCouple = L[i-1][0]
-            currentCouple = L[i][0]
+            tmpCouple = L[i-1]
+            currentCouple = L[i]
             c_b_t0 = 0
             c_b_t1 = 0
             c_b_c0 = 0
@@ -59,7 +70,9 @@ class SimilarityGraph(Graph):
             if(currentCouple[0] != None): c_b_c1 = currentCouple[1].bijection
             
             if (( c_b_t0 +1 == c_b_c0 ) and ( c_b_t1 +1 == c_b_c1 )):
-                tmpCouple_weight = L[i-1][1]
-                currentCouple_weight = L[i][1]
-                gr.insert_edge(Edge(currentCouple_weight-tmpCouple_weight,currentCouple[0],currentCouple[1]))
+                tmpCouple_weight = Weight[i-1]
+                print("v"+str(c_b_c0)+", w"+str(c_b_c1)+", weight "+str(tmpCouple_weight))
+                gr.insert_edge(Edge(tmpCouple_weight,currentCouple[0],currentCouple[1]))
+                
+
         return gr

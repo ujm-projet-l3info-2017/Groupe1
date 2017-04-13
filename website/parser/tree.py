@@ -41,10 +41,10 @@ class Tree():
 
     def create_node_list_bis(self, node_list):
         node_list.append(self)
-        if(self.right != None):
-            self.right.create_node_list_bis(node_list)
         if(self.left != None):
             self.left.create_node_list_bis(node_list)
+        if(self.right != None):
+            self.right.create_node_list_bis(node_list)
     
     def compute_depth(self):
         self.compute_depth_bis(0)

@@ -38,8 +38,8 @@ class SQLSyntaxParser(SyntaxParser):
 
     def query_list(self):
         if(self.get_lookahead() == self.lexical._opening):
+            tree = AbstractTree(self.lexical._query,"")
             self.shift()
-            tree = AbstractTree(self.lexical._query)
             tree_query = self.query()
             tree.concatenate_father_son(tree_query)
             if(self.get_lookahead() == self.lexical._closing):
@@ -50,7 +50,7 @@ class SQLSyntaxParser(SyntaxParser):
             else:
                 self.parsing_error()
         else:
-            tree = AbstractTree(self.lexical._query)
+            tree = AbstractTree(self.lexical._query, "")
             tree_query = self.query()
             tree.concatenate_father_son(tree_query)
             tree_list = self.query_list_next()
@@ -59,7 +59,7 @@ class SQLSyntaxParser(SyntaxParser):
 
     def query_list_next(self):
         if(self.get_lookahead() == self.lexical._name):
-            tree = AbstractTree(self.lexical.get_text())
+            tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
             self.shift()
             tree_list = self.query_list()
             tree.concatenate_father_brother(tree_list)
@@ -70,8 +70,8 @@ class SQLSyntaxParser(SyntaxParser):
         tree_select = self.select()
         tree.concatenate_father_son(tree_select)
         if(self.get_lookahead() == self.lexical._from):
+            tree_from = AbstractTree(self.lexical._from, self.lexical.get_text())
             self.shift()
-            tree_from = AbstractTree(self.lexical._from)
             tree_name = self.name_list()
             
             # We have to create the tree of tables
@@ -99,20 +99,20 @@ class SQLSyntaxParser(SyntaxParser):
 
     def select_mode(self):
         if(self.get_lookahead() == self.lexical._select_distinct):
+            tree_mode = AbstractTree(self.lexical._select_distinct, self.lexical.get_text())
             self.shift()
-            tree_mode = AbstractTree(self.lexical._select_distinct)
             return tree_mode
         elif(self.get_lookahead() == self.lexical._select):
+            tree_mode = AbstractTree(self.lexical._select, self.lexical.get_text())
             self.shift()
-            tree_mode = AbstractTree(self.lexical._select)
             return tree_mode
         else:
             self.parse_error()
 
     def select(self):
         if(self.get_lookahead() == self.lexical._star):
+            tree_star = AbstractTree(self.lexical._star, self.lexical.get_text())
             self.shift()
-            tree_star = AbstractTree(self.lexical._star)
             return tree_star
         else:
             tree = self.column_select_list()
@@ -128,7 +128,7 @@ class SQLSyntaxParser(SyntaxParser):
 
     def column(self):
         if(self.get_lookahead() == self.lexical._name):
-            tree = AbstractTree(self.lexical.get_text())
+            tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
             self.shift()
             tree_next = self.column_next()
             tree.concatenate_father_son(tree_next)
@@ -138,10 +138,10 @@ class SQLSyntaxParser(SyntaxParser):
 
     def column_next(self):
         if(self.get_lookahead() == self.lexical._dot):
+            tree_dot = AbstractTree(self.lexical._dot, self.lexical.get_text())
             self.shift()
             if(self.get_lookahead() == self.lexical._name):
-                tree_dot = AbstractTree(self.lexical._dot)
-                tree_dot.concatenate_father_son(AbstractTree(self.lexical.get_text()))
+                tree_dot.concatenate_father_son(AbstractTree(self.lexical.get_text(), self.lexical.get_text()))
                 self.shift()
                 return tree_dot
             else:
@@ -165,10 +165,10 @@ class SQLSyntaxParser(SyntaxParser):
 
     def column_as(self):
         if(self.get_lookahead() == self.lexical._as):
+            tree_as = AbstractTree(self.lexical._as, self.lexical.get_text())
             self.shift()
             if(self.get_lookahead() == self.lexical._name):
-                tree_as = AbstractTree(self.lexical._as)
-                tree_as.concatenate_father_son(AbstractTree(self.lexical.get_text()))
+                tree_as.concatenate_father_son(AbstractTree(self.lexical.get_text(), self.lexical.get_text()))
                 self.shift()
                 return tree_as
             else:
@@ -194,7 +194,7 @@ class SQLSyntaxParser(SyntaxParser):
             
     def name_list(self):
         if(self.get_lookahead() == self.lexical._name):
-            tree = AbstractTree(self.lexical.get_text())
+            tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
             self.shift()
             tree_list = self.name_list_next()
             tree.concatenate_father_brother(tree_list)
@@ -210,10 +210,10 @@ class SQLSyntaxParser(SyntaxParser):
 
     def query_next(self):
         if(self.get_lookahead() == self.lexical._where):
+            tree_where = AbstractTree(self.lexical._where, self.lexical.get_text())
             self.shift()
             tree_condition = self.condition()
             tree_group_by = self.group_by()
-            tree_where = AbstractTree(self.lexical._where)
             tree_where.concatenate_father_son(tree_condition)
             tree_where.concatenate_father_brother(tree_group_by)
             return tree_where
@@ -223,6 +223,7 @@ class SQLSyntaxParser(SyntaxParser):
 
     def group_by(self):
         if(self.get_lookahead() == self.lexical._group_by):
+            tree_group_by = AbstractTree(self.lexical._group_by, self.lexical.get_text())
             self.shift()
             tree_column = self.column_list()
 
@@ -235,7 +236,6 @@ class SQLSyntaxParser(SyntaxParser):
                 tmp = tmp.get_brother()
                 
             tree_having = self.having()
-            tree_group_by = AbstractTree(self.lexical._group_by)
             tree_group_by.concatenate_father_son(tree_column)
             tree_group_by.concatenate_father_brother(tree_having)
         else:
@@ -244,10 +244,10 @@ class SQLSyntaxParser(SyntaxParser):
 
     def having(self):
         if(self.get_lookahead() == self.lexical._having):
+            tree_having = AbstractTree(self.lexical._having, self.lexical.get_text())
             self.shift()
             tree_condition = self.condition()
             tree_order = self.order()
-            tree_having = AbstractTree(self.lexical._having)
             tree_having.concatenate_father_son(tree_condition)
             tree_having.concatenate_father_brother(tree_order)
             return tree_having
@@ -257,6 +257,7 @@ class SQLSyntaxParser(SyntaxParser):
 
     def order(self):
         if(self.get_lookahead() == self.lexical._order_by):
+            tree_order_by = AbstractTree(self.lexical._order_by, self.lexical.get_text())
             self.shift()
             tree_column = self.column_list()
 
@@ -269,17 +270,18 @@ class SQLSyntaxParser(SyntaxParser):
                 tmp = tmp.get_brother()
                 
             tree_order_op = self.order_op()
-            tree_order_by = AbstractTree(self.lexical._order_by)
             tree_order_by.concatenate_father_son(tree_column)
             return tree_order_by
 
     def order_op(self):
         if(self.get_lookahead() == self.lexical._asc):
+            tree = AbstractTree(self.lexical._asc, self.lexical.get_text())
             self.shift()
-            return AbstractTree(self.lexical._asc)
+            return tree
         elif(self.get_lookahead() == self.lexical._desc):
+            tree = AbstractTree(self.lexical._desc, self.lexical.get_text())
             self.shift()
-            return AbstractTree(self.lexical._desc)
+            return tree
         else:
             self.parse_error()
 
@@ -297,15 +299,15 @@ class SQLSyntaxParser(SyntaxParser):
 
     def condition_next(self):
         if(self.get_lookahead() == self.lexical._and):
+            tree_and = AbstractTree(self.lexical._and, self.lexical.get_text())
             self.shift()
             tree = self.condition()
-            tree_and = AbstractTree(self.lexical._and)
             tree_and.concatenate_father_son(tree)
             return tree_and
         elif(self.get_lookahead() == self.lexical._or):
+            tree_or = AbstractTree(self.lexical._or, self.lexical.get_text())
             self.shift()
             tree = self.condition()
-            tree_or = AbstractTree(self.lexical._or)
             tree_or.concatenate_father_son(tree)
             return tree_or
 
@@ -319,9 +321,9 @@ class SQLSyntaxParser(SyntaxParser):
             else:
                 self.parse_error()
         elif(self.get_lookahead() == self.lexical._not):
+            tree_not = AbstractTree(self.lexical._not, self.lexical.get_text())
             self.shift()
             tree = self.test_other()
-            tree_not = AbstractTree(self.lexical._not)
             tree_not.concatenate_father_son(tree)
             return tree_not
         elif(self.get_lookahead() == self.lexical._like or self.get_lookahead() == self.lexical._in):
@@ -340,22 +342,22 @@ class SQLSyntaxParser(SyntaxParser):
 
     def test_other(self):
         if(self.get_lookahead() == self.lexical._like):
+            tree_like = AbstractTree(self.lexical._like, self.lexical.get_text())
             self.shift()
             if(self.get_lookahead() == self.lexical._exp):
-                tree_like = AbstractTree(self.lexical._like)
-                tree_like.concatenate_father_son(AbstractTree(self.lexical.get_text()))
+                tree_like.concatenate_father_son(AbstractTree(self.lexical.get_text(), self.lexical.get_text()))
                 self.shift()
                 return tree_like
             else:
                 self.parse_error()
         elif(self.get_lookahead() == self.lexical._in):
+            tree_in = AbstractTree(self.lexical._in, self.lexical.get_text())
             self.shift()
             if(self.get_lookahead() == self.lexical._opening):
                 self.shift()
                 tree = self.query_list()
                 if(self.get_lookahead() == self.lexical._closing):
                     self.shift()
-                    tree_in = AbstractTree(self.lexical._in)
                     tree_in.concatenate_father_son(tree)
                     return tree_in
                 else:
@@ -381,23 +383,29 @@ class SQLSyntaxParser(SyntaxParser):
 
     def op(self):
         if(self.get_lookahead() == self.lexical._equal):
+            tree = AbstractTree(self.lexical._equal, self.lexical.get_text())
             self.shift()
-            return AbstractTree(self.lexical._equal)
+            return tree
         elif(self.get_lookahead() == self.lexical._not_equal):
+            tree = AbstractTree(self.lexical._not_equal, self.lexical.get_text())
             self.shift()
-            return AbstractTree(self.lexical._not_equal)
+            return tree
         elif(self.get_lookahead() == self.lexical._less):
+            tree = AbstractTree(self.lexical._less, self.lexical.get_text())
             self.shift()
-            return AbstractTree(self.lexical._less)
+            return tree
         elif(self.get_lookahead() == self.lexical._greater):
+            tree = AbstractTree(self.lexical._greater, self.lexical.get_text())
             self.shift()
-            return AbstractTree(self.lexical._greater)
+            return tree
         elif(self.get_lookahead() == self.lexical._less_e):
+            tree = AbstractTree(self.lexical._less_e, self.lexical.get_text())
             self.shift()
-            return AbstractTree(self.lexical._less_e)
+            return tree
         elif(self.get_lookahead() == self.lexical._greater_e):
+            tree = AbstractTree(self.lexical._greater_e, self.lexical.get_text())
             self.shift()
-            return AbstractTree(self.lexical._greater_e)
+            return tree
         else:
             self.parse_error()
 
@@ -405,7 +413,7 @@ class SQLSyntaxParser(SyntaxParser):
         if(self.get_lookahead() == self.lexical._quote):
             self.shift()
             if(self.get_lookahead() == self.lexical._name):
-                tree = AbstractTree(get_text())
+                tree = AbstractTree(get_text(), get_text())
                 self.shift()
                 if(self.get_lookahead() == self.lexical._quote):
                     self.shift()
@@ -417,7 +425,7 @@ class SQLSyntaxParser(SyntaxParser):
         elif(self.get_lookahead() == self.lexical._double_quote):
             self.shift()
             if(self.get_lookahead() == self.lexical._name):
-                tree = AbstractTree(get_text())
+                tree = AbstractTree(get_text(), get_text())
                 self.shift()
                 if(self.get_lookahead() == self.lexical._double_quote):
                     self.shift()
@@ -427,7 +435,7 @@ class SQLSyntaxParser(SyntaxParser):
             else:
                 self.parse_error()
         elif(self.get_lookahead() == self.lexical._number):
-            tree = AbstractTree(self.lexical.get_text())
+            tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
             self.shift()
             return tree
         else:
@@ -448,10 +456,10 @@ def compare_added(l_t1, l_t2):
     while(l_t1 and l_t2):
         if(l_t1[0] < l_t2[0]):
             e = l_t1.pop(0)
-            print(str(e.element)+" must be added")
+            print(str(e.text)+" must be added")
         elif(l_t1[0] > l_t2[0]):
             e = l_t2.pop(0)
-            print(str(e.element)+" must be removed")
+            print(str(e.text)+" must be removed")
         else:
             e = l_t1.pop(0)
             l_order.append(e)
@@ -459,13 +467,13 @@ def compare_added(l_t1, l_t2):
 
     while(l_t1):
         e = l_t1.pop(0)
-        print(str(e.element)+" must be added")
+        print(str(e.text)+" must be added")
     while(l_t2):
         e = l_t2.pop(0)
-        print(str(e.element)+" must be removed")
+        print(str(e.text)+" must be removed")
 
     for e in l_order:
-        print(str(e.element)+" must be in the right order")
+        print(str(e.text)+" must be in the right order")
             
 p = SQLSyntaxParser("SELECT distinct a,b,c FROM t1, t2, t7")
 t1 = p.parse()
@@ -499,10 +507,10 @@ for i in range (0 , len(l)):
 
     if(offset_i == 1 and offset_j == 1 and edge.weight == 0):
         # if there are a mapping and no errors
-        print("Sim: "+str(edge.start.element))
+        print("Sim: "+str(edge.start.text))
     elif(offset_i == 1 and offset_j == 1 and edge.weight == 1):
         # if there are a mapping and but errors
-        print("No sim: "+str(edge.start.element)+" - "+str(edge.end.element))
+        print("No sim: "+str(edge.start.text)+" - "+str(edge.end.text))
         l_add_t1.append(edge.start)
         l_add_t2.append(edge.end)
     else:

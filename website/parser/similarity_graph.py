@@ -42,11 +42,11 @@ class SimilarityGraph(Graph):
 
         s = ""
         for i in range(1, len(T1_list)):
-            s += str(T1_list[i].element)+" "
+            s += str(T1_list[i].text)+" "
         print(s)
         s= ""
         for i in range(1, len(T2_list)):
-            s += str(T2_list[i].element)+" "
+            s += str(T2_list[i].text)+" "
         print(s)
         gr = Graph()
         la = list()

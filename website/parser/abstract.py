@@ -1,6 +1,10 @@
 from tree import Tree
 class AbstractTree(Tree):
 
+    def __init__(self, element, text):
+        super().__init__(element)
+        self.text = text
+    
     def concatenate_father_son(self, son):
         self.left = son
 

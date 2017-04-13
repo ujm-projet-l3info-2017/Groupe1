@@ -46,8 +46,8 @@ class SimilarityGraph(Graph):
             gr.insert_vertex(node)
         
         for i in range (1,len(L)):
-            tmpCouple = L[i-1]
-            currentCouple = L[i]
+            tmpCouple = L[i-1][0]
+            currentCouple = L[i][0]
             c_b_t0 = 0
             c_b_t1 = 0
             c_b_c0 = 0
@@ -59,5 +59,7 @@ class SimilarityGraph(Graph):
             if(currentCouple[0] != None): c_b_c1 = currentCouple[1].bijection
             
             if (( c_b_t0 +1 == c_b_c0 ) and ( c_b_t1 +1 == c_b_c1 )):
-                gr.insert_edge(Edge(0,currentCouple[0],currentCouple[1]))
+                tmpCouple_weight = L[i-1][1]
+                currentCouple_weight = L[i][1]
+                gr.insert_edge(Edge(currentCouple_weight-tmpCouple_weight,currentCouple[0],currentCouple[1]))
         return gr

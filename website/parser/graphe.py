@@ -66,9 +66,11 @@ class Graph():
         way = list()
         vertex = end
         while(prev[vertex] != None):
-            way.append(vertex)
+            weight = self.matrix[vertex].weight
+            way.append((vertex, weight))
             vertex = prev[vertex]
-        way.append(vertex)
+        weight = self.matrix[vertex].weight
+        way.append((vertex, weight))
         way.reverse()
         return way
             

@@ -1,6 +1,6 @@
-from graphe import Graph
-from graphe import Edge
-import tree
+from .graph import Graph
+from .graph import Edge
+from ..tree.tree import Tree
 
 class SimilarityGraph(Graph):
     def __init__(self, T1, T2):
@@ -16,8 +16,6 @@ class SimilarityGraph(Graph):
     def create_graph(self):
         T1_list = self.T1.create_node_list()
         T2_list = self.T2.create_node_list()
-        print(T1_list)
-        print(T2_list)
 
         for i in range(1, len(T1_list)):
             for j in range(1, len(T2_list)):
@@ -40,14 +38,6 @@ class SimilarityGraph(Graph):
         # L is a list of the couples of the similarity graph
         L, Weight = self.dijkstra((None, None), (T1_list[len(T1_list)-1], T2_list[len(T2_list)-1]))
 
-        s = ""
-        for i in range(1, len(T1_list)):
-            s += str(T1_list[i].text)+" "
-        print(s)
-        s= ""
-        for i in range(1, len(T2_list)):
-            s += str(T2_list[i].text)+" "
-        print(s)
         gr = Graph()
         la = list()
         for node in T1_list:
@@ -70,10 +60,8 @@ class SimilarityGraph(Graph):
             
             if (( c_b_t0 +1 == c_b_c0 ) and ( c_b_t1 +1 == c_b_c1 )):
                 tmpCouple_weight = Weight[i-1]
-                print("v"+str(c_b_c0)+", w"+str(c_b_c1)+", weight "+str(tmpCouple_weight))
                 e = Edge(tmpCouple_weight,currentCouple[0],currentCouple[1])
                 gr.insert_edge(e)
                 la.append(e) 
     
         return gr,la
-

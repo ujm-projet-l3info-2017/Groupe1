@@ -3,10 +3,10 @@
 <html>
   <head>
     <style>
-table, th, td {
-    border: 1px solid black;
-}
-</style>
+     table, th, td {
+	 border: 1px solid black;
+     }
+    </style>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static "website/css/index.css" %}">
     <script type="text/javascript" src="{% static "website/js/scriptyskippy.js"%}" ></script>
@@ -33,7 +33,7 @@ table, th, td {
 	  <td id="input">
 	    <form>
 	      <textarea>Tapez votre requete ici ...</textarea>
-	      <input type="button" onclick="get_request()" value="Envoyer" /> 
+	      <input type="button" onclick="get_request(); get_hint()" value="Envoyer" /> 
 	    </form>
 	  </td>
 	  <td id="output_request">
@@ -42,6 +42,14 @@ table, th, td {
 	    <td id="expected_request">
 	      {{expected_request |safe }}
 	  </td>
+	</tr>
+	<tr>
+	    <td>
+	    </td>
+	    </td>
+	    <td id="hint" colspan="3">
+		Un conseil !
+	    </td>
 	</tr>
       </table>
   </body>

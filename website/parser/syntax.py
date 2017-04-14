@@ -1,9 +1,7 @@
-from lexical import *
-from abstract import AbstractTree
-from sort import *
-from bdd import *
-from similarity_graph import SimilarityGraph
-from similarity_graph import Mapping
+from .lexical import *
+from ..tree.abstract import AbstractTree
+from .sort import *
+from .bdd import *
 
 class SyntaxParser():
     
@@ -90,7 +88,8 @@ class SQLSyntaxParser(SyntaxParser):
             # We can transform the column of the SELECT
             for col in self.select_column:
                 modify_tree_column(self.table_tree, col)
-                
+
+
             tree_next = self.query_next()
             tree_from.concatenate_father_son(tree_name)
             tree_from.concatenate_father_brother(tree_next)
@@ -134,6 +133,8 @@ class SQLSyntaxParser(SyntaxParser):
             self.shift()
             tree_next = self.column_next()
             tree.concatenate_father_son(tree_next)
+            if(tree_next == None and self.table_tree != None):
+                modify_tree_column(self.table_tree, tree)
             return tree
         else:
             self.parse_error()
@@ -442,13 +443,3 @@ class SQLSyntaxParser(SyntaxParser):
             return tree
         else:
             self.parse_error()
-            
-p = SQLSyntaxParser("SELECT distinct a,b,c FROM t1, t2, t7")
-t1 = p.parse()
-p = SQLSyntaxParser("SELECT b,a FROM t1")
-t2 = p.parse()
-mapp = Mapping(t1, t2)
-mapp.compare()
-
-
-

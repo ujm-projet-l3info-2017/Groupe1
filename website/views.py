@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.template import loader
 from django.db import connection
 from .similarity.similarity import compare_table
+from .similarity.mapping import Mapping
+from .parser.syntax import SQLSyntaxParser
 # Create your views here.
 
 def index(request):
@@ -47,8 +49,7 @@ def request(request):
             template = loader.get_template('website/error_request.html')
 
     return HttpResponse(template.render(context, request))
-    
-        
+         
 def expected_request(request):
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
@@ -80,6 +81,41 @@ def expected_request(request):
                 'error': error
             }
             template = loader.get_template('website/error_request.html')
+
+def load_hint(request):
+    user_request = request.POST.get('query')
+    # We take the expected request
+    exercice_no  = request.POST.get('exercise_no')
+    if(exercice_no == None):
+        exercice_no = "1"
+    question_no  = request.POST.get('question_no')
+    if(question_no == None):
+        question_no = "1"
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("select requete from website_question,website_contient_exercice_question,website_exercice where website_question.numero="+question_no+" AND website_question.id=idQuestion AND idExercice=website_exercice.id AND website_exercice.numero="+exercice_no)
+            # We have now the expected request
+            expected_request = str(cursor.fetchone()[0])
+
+        except Exception as e:
+            error = str(e)
+            context= {
+                'error': error
+            }
+            template = loader.get_template('website/error_request.html')
+    p = SQLSyntaxParser(expected_request)
+    t1 = p.parse()
+    p = SQLSyntaxParser(user_request)
+    t2 = p.parse()
+    mapping = Mapping(t1, t2)
+    mapping.compare()
+    context = {
+        'hint': mapping.hint
+    }
+    template = loader.get_template('website/hint.html')
+    return HttpResponse(template.render(context, request))
+    
+    
             
 def load_expected_request(request):
     column_name,row=expected_request(request)
@@ -136,12 +172,6 @@ def load_label(request):
             return HttpResponse(template.render(context, request))
 
         return  HttpResponse("<p>"+ row +"</p>")
-
-def load_select(request):
-    template = loader.get_template('website/request.html')
-#    with connection.cursor() as cursor:
-        
-        #cursor.execute('SELECT * FROM website_contient')
 
 def load_question(request):
     template = loader.get_template('website/question.html')

@@ -1,4 +1,4 @@
-from tree import Tree
+from .tree import Tree
 class AbstractTree(Tree):
 
     def __init__(self, element, text):

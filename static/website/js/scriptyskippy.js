@@ -68,3 +68,18 @@ function get_question() {
 	}
     });   
 }
+
+function get_hint() {    
+    $.ajax({
+	url : '/hint/', 
+	type : 'POST' ,
+	headers: {
+            'X-CSRFToken': get_token()
+	},
+	data : { exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val(), query : $("#input textarea").val() },	
+	success : function(data, status){
+	    if (status ==="success")
+		$("#hint").html(data);
+	}
+    });   
+}

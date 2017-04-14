@@ -1,7 +1,7 @@
-from abstract import AbstractTree
-from lexical import SQLLexicalParser
-#from django.db import connection
-from avl import AVL
+from ..tree.abstract import AbstractTree
+from .lexical import SQLLexicalParser
+from django.db import connection
+from ..tree.avl import AVL
 
 class TableTreeElement():
 
@@ -39,23 +39,22 @@ def create_table_tree(tables):
     return tree
 
 def insert_table(table, tree):
-    #with connection.cursor() as cursor:
-     #   try:
-            #cursor.execute("SELECT * FROM "+table)
-            #column_name = [col[0] for col in cursor.description]
-    column_name = ["x", "y", "z"]
-
-    if(tree == None):
-        col = column_name.pop()
-        tree = AVL(TableTreeElement(col, [table]))
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("SELECT * FROM "+table)
+            column_name = [col[0] for col in cursor.description]
+            
+            if(tree == None):
+                col = column_name.pop()
+                tree = AVL(TableTreeElement(col, [table]))
     
-    for col in column_name:
-        if(tree[col] != None):
-            tree[col].add_table(table)
-        else:
-            tree = tree.insert(TableTreeElement(col, [table]))
-      #  except:
-       #     pass
+            for col in column_name:
+                if(tree[col] != None):
+                    tree[col].add_table(table)
+                else:
+                    tree = tree.insert(TableTreeElement(col, [table]))
+        except:
+            pass
             # Nothing !
     return tree
 
@@ -63,7 +62,9 @@ def modify_tree_column(table_tree, column_tree):
     column = column_tree.element
     if(table_tree[column] != None and table_tree[column].get_table() != None):
         column_tree.element = table_tree[column].get_table()
-        tree_dot = AbstractTree(SQLLexicalParser._dot)
-        tree_column = AbstractTree(column)
+        column_tree.text = table_tree[column].get_table()
+        column_tree.element = table_tree[column].get_table()
+        tree_dot = AbstractTree(SQLLexicalParser._dot, ".")
+        tree_column = AbstractTree(column, column)
         tree_dot.concatenate_father_son(tree_column)
-        column_tree.concatenate_father_son(tree_dot)
+        column_tree.concatenate_father_son(tree_dot)    

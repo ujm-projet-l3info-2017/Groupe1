@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^label/', views.load_label),
     url(r'^exercise/', views.load_exercise),
     url(r'^question/', views.load_question),
-    url(r'^expected_request/',views.load_expected_request)
+    url(r'^expected_request/',views.load_expected_request),
+    url(r'^hint/', views.load_hint)
 ]

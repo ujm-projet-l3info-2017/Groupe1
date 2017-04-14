@@ -52,11 +52,11 @@ class Graph():
         dist = {key: float("inf") for key in self.matrix.keys()}
         prev = {key: None for key in self.matrix.keys()}
         dist[start] = 0
-        
+
         while(v):
             vertex = argmin(dist, v)
             v.remove(vertex)
-
+            
             for succ in self.successor(vertex):
                 old = dist[vertex] + succ.weight
                 if old < dist[succ.end]:
@@ -66,6 +66,7 @@ class Graph():
         way = list()
         way_weight = list()
         vertex = end
+
         while(prev[vertex] != None):
             way.append(vertex)
             vertex = prev[vertex]
@@ -106,41 +107,3 @@ def argmin(l, s):
             arg = key
     return arg
 
-a = Edge(2,"E", "B")
-b = Edge(6,"E","A")
-c = Edge(8,"E","C")
-d = Edge(1,"B","D")
-e = Edge(2,"D","A")
-f = Edge(4,"A","F")
-g = Edge(2,"A","C")
-h = Edge(8,"D","F")
-i = Edge(3,"F","C")
-j = Edge(9,"D","G")
-k = Edge(1,"F","G")
-l = Edge(7,"C","H")
-m = Edge(2,"G","H")
-gr = Graph()
-gr.insert_edge(a)
-gr.insert_edge(b)
-gr.insert_edge(c)
-gr.insert_edge(d)
-gr.insert_edge(e)
-gr.insert_edge(f)
-gr.insert_edge(g)
-gr.insert_edge(h)
-gr.insert_edge(i)
-gr.insert_edge(j)
-gr.insert_edge(k)
-gr.insert_edge(l)
-gr.insert_edge(m)
-#print(str(len(gr)))
-print(gr)
-#print(gr.successor(0))
-l = list(gr.all_vertices())
-
-
-chemin = gr.dijkstra("E","H")
-print(chemin)
-#for v in chemin:
-#    print(v)
- 

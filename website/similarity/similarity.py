@@ -1,4 +1,4 @@
-from .tree import Tree
+from ..tree.avl import AVL
 
 GREEN = 0
 ORANGE = 1
@@ -56,7 +56,7 @@ class Element():
     
 def convert_column_tree(column):
     # Convert a column in a single tree (an AVL tree)
-    tree = Tree(Element(column[0], [0]))
+    tree = AVL(Element(column[0], [0]))
     for i in range(1, len(column)):
         element = tree[column[i]]
         if(element != None):

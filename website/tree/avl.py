@@ -1,15 +1,12 @@
-class Tree():
-    # We have a binary tree
-    # with a left tree and a right tree
-    left = None
-    right = None
-    # We have an element on the tree
-    element = None
-    # We have an AVL, so we have to add the balance of the tree
-    balance = 0
+from .tree import Tree 
+class AVL(Tree):
 
+    # We have an AVL, so we have to add the balance of the tree
     def __init__(self, element):
         self.element = element
+        self.left = None
+        self.right = None
+        self.balance = 0
 
     def rotate_left(self, father, root):
         # We rotate the sub tree if the tree isn't well-balanced
@@ -68,7 +65,7 @@ class Tree():
                 return self.left._insert(root, element)
             else:
                 # We can insert !
-                self.left = Tree(element)
+                self.left = AVL(element)
                 # And we want to have a balanced tree
                 root = root._balance(root, root)
                 return root
@@ -80,7 +77,7 @@ class Tree():
                 return self.right._insert(root, element)
             else:
                 # We can insert !
-                self.right = Tree(element)
+                self.right = AVL(element)
                 # And we want to have a balanced tree
                 root = root._balance(root, root)
                 return root
@@ -102,29 +99,6 @@ class Tree():
             right_balance = 0
         # The balance of the current element is ...
         self.balance = left_balance - right_balance
-
-    def height(self):
-        # If the tree is empty, the height will be 0
-        if(self == None):
-            return 0
-
-        # The maximal height of the current element at the left is
-        # the maximal height of the left sub-tree + 1
-        if(self.left != None):
-            height_left = self.left.height()+1
-        else:
-            # If the left doesn't exist, the height is 0
-            height_left = 0
-        # It's the same thing for the height at the right
-        if(self.right != None):
-            height_right = self.right.height()+1
-        else:
-            height_right = 0
-        # And we take the maximal height between the left and the right
-        if(height_left > height_right):
-            return height_left
-        else:
-            return height_right
         
     def _balance(self, father, root):
         # We will balance the tree !
@@ -189,7 +163,7 @@ class Tree():
             else:
                 if(self.left != None):
                     self.left.__setitem__(key)
-                
+
     def __str__(self):
         s = str(self.element)+"("+str(self.balance)+"):"
         if(self.left != None):

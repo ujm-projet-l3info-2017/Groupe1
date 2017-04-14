@@ -39,9 +39,12 @@ def request(request):
                 'column_name': column_name,
                 'table': table
             }
-        except:
+        except Exception as e:
+            error = str(e)
+            context= {
+                'error': error
+            }
             template = loader.get_template('website/error_request.html')
-            context = None
 
     return HttpResponse(template.render(context, request))
     
@@ -58,9 +61,12 @@ def expected_request(request):
             cursor.execute("select requete from website_question,website_contient_exercice_question,website_exercice where website_question.numero="+question_no+" AND website_question.id=idQuestion AND idExercice=website_exercice.id AND website_exercice.numero="+exercice_no)
             expected_request = str(cursor.fetchone()[0])
 
-        except:
+        except Exception as e:
+            error = str(e)
+            context= {
+                'error': error
+            }
             template = loader.get_template('website/error_request.html')
-            context=None
         try:
             print(expected_request)
             cursor.execute(expected_request)
@@ -68,9 +74,12 @@ def expected_request(request):
             row = cursor.fetchall()
             row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
             return (column_name,row)
-        except:
+        except Exception as e:
+            error = str(e)
+            context= {
+                'error': error
+            }
             template = loader.get_template('website/error_request.html')
-            context=None
             
 def load_expected_request(request):
     column_name,row=expected_request(request)
@@ -118,9 +127,12 @@ def load_label(request):
         try:
             cursor.execute(requete)
             row = cursor.fetchone()[0]
-        except:
+        except Exception as e:
+            error = str(e)
+            context= {
+                'error': error
+            }
             template = loader.get_template('website/error_request.html')
-            context = None
             return HttpResponse(template.render(context, request))
 
         return  HttpResponse("<p>"+ row +"</p>")
@@ -144,9 +156,12 @@ def load_question(request):
             context= {
                 'row': row
             }
-        except:
+        except Exception as e:
+            error = str(e)
+            context= {
+                'error': error
+            }
             template = loader.get_template('website/error_request.html')
-            context = None
             return HttpResponse(template.render(context, request))
 
         return HttpResponse(template.render(context, request))
@@ -162,9 +177,12 @@ def load_exercise(request):
             context= {
                 'row': row
             }
-        except:
+        except Exception as e:
+            error = str(e)
+            context= {
+                'error': error
+            }
             template = loader.get_template('website/error_request.html')
-            context = None
             return HttpResponse(template.render(context, request))
 
     return HttpResponse(template.render(context, request))

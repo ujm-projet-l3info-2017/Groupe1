@@ -1,1 +1,1 @@
-__all__ = ["similarity"]
+__all__ = ["similarity", "tree", "graph", "parser"]

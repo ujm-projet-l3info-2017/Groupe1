@@ -1,4 +1,5 @@
 from ..graph.similarity_graph import SimilarityGraph
+from ..parser.lexical import SQLLexicalParser
 
 class Mapping():
 
@@ -11,6 +12,20 @@ class Mapping():
         _, self.edge_list = self.sim.mapping()
 
 
+    def add_hint_added(self, join):
+        for sentence in join:
+            h = ""
+            for tree in sentence:
+                h += tree.text+" "
+            self.hint.append("<b>"+h+"</b>doit etre ajoute")
+
+    def add_hint_removed(self, join):
+        for sentence in join:
+            h = ""
+            for tree in sentence:
+                h += tree.text+" "
+            self.hint.append("<b>"+h+"</b>doit etre supprime")
+        
     def sort_tree_element(self, l):        
         for i in range (len(l)-1, 1,-1):
             for j in range (0, i-1):
@@ -19,8 +34,48 @@ class Mapping():
                     l[j+1] = l[j]
                     l[j] = tmp
 
+    def join_tree_element(self, l):
+        join = list()
+        while(l):
+            max_len = -float("inf")
+            max_sub = None
+            for e in l:
+                sub = list()
+                self.join_tree_element_bis(l, e, sub)
+                if(len(sub) > max_len):
+                    max_sub = sub
+                    max_len = len(sub)
+
+            for e_sub in max_sub:
+                l.remove(e_sub)
+            join.append(max_sub)
+        return join
                 
+    def join_tree_op_bis(self, l, e, sub):
+        find_left = False
+        find_left_right = False
+        if(e.left != None and (e.left.element != SQLLexicalParser._equal and e.left.element != SQLLexicalParser._not_equal and e.left.element != SQLLexicalParser._less_e and e.left.element != SQLLexicalParser._greater_e and e.left.element != SQLLexicalParser._less and e.left.element != SQLLexicalParser._greater)):
+            find_left = True
+        if(e.left and e.left.right != None and (e.left.right.element != SQLLexicalParser._equal and e.left.right.element != SQLLexicalParser._not_equal and e.left.right.element != SQLLexicalParser._less_e and e.left.right.element != SQLLexicalParser._greater_e and e.left.right.element != SQLLexicalParser._less and e.left.right.element != SQLLexicalParser._greater)):
+            find_left_right = True
+
+        if(find_left):
+            if e.left in l:
+                sub.append(e.left)
+        sub.append(e)
+        if(find_left_right):
+            if e.left.right in l:
+                sub.append(e.left.right)
+            
+    def join_tree_element_bis(self, l, e, sub):
+        if(e.element == SQLLexicalParser._equal or e.element == SQLLexicalParser._not_equal or e.element == SQLLexicalParser._less_e or e.element == SQLLexicalParser._greater_e or e.element == SQLLexicalParser._less or e.element == SQLLexicalParser._greater):
+            self.join_tree_op_bis(l, e, sub)
+        else:
+            sub.append(e)
+    
     def compare_added(self, l_t1, l_t2):
+        l_added = list()
+        l_removed = list()
         l_t1_non_sorted = l_t1.copy()
         l_t2_non_sorted = l_t2.copy()
         self.sort_tree_element(l_t1)
@@ -30,11 +85,11 @@ class Mapping():
             if(str(l_t1[0].element) < str(l_t2[0].element)):
                 e = l_t1.pop(0)
                 l_t1_non_sorted.remove(e)
-                self.hint.append(str(e.text)+" must be added")
+                l_added.append(e)
             elif(str(l_t1[0].element) > str(l_t2[0].element)):
                 e = l_t2.pop(0)
                 l_t2_non_sorted.remove(e)
-                self.hint.append(str(e.text)+" must be removed")
+                l_removed.append(e)
             else:
                 e = l_t1.pop(0)
                 e = l_t2.pop(0)
@@ -42,17 +97,22 @@ class Mapping():
         while(l_t1):
             e = l_t1.pop(0)
             l_t1_non_sorted.remove(e)
-            self.hint.append(str(e.text)+" must be added")
+            l_added.append(e)
         while(l_t2):
             e = l_t2.pop(0)
             l_t2_non_sorted.remove(e)
-            self.hint.append(str(e.text)+" must be removed")
+            l_removed.append(e)
 
         while(l_t1_non_sorted and l_t2_non_sorted):
             e1 = l_t1_non_sorted.pop(0)
             e2 = l_t2_non_sorted.pop(0)
             if(str(e1.element) != str(e2.element)):
-                self.hint.append(str(e1.text)+" must be at the right order")
+                self.hint.append(str(e1.text)+" doit etre a la bonne place")
+
+        join_added = self.join_tree_element(l_added)
+        join_removed = self.join_tree_element(l_removed)
+        self.add_hint_added(join_added)
+        self.add_hint_removed(join_removed)
 
     def compare(self):
         T1_list = self.tree_expected.create_node_list()
@@ -86,17 +146,19 @@ class Mapping():
 
             if(offset_i == 1 and offset_j == 1 and edge.weight == 0):
                 # if there are a mapping and no errors
-                self.hint.append("Sim: "+str(edge.start.text))
+                # It's similar
+                pass
             elif(offset_i == 1 and offset_j == 1 and edge.weight == 1):
                 # if there are a mapping and but errors
-                self.hint.append("Non-Sim: "+str(edge.start.text)+" - "+str(edge.end.text))
+                # The two elements are mapped together but are not similar
                 l_t1.append(edge.start)
                 l_t2.append(edge.end)
             else:
                 if(edge.weight == 0):
-                    self.hint.append("Sim: "+str(edge.start.text))
+                    # It's similar
+                    pass
                 else:
-                    self.hint.append("Non-Sim: "+str(edge.start.text)+" - "+str(edge.end.text))
+                    # The two elements are mapped together but are not similar
                     l_t1.append(edge.start)
                     l_t2.append(edge.end)
 

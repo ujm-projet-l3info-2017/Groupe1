@@ -41,8 +41,9 @@ def create_table_tree(tables):
 def insert_table(table, tree):
     with connection.cursor() as cursor:
         try:
+            table = table.lower()
             cursor.execute("SELECT * FROM "+table)
-            column_name = [col[0] for col in cursor.description]
+            column_name = [col[0].lower() for col in cursor.description]
             
             if(tree == None):
                 col = column_name.pop()
@@ -59,12 +60,7 @@ def insert_table(table, tree):
     return tree
 
 def modify_tree_column(table_tree, column_tree):
-    column = column_tree.element
+    column = column_tree.element.lower()
     if(table_tree[column] != None and table_tree[column].get_table() != None):
-        column_tree.element = table_tree[column].get_table()
-        column_tree.text = table_tree[column].get_table()
-        column_tree.element = table_tree[column].get_table()
-        tree_dot = AbstractTree(SQLLexicalParser._dot, ".")
-        tree_column = AbstractTree(column, column)
-        tree_dot.concatenate_father_son(tree_column)
-        column_tree.concatenate_father_son(tree_dot)    
+        column_tree.element = table_tree[column].get_table()+"."+column
+        column_tree.text = table_tree[column].get_table()+"."+column

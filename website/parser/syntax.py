@@ -2,6 +2,7 @@ from .lexical import *
 from ..tree.abstract import AbstractTree
 from .sort import *
 from .bdd import *
+import re
 
 class SyntaxParser():
     
@@ -89,7 +90,6 @@ class SQLSyntaxParser(SyntaxParser):
             for col in self.select_column:
                 modify_tree_column(self.table_tree, col)
 
-
             tree_next = self.query_next()
             tree_from.concatenate_father_son(tree_name)
             tree_from.concatenate_father_brother(tree_next)
@@ -117,11 +117,10 @@ class SQLSyntaxParser(SyntaxParser):
             return tree_star
         else:
             tree = self.column_select_list()
-
             # Insert the subtree to transform the column when we have tables
             tmp = tree
             while(tmp != None):
-                if(tmp.get_son() == None):
+                if(not(re.compile("[a-zA-Z0-9]*\.[a-zA-Z0-9]*").match(tmp.text))):
                     # It's just the column: we have to transform the tree
                     self.select_column.append(tmp)
                 tmp = tmp.get_brother()
@@ -132,9 +131,15 @@ class SQLSyntaxParser(SyntaxParser):
             tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
             self.shift()
             tree_next = self.column_next()
-            tree.concatenate_father_son(tree_next)
+            
             if(tree_next == None and self.table_tree != None):
                 modify_tree_column(self.table_tree, tree)
+            elif(tree_next != None and tree_next.element == self.lexical._dot):
+                column = tree_next.get_son().element
+                tree.element = tree.element+"."+column
+                tree.text = tree.text+"."+column
+            else:
+                tree.concatenate_father_son(tree_next)
             return tree
         else:
             self.parse_error()

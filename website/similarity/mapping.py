@@ -11,26 +11,21 @@ class Mapping():
         _, self.edge_list = self.sim.mapping()
 
 
-    def sort(self, l_t1, l_t2):        
-        for i in range (len(l_t1)-1, 1,-1):
+    def sort_tree_element(self, l):        
+        for i in range (len(l)-1, 1,-1):
             for j in range (0, i-1):
-                if str(l_t1[j+1].element) < str(l_t1[j].element):
-                    tmp = l_t1[j+1]
-                    l_t1[j+1] = l_t1[j]
-                    l_t1[j] = tmp
+                if str(l[j+1].element) < str(l[j].element):
+                    tmp = l[j+1]
+                    l[j+1] = l[j]
+                    l[j] = tmp
 
-        for i in range (len(l_t2)-1, 1,-1):
-            for j in range (0, i-1):
-                if str(l_t2[j+1].element) < str(l_t2[j].element):
-                    tmp = l_t2[j+1]
-                    l_t2[j+1] = l_t2[j]
-                    l_t2[j] = tmp
                 
     def compare_added(self, l_t1, l_t2):
         l_t1_non_sorted = l_t1.copy()
         l_t2_non_sorted = l_t2.copy()
-        self.sort(l_t1, l_t2)
- 
+        self.sort_tree_element(l_t1)
+        self.sort_tree_element(l_t2)
+
         while(l_t1 and l_t2):
             if(str(l_t1[0].element) < str(l_t2[0].element)):
                 e = l_t1.pop(0)
@@ -56,7 +51,7 @@ class Mapping():
         while(l_t1_non_sorted and l_t2_non_sorted):
             e1 = l_t1_non_sorted.pop(0)
             e2 = l_t2_non_sorted.pop(0)
-            if(e1 != e2):
+            if(str(e1.element) != str(e2.element)):
                 self.hint.append(str(e1.text)+" must be at the right order")
 
     def compare(self):
@@ -64,7 +59,18 @@ class Mapping():
         T2_list = self.tree_user.create_node_list()
         l_t1 = list()
         l_t2 = list()
-        
+
+        s = ""
+        for t in T1_list:
+            if(t != None):
+                s += str(t.text)+" "
+        print(s)
+        s = ""
+        for t in T2_list:
+            if(t != None):
+                s += str(t.text)+" "
+        print(s)
+
         for i in range (0 , len(self.edge_list)):
             edge = self.edge_list[i]
             edge_i = edge.start.bijection
@@ -83,23 +89,29 @@ class Mapping():
                 self.hint.append("Sim: "+str(edge.start.text))
             elif(offset_i == 1 and offset_j == 1 and edge.weight == 1):
                 # if there are a mapping and but errors
+                self.hint.append("Non-Sim: "+str(edge.start.text)+" - "+str(edge.end.text))
                 l_t1.append(edge.start)
                 l_t2.append(edge.end)
             else:
-                if(offset_i > offset_j):
-                    # The user must add elements (there are less elements in his query)
-                    for j in range(edge.start.bijection-offset_i+1, edge.start.bijection):
-                        l_t1.append(T1_list[j])
+                if(edge.weight == 0):
+                    self.hint.append("Sim: "+str(edge.start.text))
+                else:
+                    self.hint.append("Non-Sim: "+str(edge.start.text)+" - "+str(edge.end.text))
+                    l_t1.append(edge.start)
+                    l_t2.append(edge.end)
 
-                elif(offset_i < offset_j):
-                    for j in range(edge.end.bijection-offset_j+1, edge.end.bijection):
-                        l_t2.append(T2_list[j])
-                self.compare_added(l_t1, l_t2)
+                
+                # We must add the elements between the elements mapped
+                for j in range(edge.start.bijection-offset_i+1, edge.start.bijection):
+                    l_t1.append(T1_list[j])
+
+                for j in range(edge.end.bijection-offset_j+1, edge.end.bijection):
+                    l_t2.append(T2_list[j])
 
 
         if(len(self.edge_list) > 0):
-            for j in range(edge.start.bijection-offset_i+1, len(T1_list)):
+            for j in range(edge_i+1, len(T1_list)):
                 l_t1.append(T1_list[j])
-            for j in range(edge.end.bijection-offset_j+1, len(T2_list)):
+            for j in range(edge_j+1, len(T2_list)):
                 l_t2.append(T2_list[j])
-            self.compare_added(l_t1, l_t2)
+        self.compare_added(l_t1, l_t2)

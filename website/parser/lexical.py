@@ -22,7 +22,7 @@ class LexicalParser():
         self.sentence = self.sentence[self.length:]
 
     def get_text(self):
-        return self.text
+        return self.text.lower()
     
     def get_lexeme(self):
         raise NotImplementedError

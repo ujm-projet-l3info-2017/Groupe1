@@ -9,8 +9,9 @@ class SimilarityGraph(Graph):
         self.T2 = T2
 
     def get_error(self, T1, T2):
-        if(str(T1.element) == str(T2.element)):
+        if(str(T1.text) == str(T2.text)):
             return 0
+        print("error: "+str(T1.text)+" - "+str(T2.text))
         return 1
 
     def create_graph(self):

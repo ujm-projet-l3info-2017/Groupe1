@@ -6,6 +6,14 @@ body {
     margin: 0 auto;
 }
 
+table, th, td {
+    border: 1px solid black;
+}
+	 
+#tables_exercice{
+    display: inline;
+}
+
 .color-0 {
     background: green;
 }

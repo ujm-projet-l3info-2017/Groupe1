@@ -139,24 +139,38 @@ def load_tables(request):
         
     with connection.cursor() as cursor:
         try:
-            cursor.execute("select * from website_table,website_contient_exercice_table,website_exercice where exercice.numero="+exercice_no+" and exercice.id=idExercice and idTable=table.id")
+            cursor.execute("SELECT * FROM website_table,website_contient_exercice_table,website_exercice WHERE website_exercice.numero="+exercice_no+" AND website_exercice.id=idExercice AND idTable=website_table.id")
             row=cursor.fetchall()
             for line in row:
                 tableau=[]
                 for l in line:
                     tableau.append(l)
-                    print(tableau)
-                    tableau[0]=str(tableau[0])
-                    tableau[1]=str(tableau[1]) # NOM de la table
-                    tableau[2]=str(tableau[2]) # attributs de creation
-                    tableau[3]=str(tableau[3]) # Insert into
-                    cursor.execute('create table '+tableau[1]+' '+tableau[2])
-                    
+                tableau[0]=str(tableau[0])
+                tableau[1]=str(tableau[1]) # NOM de la table
+                tableau[2]=str(tableau[2]) # attributs de creation
+                tableau[3]=str(tableau[3]) # Insert into
+                cursor.execute('create table '+tableau[1]+' '+tableau[2])
                 tableau[3]=tableau[3].split('\n')
                 for insertline in tableau[3]:
-                    cursor.execute('insert into '+tableau[1]+insertline)
+                    cursor.execute('INSERT INTO '+tableau[1]+" "+insertline)
         except:
             print("Erreur: la table existe deja !")
+
+
+def drop_tables(request):
+    #supprime toutes les tables de l'exo, une amelio serait de chopper l'ancien num d'exo
+    print("JE DROP")
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("SELECT nom FROM website_table")
+            row=cursor.fetchall()
+            for line in row:
+                for l in line:
+                    cursor.execute('drop table if exists '+str(l))
+        except:
+            print("Erreur: drop table a foire !")
+    #je charge les bonnes tables maintenant
+    load_tables(request)
 
 def load_label(request):
     exercice_no  = request.POST.get('exercise_no')
@@ -188,14 +202,16 @@ def load_question(request):
     requete = "SELECT website_question.numero FROM website_contient_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no
 
 
+    # On enleve les autres tables
+    drop_tables(request)
     # On charge les tables de l'exercice
-    load_tables(request);
 
+    #######################################################################################################
     #
-    # /!\ CHARGE 2 FOIS toutes les fonctions, au clic du menu deroulant, au clic du choix
+    # /!\ CHARGE 2 FOIS toutes les fonctions: au clic du menu deroulant, au clic du choix
     # > Devrait faire qu'au choix.
     #
-    #
+    #######################################################################################################
     
     with connection.cursor() as cursor:
         try:

@@ -8,7 +8,7 @@ from .parser.syntax import SQLSyntaxParser
 # Create your views here.
 
 def index(request):
-    load_tables()
+    #load_tables()
     template = loader.get_template('website/index.html')
     exercice = load_exercise(request).content
     question = load_question(request).content
@@ -127,12 +127,19 @@ def load_expected_request(request):
     }    
     return HttpResponse(template.render(context, request))
 
-def load_tables():
+def load_tables(request):
     # On charge les donnees de l'exercice > a passer en argument POST (formulaire)
     
+    exercice_no  = request.POST.get('exercise_no')
+    if(exercice_no == None):
+        exercice_no = "1"
+
+    print("DAns load tables: "+exercice_no)
+
+        
     with connection.cursor() as cursor:
         try:
-            cursor.execute('select * from website_table')
+            cursor.execute("select * from website_table,website_contient_exercice_table,website_exercice where exercice.numero="+exercice_no+" and exercice.id=idExercice and idTable=table.id")
             row=cursor.fetchall()
             for line in row:
                 tableau=[]
@@ -179,6 +186,17 @@ def load_question(request):
     if(exercice_no == None):
         exercice_no = "1"
     requete = "SELECT website_question.numero FROM website_contient_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no
+
+
+    # On charge les tables de l'exercice
+    load_tables(request);
+
+    #
+    # /!\ CHARGE 2 FOIS toutes les fonctions, au clic du menu deroulant, au clic du choix
+    # > Devrait faire qu'au choix.
+    #
+    #
+    
     with connection.cursor() as cursor:
         try:
             cursor.execute(requete)

@@ -421,7 +421,7 @@ class SQLSyntaxParser(SyntaxParser):
         if(self.get_lookahead() == self.lexical._quote):
             self.shift()
             if(self.get_lookahead() == self.lexical._name):
-                tree = AbstractTree(get_text(), get_text())
+                tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
                 self.shift()
                 if(self.get_lookahead() == self.lexical._quote):
                     self.shift()
@@ -433,7 +433,7 @@ class SQLSyntaxParser(SyntaxParser):
         elif(self.get_lookahead() == self.lexical._double_quote):
             self.shift()
             if(self.get_lookahead() == self.lexical._name):
-                tree = AbstractTree(get_text(), get_text())
+                tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
                 self.shift()
                 if(self.get_lookahead() == self.lexical._double_quote):
                     self.shift()

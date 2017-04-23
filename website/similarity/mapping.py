@@ -27,13 +27,30 @@ class Mapping():
             self.hint.append("<b>"+h+"</b>doit etre supprime")
         
     def sort_tree_element(self, l):        
-        for i in range (len(l)-1, 1,-1):
-            for j in range (0, i-1):
+        for i in range (len(l)-1, 0,-1):
+            for j in range (0, i):
                 if str(l[j+1].element) < str(l[j].element):
                     tmp = l[j+1]
                     l[j+1] = l[j]
                     l[j] = tmp
+                elif str(l[j+1].element) == str(l[j].element) and str(l[j+1].text) < str(l[j].text):
+                    tmp = l[j+1]
+                    l[j+1] = l[j]
+                    l[j] = tmp
 
+    def sort_tree_bijection(self, l):
+        for i in range (len(l)-1, 0,-1):
+            for j in range (0, i):
+                if l[j+1].bijection < l[j].bijection:
+                    tmp = l[j+1]
+                    l[j+1] = l[j]
+                    l[j] = tmp
+
+    def remove_tree_element(self, l, e):
+        for e_l in l:
+            if str(e_l.element) == str(e.element) and str(e_l.text) == str(e.text):
+                l.remove(e_l)
+                    
     def join_tree_element(self, l):
         join = list()
         while(l):
@@ -76,38 +93,51 @@ class Mapping():
     def compare_added(self, l_t1, l_t2):
         l_added = list()
         l_removed = list()
+        
         l_t1_non_sorted = l_t1.copy()
         l_t2_non_sorted = l_t2.copy()
+        self.sort_tree_bijection(l_t1_non_sorted)
+        self.sort_tree_bijection(l_t2_non_sorted)
+        
         self.sort_tree_element(l_t1)
         self.sort_tree_element(l_t2)
 
         while(l_t1 and l_t2):
             if(str(l_t1[0].element) < str(l_t2[0].element)):
                 e = l_t1.pop(0)
-                l_t1_non_sorted.remove(e)
+                self.remove_tree_element(l_t1_non_sorted, e)
                 l_added.append(e)
             elif(str(l_t1[0].element) > str(l_t2[0].element)):
                 e = l_t2.pop(0)
-                l_t2_non_sorted.remove(e)
+                self.remove_tree_element(l_t2_non_sorted, e)
                 l_removed.append(e)
             else:
-                e = l_t1.pop(0)
-                e = l_t2.pop(0)
+                if((str(l_t1[0].text) < str(l_t2[0].text))):
+                    e = l_t1.pop(0)
+                    self.remove_tree_element(l_t1_non_sorted, e)
+                    l_added.append(e)
+                elif(str(l_t1[0].text) > str(l_t2[0].text)):
+                    e = l_t2.pop(0)
+                    self.remove_tree_element(l_t2_non_sorted, e)
+                    l_removed.append(e)
+                else:
+                    e = l_t1.pop(0)
+                    e = l_t2.pop(0)
 
         while(l_t1):
             e = l_t1.pop(0)
-            l_t1_non_sorted.remove(e)
+            self.remove_tree_element(l_t1_non_sorted, e)
             l_added.append(e)
         while(l_t2):
             e = l_t2.pop(0)
-            l_t2_non_sorted.remove(e)
+            self.remove_tree_element(l_t2_non_sorted, e)
             l_removed.append(e)
 
         while(l_t1_non_sorted and l_t2_non_sorted):
             e1 = l_t1_non_sorted.pop(0)
             e2 = l_t2_non_sorted.pop(0)
             if(str(e1.element) != str(e2.element)):
-                self.hint.append(str(e1.text)+" doit etre a la bonne place")
+                self.hint.append("<b>"+str(e1.text)+"</b> doit etre a la bonne place")
 
         join_added = self.join_tree_element(l_added)
         join_removed = self.join_tree_element(l_removed)
@@ -156,7 +186,9 @@ class Mapping():
             else:
                 if(edge.weight == 0):
                     # It's similar
-                    pass
+                    l_t1.append(edge.start)
+                    l_t2.append(edge.end)
+                    #pass
                 else:
                     # The two elements are mapped together but are not similar
                     l_t1.append(edge.start)
@@ -169,7 +201,7 @@ class Mapping():
 
                 for j in range(edge.end.bijection-offset_j+1, edge.end.bijection):
                     l_t2.append(T2_list[j])
-
+                self.compare_added(l_t1, l_t2)
 
         if(len(self.edge_list) > 0):
             for j in range(edge_i+1, len(T1_list)):

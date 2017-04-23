@@ -263,6 +263,8 @@ def load_tables_exercise(request):
         try:
             cursor.execute(requete)
             row =cursor.fetchall()
+            # always one name per tuple
+            name =  [str(row[j][0]) for j in range(len(row))]
             tables=list()
             for nom in row:
                 requete = "SELECT * FROM "+nom[0]
@@ -272,7 +274,8 @@ def load_tables_exercise(request):
                 row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
                 tables.append((column_name, row))
                 context= {
-                    'tables': tables
+                    'tables': tables,
+                    'name': name 
                 }
         except Exception as e:
             error = str(e)

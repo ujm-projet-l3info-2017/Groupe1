@@ -1,18 +1,29 @@
 {% if tables  %}
-{% for tab in tables  %}
-<table id=tables_exercice>
-  <tr>
-    {% for cn in tab.0 %}
-    <td> {{ cn }} </td>
+<table id="noBorder">
+  <tr >
+    {% for n in name %}
+    <td id="noBorder"> {{ n }} </td>
     {% endfor %}
   </tr>
-  {% for line in tab.1 %}
   <tr>
-    {% for col in line %}
-    <td> {{ col }}  </td>
-    {% endfor %}
+    {% for tab in tables  %}
+    <td id="noBorder">
+    <table>
+      <tr>
+	{% for cn in tab.0 %}
+	<td> {{ cn }} </td>
+	{% endfor %}
+      </tr>
+      {% for line in tab.1 %}
+      <tr>
+	{% for col in line %}
+	<td> {{ col }}  </td>
+	{% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+    </td>
+    {% endfor  %}
   </tr>
-  {% endfor %}
 </table>
-{% endfor  %}
 {% endif %}

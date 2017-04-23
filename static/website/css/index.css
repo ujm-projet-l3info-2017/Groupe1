@@ -10,8 +10,8 @@ table, th, td {
     border: 1px solid black;
 }
 	 
-#tables_exercice{
-    display: inline;
+#noBorder {
+    border: None;
 }
 
 .color-0 {

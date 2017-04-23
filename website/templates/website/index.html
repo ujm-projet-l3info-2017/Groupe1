@@ -2,11 +2,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-     table, th, td {
-	 border: 1px solid black;
-     }
-    </style>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static "website/css/index.css" %}">
     <script type="text/javascript" src="{% static "website/js/scriptyskippy.js"%}" ></script>
@@ -43,12 +38,20 @@
 	      {{expected_request |safe }}
 	  </td>
 	</tr>
-	<tr>
+        <tr>
 	    <td>
 	    </td>
 	    </td>
 	    <td id="hint" colspan="3">
 		Un conseil !
+	    </td>
+        </tr>
+        <tr>
+	    <td>
+	    </td>
+	    </td>
+	    <td id="tables" colspan="3">
+		{{tables | safe}}
 	    </td>
 	</tr>
       </table>

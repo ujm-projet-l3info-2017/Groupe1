@@ -83,3 +83,18 @@ function get_hint() {
 	}
     });   
 }
+
+function get_tables() {    
+    $.ajax({
+	url : '/tables/', 
+	type : 'POST' ,
+	headers: {
+            'X-CSRFToken': get_token()
+	},
+	data : { exercise_no : $("#exercise_selection").val()},	
+	success : function(data, status){
+	    if (status ==="success")
+		$("#tables").html(data);
+	}
+    });   
+}

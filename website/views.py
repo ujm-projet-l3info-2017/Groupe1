@@ -14,12 +14,13 @@ def index(request):
     question = load_question(request).content
     label = load_label(request).content
     expected_request=load_expected_request(request).content
-    
+    tables = load_tables_exercise(request).content
     context = {
         'exercice': exercice,
         'question': question,
         'label': label,
-        'expected_request': expected_request
+        'expected_request': expected_request,
+        'tables': tables
     }
     return HttpResponse(template.render(context, request))
 
@@ -207,6 +208,38 @@ def load_exercise(request):
             context= {
                 'row': row
             }
+        except Exception as e:
+            error = str(e)
+            context= {
+                'error': error
+            }
+            template = loader.get_template('website/error_request.html')
+            return HttpResponse(template.render(context, request))
+
+    return HttpResponse(template.render(context, request))
+
+def load_tables_exercise(request):
+    template = loader.get_template('website/tables_exercise.html')
+    exercice_no  = request.POST.get('exercise_no')
+    if(exercice_no == None):
+        exercice_no = "1"
+    requete = "SELECT website_table.nom FROM website_table, website_exercice, website_contient_exercice_table WHERE website_contient_exercice_table.idExercice=website_exercice.numero AND website_contient_exercice_table.idtable=website_table.id AND numero="+exercice_no
+   
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute(requete)
+            row =cursor.fetchall()
+            tables=list()
+            for nom in row:
+                requete = "SELECT * FROM "+nom[0]
+                cursor.execute(requete)
+                column_name = [col[0] for col in cursor.description]
+                row = cursor.fetchall()
+                row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
+                tables.append((column_name, row))
+                context= {
+                    'tables': tables
+                }
         except Exception as e:
             error = str(e)
             context= {

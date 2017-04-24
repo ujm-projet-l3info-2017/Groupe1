@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^question/', views.load_question),
     url(r'^expected_request/',views.load_expected_request),
     url(r'^hint/', views.load_hint),
-    url(r'^tables/', views.load_tables_exercise)
+    url(r'^tables/', views.load_tables_exercise),
+    url(r'^reset/',views.drop_tables)
 ]

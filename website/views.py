@@ -66,6 +66,9 @@ def check_table(request):
     # Returns 1 if all tables are accessible in the request
     requete = request.POST.get('query')
     requete = requete.lower()
+
+    requete = requete.replace(";","")
+    
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
         exercice_no = "1"
@@ -78,6 +81,7 @@ def check_table(request):
             for line in row:
                 for l in line:
                     table_list.append(str(l))
+                    print(str(l))
         except:
             print("Probleme check table")
 
@@ -87,6 +91,7 @@ def check_table(request):
     tables=second_split[0].split(",")
 
     for item in tables:
+        print(" TEST: "+item)
         if item not in table_list:
             return 0
     return 1
@@ -210,8 +215,11 @@ def drop_tables(request):
                     cursor.execute('drop table if exists '+str(l))
         except:
             print("Erreur: drop table a foire !")
+            return HttpResponse(status=400)
     #je charge les bonnes tables maintenant
     load_tables(request)
+
+    return HttpResponse(status=200)
 
 def load_label(request):
     exercice_no  = request.POST.get('exercise_no')

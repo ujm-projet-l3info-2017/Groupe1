@@ -71,8 +71,8 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	3,
-	"Liste des fournisseurs dont on ne connaît pas l'adresse ?",
-	"SELECT * FROM FOURNISSEURS WHERE ADRFOUR IS NULL;"
+	"Liste des fournisseurs qui se situent a Lyon ?",
+	"SELECT * FROM FOURNISSEURS WHERE VILLEFOUR='Lyon';"
 );
 
 

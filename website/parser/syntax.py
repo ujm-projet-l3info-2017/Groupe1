@@ -15,7 +15,7 @@ class SyntaxParser():
 
     def shift(self):
         self.lookahead = self.lexical.get_lexeme()
-        #print("lookahead: "+str(self.lookahead))
+        print("lookahead: "+str(self.lookahead))
 
     def parse_error(self):
         print("Parsing error")

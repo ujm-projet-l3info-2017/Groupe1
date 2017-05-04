@@ -39,6 +39,17 @@ function get_expected_request() {
     });   
 }
 
+function reset_tables() {
+    $.ajax({
+	url : '/reset/', 
+	type : 'POST' ,
+	headers: {
+            'X-CSRFToken': get_token()
+	},
+	data : { exercise_no : $("#exercise_selection").val() }
+    });   
+}
+
 function get_label() {
     $.ajax({
 	url : '/label/', 

@@ -63,16 +63,16 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	2,
-	"Liste des articles dont le prix d'inventaire est compris entre 100 et 300 ?",
-	"SELECT * FROM ARTICLE WHERE PRIXINVENT BETWEEN 100 AND 300;"
+	"Liste des articles dont le prix d'inventaire est inferieur a 300 ?",
+	"SELECT * FROM ARTICLE WHERE PRIXINVENT<300;"
 );
 
 
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	3,
-	"Liste des fournisseurs dont on ne connaît pas l'adresse ?",
-	"SELECT * FROM FOURNISSEURS WHERE ADRFOUR IS NULL;"
+	"Liste des fournisseurs qui se situent a Lyon ?",
+	"SELECT * FROM FOURNISSEURS WHERE VILLEFOUR='Lyon';"
 );
 
 

@@ -112,7 +112,7 @@ class Mapping():
         # We sort the original lists in comparing elements
         self.sort_tree_element(l_t1)
         self.sort_tree_element(l_t2)
-
+        
         # Then we can verify if an element was added or removed
         while(l_t1 and l_t2):
             if(str(l_t1[0].element) < str(l_t2[0].element)):
@@ -144,7 +144,7 @@ class Mapping():
                     # We have to verify if the two elements are swapped
                     e = l_t1.pop(0)
                     e = l_t2.pop(0)
-
+                    
         while(l_t1):
             # The element was added
             e = l_t1.pop(0)
@@ -201,32 +201,28 @@ class Mapping():
                 # Ff there are a mapping and but errors
                 # The two elements are mapped together but are not similar
                 # So we have to add this two elements in the tree list
-                l_t1.append(edge.start)
-                l_t2.append(edge.end)
+                if edge.start not in l_t1:
+                    l_t1.append(edge.start)
+                if edge.end not in l_t2:
+                    l_t2.append(edge.end)
             else:
                 # If there are errors between the edges
-                if(edge.weight == 0):
-                    # It's similar
-                    pass
-                else:
-                    # The two elements are mapped together but are not similar
-                    # So we have to add this two elements in the tree list
-                    l_t1.append(edge.start)
-                    l_t2.append(edge.end)
-
-                
                 # We must add the elements between the elements mapped
-                for j in range(edge.start.bijection-offset_i+1, edge.start.bijection):
-                    l_t1.append(T1_list[j])
+                for j in range(edge.start.bijection-offset_i, edge.start.bijection):
+                    if T1_list[j] not in l_t1:
+                        l_t1.append(T1_list[j])
 
-                for j in range(edge.end.bijection-offset_j+1, edge.end.bijection):
-                    l_t2.append(T2_list[j])
-                self.compare_added(l_t1, l_t2)
+                for j in range(edge.end.bijection-offset_j, edge.end.bijection):
+                    if T2_list[j] not in l_t2:
+                        l_t2.append(T2_list[j])
 
         # We have to compare the elements behind the last element mapped
         if(len(self.edge_list) > 0):
-            for j in range(edge_i+1, len(T1_list)):
-                l_t1.append(T1_list[j])
-            for j in range(edge_j+1, len(T2_list)):
-                l_t2.append(T2_list[j])
+            for j in range(edge_i, len(T1_list)):
+                if T1_list[j] not in l_t1:
+                    l_t1.append(T1_list[j])
+                    
+            for j in range(edge_j, len(T2_list)):
+                if T2_list[j] not in l_t2:
+                    l_t2.append(T2_list[j])
         self.compare_added(l_t1, l_t2)

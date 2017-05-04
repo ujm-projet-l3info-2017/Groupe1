@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static "website/css/index.css" %}">
     <script type="text/javascript" src="{% static "website/js/scriptyskippy.js"%}" ></script>
+    <script type="text/javascript" src="{% static "website/js/lexical.js"%}" ></script>
+    <script type="text/javascript" src="{% static "website/js/syntax.js"%}" ></script>
     <script type="text/javascript" src="{% static "website/js/jquery.js"%}" ></script>
     <title>MOOC</title>
   </head>
@@ -47,7 +49,10 @@
 	    </td>
         </tr>
         <tr>
-	    <td>
+	  <td>
+	    <form>
+	      <input type="button" onclick="reset_tables()" value="Reset BDD" />
+	      </form>
 	    </td>
 	    </td>
 	    <td id="tables" colspan="3">

@@ -188,6 +188,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.query_next = function() {
+	this.predict=[this.lexical._having,this.lexical._order_by,this.lexical._group,this.lexical._closing,this.lexical._name,this.lexical._where];
 	if(this.lookahead == this.lexical._where) {
 	    this.color();
 	    this.shift();
@@ -199,6 +200,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.group_by = function() {
+	this.predict=[this.lexical._having,this.lexical._order_by,this.lexical._group,this.lexical._closing,this.lexical._name];
 	if(this.lookahead == this.lexical._group_by) {
 	    this.color();
 	    this.shift();
@@ -210,6 +212,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.having = function() {
+	this.predict=[this.lexical._having,this.lexical._order_by,this.lexical._closing,this.lexical._name];
 	if(this.lookahead == this.lexical._having) {
 	    this.color();
 	    this.shift();
@@ -221,6 +224,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.order = function() {
+	this.predict=[this.lexical._order_by,this.lexical._closing,this.lexical._name];
 	if(this.lookahead == this.lexical._order_by) {
 	    this.color();
 	    this.shift();
@@ -230,6 +234,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.order_op = function() {
+	this.predict=[this.lexical._asc,this.lexical._desc];
 	if(this.lookahead == this.lexical.asc) {
 	    this.color();
 	    this.shift();
@@ -242,11 +247,13 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.condition = function() {
+	this.predict=[this.lexical._opening,this.lexical._name,this.lexical._not,this.lexical._like,this.lexical._in];
 	this.test();
 	this.condition_next();
     }
 
     this.condition_next = function() {
+	this.predict=[this.lexical._and,this.lexical._or,this.lexical._closing,this.lexical._name,this.lexical._group,this.lexical._having,this.lexical._order_by];
 	if(this.lookahead == this.lexical._and) {
 	    this.color();
 	    this.shift();
@@ -259,6 +266,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.test = function() {
+	this.predict=[this.lexical._like,this.lexical._in,this.lexical._not,this.lexical._name,this.lexical._opening];
 	if(this.lookahead == this.lexical._opening) {
 	    this.color();
 	    this.shift();
@@ -283,6 +291,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.test_other = function() {
+	this.predict=[this.lexical._like,this.lexical._in];
 	if(this.lookahead == this.lexical._like) {
 	    this.color();
 	    this.shift();
@@ -314,6 +323,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.test_next = function() {
+	this.predict=[this.lexical._opening,this.lexical._name,this.lexical._quote,this.lexical._double_quote,this.lexical._number];
 	if(this.lookahead == this.lexical._opening) {
 	    this.color();
 	    this.shift();
@@ -332,6 +342,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.op = function() {
+	this.predict=[this.lexical._equal,this.lexical._not_equal,this.lexical._less,this.lexical._greater,this.lexical._less_e,this.lexical._greater_e];
 	if(this.lookahead == this.lexical._equal) {
 	    this.color();
 	    this.shift();
@@ -356,6 +367,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.value = function() {
+	this.predict=[this.lexical._quote,this.lexical._double_quote,this.lexical._number];
 	if(this.lookahead == this.lexical._quote) {
 	    this.color();
 	    this.shift();

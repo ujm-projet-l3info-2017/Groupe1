@@ -111,7 +111,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.column_next = function() {
-	this.predict = [this.lexical._opening, this.lexical._dot, this.lexical._closing, this.lexical._name, this.lexical._from, this.lexical._as, this.lexical._comma, this.lexical._where, this.lexical._group, this.lexical._having, this.lexical._order, this.lexical._asc, this.lexical._desc, this.lexical._and, this.lexical._or, this.lexical._equal, this.lexical._not_equal, this.lexical._less, this.lexical._greater, this.lexical._less_e, this.lexical._greater_e];
+	this.predict = [];
 	if(this.lookahead == this.lexical._dot) {
 	    this.color();
 	    this.shift();

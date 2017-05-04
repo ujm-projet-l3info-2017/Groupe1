@@ -34,6 +34,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.query_list = function() {
+	this.predict = [this.lexical._opening, this.lexical._select, this.lexical._select_distinct];
 	if(this.lookahead == this.lexical._opening) {
 	    this.color();
 	    this.shift();
@@ -53,6 +54,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.query_list_next = function() {
+	this.predict = [this.lexical._name, this.lexical._closing];
 	if(this.lookahead == this.lexical._name) {
 	    this.color();
 	    this.shift();
@@ -61,6 +63,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.query = function() {
+	this.predict = [this.lexical._select, this.lexical._select_distinct];
 	this.select_mode();
 	this.select();
 	if(this.lookahead == this.lexical._from) {
@@ -73,6 +76,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.select_mode = function() {
+	this.predict = [this.lexical._select, this.lexical._select_distinct];
 	if(this.lookahead == this.lexical._select_distinct) {
 	    this.color();
 	    this.shift();
@@ -85,6 +89,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.select = function() {
+	this.predict = [this.lexical._name, this.lexical._star];
 	if(this.lookahead == this.lexical._star) {
 	    this.color();
 	    this.shift();
@@ -94,6 +99,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.column = function() {
+	this.predict = [this.lexical._name];
 	if(this.lookahead == this.lexical._name) {
 	    this.color();
 	    this.shift();
@@ -105,6 +111,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.column_next = function() {
+	this.predict = [this.lexical._opening, this.lexical._dot, this.lexical._closing, this.lexical._name, this.lexical._from, this.lexical._as, this.lexical._comma, this.lexical._where, this.lexical._group, this.lexical._having, this.lexical._order, this.lexical._asc, this.lexical._desc, this.lexical._and, this.lexical._or, this.lexical._equal, this.lexical._not_equal, this.lexical._less, this.lexical._greater, this.lexical._less_e, this.lexical._greater_e];
 	if(this.lookahead == this.lexical._dot) {
 	    this.color();
 	    this.shift();
@@ -129,12 +136,14 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.column_select_list = function() {
+	this.predict = [this.lexical._name];
 	this.column();
 	this.column_as();
 	this.column_select_list_next();
     }
 
     this.column_as = function() {
+	this.predict = [this.lexical._as, this.lexical._from, this.lexical._comma];
 	if(this.lookahead == this.lexical._as) {
 	    this.color();
 	    this.shift();
@@ -149,6 +158,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.column_select_list_next = function() {
+	this.predict = [this.lexical._comma, this.lexical._from];
 	if(this.lookahead == this.lexical._comma) {
 	    this.color();
 	    this.shift();
@@ -157,11 +167,13 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.column_list = function() {
+	this.predict = [this.lexical._name];
 	this.column();
 	this.column_list_next();
     }
 
     this.column_list_next = function() {
+	this.predict = [this.lexical._comma, this.lexical._closing, this.lexical._name, this.lexical._where, this.lexical._group, this.lexical._having, this.lexical._order, this.lexical._asc, this.lexical._desc];
 	if(this.lookahead == this.lexical._comma) {
 	    this.color();
 	    this.shift();
@@ -170,6 +182,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.name_list = function() {
+	this.predict = [this.lexical._name];
 	if(this.lookahead == this.lexical._name) {
 	    this.color();
 	    this.shift();
@@ -180,6 +193,7 @@ function SQLSyntaxParser(sentence) {
     }
 
     this.name_list_next = function() {
+	this.predict = [this.lexical._comma];
 	if(this.lookahead == this.lexical._comma) {
 	    this.color();
 	    this.shift();

@@ -22,10 +22,10 @@ function SQLSyntaxParser(sentence) {
 
     this.parse_error = function() {
 	while(this.lookahead != -1) {
-	    console.log("Hohoho: "+this.lexical.text);
 	    this.highlighting.push([this.lexical.text, "black"]);
 	    this.shift();
 	}
+	this.highlighting.push([this.lexical.sentence, "black"]);
 	throw new Error("Parse error");
     }
     
@@ -70,6 +70,7 @@ function SQLSyntaxParser(sentence) {
 	if(this.lookahead == this.lexical._from) {
 	    this.color();
 	    this.shift();
+	    this.name_list();
 	    this.query_next();
 	} else {
 	    this.parse_error();
@@ -204,6 +205,7 @@ function SQLSyntaxParser(sentence) {
 
     this.query_next = function() {
 	this.predict=[this.lexical._having,this.lexical._order_by,this.lexical._group,this.lexical._closing,this.lexical._name,this.lexical._where];
+	console.log("next");
 	if(this.lookahead == this.lexical._where) {
 	    this.color();
 	    this.shift();

@@ -4,13 +4,13 @@ function LexicalParser(sentence) {
     this.text = "";
 
     this.match = function(regex) {
-	var m = this.sentence.toLowerCase().match(new RegExp('^'+regex));
+	var m = this.sentence.toLowerCase().match(new RegExp('^'+regex+"\\s*"));
 	if(m == null) {
 	    return null;
 	} else {
 	    m = m[0];
 	}
-	console.log("sentence: "+this.sentence);
+	console.log("sentence: $"+this.sentence+"$");
 	console.log("m: "+m);
 	this.length = m.length;
 	this.text = m;
@@ -30,6 +30,8 @@ function LexicalParser(sentence) {
 function SQLLexicalParser(sentence) {
     LexicalParser.call(this, sentence);
 
+    this._nothing = -1;
+    
     this._query = 0;
     this._opening = 1;
     this._closing = 2;
@@ -102,7 +104,7 @@ function SQLLexicalParser(sentence) {
 
         if (this.match("[a-zA-Z0-9]+")) { return this._name; }
         if (this.match("[0-9]+")) { return this._number; }
-        if (this.match("\\s+")) { return this.get_lexeme(); }
-	return -1;
+	if (this.match("[ ]+")) { return this.get_lexeme(); }
+	return this._nothing;
     }
 }

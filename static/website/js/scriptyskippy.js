@@ -118,6 +118,7 @@ function get_length() {
 	length += e.childNodes.item(i).childNodes.item(0).nodeValue.length;
 	i++;
     }
+
     length += window.getSelection().getRangeAt(0).startOffset;
     return length;
 }
@@ -126,28 +127,61 @@ function set_cursor(length) {
     var e = document.getElementById("input_text");
     for(var i=0; i<e.childNodes.length; i++) {
 	var n_e = e.childNodes.item(i).childNodes.item(0);
-	var n = n_e.nodeValue;
-	var n_length = n.length;
-	if(n_length >= length) {
-	    var range = document.createRange();
-	    range.setStart(n_e,length);
-	    window.getSelection().removeAllRanges();
-	    window.getSelection().addRange(range);
-	}
-	else {
-	    length -= n_length;
+	if(n_e != null) {
+	    var n = n_e.nodeValue;
+	    var n_length = n.length;
+	    if(n_length >= length) {
+		var range = document.createRange();
+		range.setStart(n_e,length);
+		window.getSelection().removeAllRanges();
+		window.getSelection().addRange(range);
+		return;
+	    }
+	    else {
+		length -= n_length;
+	    }
 	}
     }    
 }
 
+function delete_br() {
+    var e = document.getElementById("input_text");
+    var l = e.getElementsByTagName("br");
+    for(var i=0; i<l.length; i++) {
+	/*if(l.item(i).attributes["type"] != undefined) {
+	   l.item(i).remove(); 
+	} else {
+	    console.log("hehe: "+l.item(i).parentElement);
+	    var parent = l.item(i).parentElement;
+	    parent.removeChild(l.item(i));
+	    parent.innerHTML += "";
+	    }*/
+	l.item(i).remove();
+    }
+}
+
+function set_space() {
+    var e = document.getElementById("input_text");
+    for(var i=0; i<e.childNodes.length; i++) {
+	var n_e = e.childNodes.item(i);
+	if(n_e.innerHTML != undefined) {
+	    n_e.innerHTML = n_e.innerHTML.replace(" ", "&nbsp;");
+	}
+    }
+}
+
 function color(){
     input_text = document.getElementById("input_text");
-    var sentence = input_text.innerText;
-    var p = new SQLSyntaxParser(sentence);
-    var last_letter = sentence[sentence.length-1];
     l = get_length();
 
-    if(sentence.length != 1 && last_letter == '\n') {
+    delete_br();
+    set_space();
+    
+    var sentence = input_text.innerText;
+    var last_letter = sentence[sentence.length-1];
+    
+    var p = new SQLSyntaxParser(sentence);
+	
 	try{
 	    p.parse();
 	}catch(e){}
@@ -161,17 +195,8 @@ function color(){
 	    span.innerText = tabcolor[i][0];
 	    span.style.color = tabcolor[i][1];
 	    input_text.appendChild(span);
-	    if(i < tabcolor.length-1) {
-		var span = document.createElement("span");
-		span.innerHTML = " ";
-		input_text.appendChild(span);
-	    }
 	}
-    //if(last_letter == '\n') {
-	var span = document.createElement("span");
-	span.innerHTML = "&nbsp;";
-	input_text.appendChild(span);
-    
-	set_cursor(l);
-    }
+
+    console.log("len: "+l);
+    set_cursor(l);
 }

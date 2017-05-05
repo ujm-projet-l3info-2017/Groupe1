@@ -19,6 +19,8 @@ class SyntaxParser():
 
     def parse_error(self):
         print("Parsing error")
+        raise Exception()
+        return None 
 
     def parse(self):
         raise NotImplementedError
@@ -74,7 +76,18 @@ class SQLSyntaxParser(SyntaxParser):
             tree_from = AbstractTree(self.lexical._from, self.lexical.get_text())
             self.shift()
             tree_name = self.name_list()
+
+            check_table=tree_name
+            print(tree_name)
+            while(check_table!=None):
+                print("Check: "+check_table.element)
+                m = re.match(r"^auth.+|^django.+|^website.*",check_table.element)
+                if(m != None):
+                    return self.parse_error()
+                check_table=check_table.get_brother()
             
+            print("TESTFFF")
+                
             # We have to create the tree of tables
             tables = []
             tmp = tree_name
@@ -96,7 +109,7 @@ class SQLSyntaxParser(SyntaxParser):
             tree.concatenate_father_brother(tree_from)
             return tree
         else:
-            self.parse_error()
+            return self.parse_error()
 
     def select_mode(self):
         if(self.get_lookahead() == self.lexical._select_distinct):
@@ -108,7 +121,7 @@ class SQLSyntaxParser(SyntaxParser):
             self.shift()
             return tree_mode
         else:
-            self.parse_error()
+            return self.parse_error()
 
     def select(self):
         if(self.get_lookahead() == self.lexical._star):
@@ -142,7 +155,7 @@ class SQLSyntaxParser(SyntaxParser):
                 tree.concatenate_father_son(tree_next)
             return tree
         else:
-            self.parse_error()
+            return self.parse_error()
 
     def column_next(self):
         if(self.get_lookahead() == self.lexical._dot):
@@ -153,7 +166,7 @@ class SQLSyntaxParser(SyntaxParser):
                 self.shift()
                 return tree_dot
             else:
-                self.parse_error()
+                return self.parse_error()
         elif(self.get_lookahead() == self.lexical._opening):
             self.shift()
             tree = self.column()
@@ -161,7 +174,7 @@ class SQLSyntaxParser(SyntaxParser):
                 self.shift()
                 return tree
             else:
-                self.parse_error()
+                return self.parse_error()
 
     def column_select_list(self):
         tree_column = self.column()
@@ -180,7 +193,7 @@ class SQLSyntaxParser(SyntaxParser):
                 self.shift()
                 return tree_as
             else:
-                self.parse_error()
+                return self.parse_error()
 
     def column_select_list_next(self):
         if(self.get_lookahead() == self.lexical._comma):
@@ -208,7 +221,7 @@ class SQLSyntaxParser(SyntaxParser):
             tree.concatenate_father_brother(tree_list)
             return tree
         else:
-            self.parse_error()
+            return self.parse_error()
 
     def name_list_next(self):
         if(self.get_lookahead() == self.lexical._comma):
@@ -291,7 +304,7 @@ class SQLSyntaxParser(SyntaxParser):
             self.shift()
             return tree
         else:
-            self.parse_error()
+            return self.parse_error()
 
     def condition(self):
         tree_test = self.test()
@@ -327,7 +340,7 @@ class SQLSyntaxParser(SyntaxParser):
                 self.shift()
                 return tree
             else:
-                self.parse_error()
+                return self.parse_error()
         elif(self.get_lookahead() == self.lexical._not):
             tree_not = AbstractTree(self.lexical._not, self.lexical.get_text())
             self.shift()
@@ -357,7 +370,7 @@ class SQLSyntaxParser(SyntaxParser):
                 self.shift()
                 return tree_like
             else:
-                self.parse_error()
+                return self.parse_error()
         elif(self.get_lookahead() == self.lexical._in):
             tree_in = AbstractTree(self.lexical._in, self.lexical.get_text())
             self.shift()
@@ -369,11 +382,11 @@ class SQLSyntaxParser(SyntaxParser):
                     tree_in.concatenate_father_son(tree)
                     return tree_in
                 else:
-                    self.parse_error()
+                    return self.parse_error()
             else:
-                self.parse_error()
+                return self.parse_error()
         else:
-            self.parse_error()
+            return self.parse_error()
 
     def test_next(self):
         if(self.get_lookahead() == self.lexical._opening):
@@ -382,7 +395,7 @@ class SQLSyntaxParser(SyntaxParser):
             if(self.get_lookahead() == self.lexical._closing):
                 self.shift()
             else:
-                self.parse_error()
+                return self.parse_error()
         elif(self.get_lookahead() == self.lexical._quote or self.get_lookahead() == self.lexical._double_quote or self.get_lookahead() == self.lexical._number):
             tree = self.value()
         else:
@@ -415,7 +428,7 @@ class SQLSyntaxParser(SyntaxParser):
             self.shift()
             return tree
         else:
-            self.parse_error()
+            return self.parse_error()
 
     def value(self):
         if(self.get_lookahead() == self.lexical._quote):
@@ -427,9 +440,9 @@ class SQLSyntaxParser(SyntaxParser):
                     self.shift()
                     return tree
                 else:
-                    self.parse_error()
+                    return self.parse_error()
             else:
-                self.parse_error()
+                return self.parse_error()
         elif(self.get_lookahead() == self.lexical._double_quote):
             self.shift()
             if(self.get_lookahead() == self.lexical._name):
@@ -439,12 +452,12 @@ class SQLSyntaxParser(SyntaxParser):
                     self.shift()
                     return tree
                 else:
-                    self.parse_error()
+                    return self.parse_error()
             else:
-                self.parse_error()
+                return self.parse_error()
         elif(self.get_lookahead() == self.lexical._number):
             tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
             self.shift()
             return tree
         else:
-            self.parse_error()
+            return self.parse_error()

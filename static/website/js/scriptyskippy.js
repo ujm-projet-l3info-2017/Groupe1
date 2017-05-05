@@ -16,7 +16,7 @@ function get_request() {
 	headers: {
             'X-CSRFToken': get_token()
 	},
-	data : { query : $("#input textarea").val(), exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val() },	
+	data : { query : $("#input_text").val(), exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val() },	
 	success : function(data, status){
 	    if (status ==="success")
 		$("#output_request").html( data );
@@ -31,7 +31,7 @@ function get_expected_request() {
 	headers: {
             'X-CSRFToken': get_token()
 	},
-	data : { query : $("#input textarea").val(),exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val() },	
+	data : {exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val() },	
 	success : function(data, status){
 	    if (status ==="success")
 		$("#expected_request").html( data );

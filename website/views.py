@@ -27,38 +27,49 @@ def index(request):
 def request(request):
     # Ajouter un argument "contenu requete"
     # Recupere a l'envoi de la requete par l'utilisateur
+
     requete = request.POST.get('query')
     
     column_expected, table_expected = expected_request(request)
     template = loader.get_template('website/request.html')
 
-    check=check_table(request)
-    if (check==0) :
-        context= {   
-            'error': "no such table"
+    
+    #check=check_table(request)
+    #if (check==0) :
+    #    context= {   
+    #        'error': "no such table"
+    #    }
+    #    template = loader.get_template('website/error_request.html')
+#    return HttpResponse(template.render(context, request))
+    
+    try:
+        p = SQLSyntaxParser(requete)
+        t2 = p.parse()
+
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute(requete)
+                column_name = [col[0] for col in cursor.description]
+                row = cursor.fetchall()
+                row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
+                color_table =compare_table(table_expected, row, column_expected, column_name)
+                table = [[[color_table[i][j], row[i][j]] for j in range(len(row[i]))] for i in range(len(row))]
+                context= {
+                    'column_name': column_name,
+                    'table': table
+                }
+            except Exception as e:
+                error = str(e)
+                context= {
+                    'error': error
+                }
+                template = loader.get_template('website/error_request.html')
+    except Exception as e:
+        context={
+            'error': "Erreur d'analyse"
         }
         template = loader.get_template('website/error_request.html')
-        return HttpResponse(template.render(context, request))
-    
-    with connection.cursor() as cursor:
-        try:
-            cursor.execute(requete)
-            column_name = [col[0] for col in cursor.description]
-            row = cursor.fetchall()
-            row = [[str(row[i][j]) for j in range(len(row[i]))] for i in range(len(row))]
-            color_table =compare_table(table_expected, row, column_expected, column_name)
-            table = [[[color_table[i][j], row[i][j]] for j in range(len(row[i]))] for i in range(len(row))]
-            context= {
-                'column_name': column_name,
-                'table': table
-            }
-        except Exception as e:
-            error = str(e)
-            context= {
-                'error': error
-            }
-            template = loader.get_template('website/error_request.html')
-
+        
     return HttpResponse(template.render(context, request))
 
 

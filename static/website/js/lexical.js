@@ -10,10 +10,8 @@ function LexicalParser(sentence) {
 	} else {
 	    m = m[0];
 	}
-	console.log("sentence: $"+this.sentence+"$");
-	console.log("m: "+m);
 	this.length = m.length;
-	this.text = m;
+	this.text = this.sentence.substring(0, m.length);
 	this.shift(this.length);
 	return this.text;
     }

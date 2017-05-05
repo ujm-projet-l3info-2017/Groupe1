@@ -10,13 +10,14 @@ function get_token(){
 }
 
 function get_request() {    
+    var input = $("#input_text").text().replace(/\s/g, " ");
     $.ajax({
 	url : '/request/', 
 	type : 'POST' ,
 	headers: {
             'X-CSRFToken': get_token()
 	},
-	data : { query : $("#input_text").val(), exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val() },	
+	data : { query : input, exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val() },	
 	success : function(data, status){
 	    if (status ==="success")
 		$("#output_request").html( data );
@@ -24,7 +25,7 @@ function get_request() {
     });
 }
 
-function get_expected_request() {    
+function get_expected_request() {
     $.ajax({
 	url : '/expected_request/', 
 	type : 'POST' ,
@@ -80,14 +81,15 @@ function get_question() {
     });   
 }
 
-function get_hint() {    
+function get_hint() {
+    var input = $("#input_text").text().replace(/\s/g, " ");
     $.ajax({
 	url : '/hint/', 
 	type : 'POST' ,
 	headers: {
             'X-CSRFToken': get_token()
 	},
-	data : { exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val(), query : $("#input textarea").val() },	
+	data : { exercise_no : $("#exercise_selection").val(), question_no : $("#question_selection").val(), query : input },	
 	success : function(data, status){
 	    if (status ==="success")
 		$("#hint").html(data);
@@ -148,14 +150,6 @@ function delete_br() {
     var e = document.getElementById("input_text");
     var l = e.getElementsByTagName("br");
     for(var i=0; i<l.length; i++) {
-	/*if(l.item(i).attributes["type"] != undefined) {
-	   l.item(i).remove(); 
-	} else {
-	    console.log("hehe: "+l.item(i).parentElement);
-	    var parent = l.item(i).parentElement;
-	    parent.removeChild(l.item(i));
-	    parent.innerHTML += "";
-	    }*/
 	l.item(i).remove();
     }
 }

@@ -10,7 +10,7 @@ class LexicalParser():
         self.sentence = sentence
         
     def match(self, regex):
-        m = re.match(r"^"+regex, self.sentence)
+        m = re.match(r"^"+regex, self.sentence.lower())
         if(m == None):
             return None
         self.length = len(m.group(0))
@@ -22,7 +22,7 @@ class LexicalParser():
         self.sentence = self.sentence[self.length:]
 
     def get_text(self):
-        return self.text.lower()
+        return self.text
     
     def get_lexeme(self):
         raise NotImplementedError
@@ -79,22 +79,22 @@ class SQLLexicalParser(LexicalParser):
         if self.match("<") : return self._less
         if self.match(">") : return self._greater
 
-        if self.match("(SELECT|select)[ ]+(DISTINCT|distinct)") : return self._select_distinct
-        if self.match("SELECT|select") : return self._select
-        if self.match("FROM|from") : return self._from
-        if self.match("AS|as") : return self._as
-        if self.match("WHERE|where") : return self._where
-        if self.match("(GROUP|group)[ ]+(BY|by)") : return self._group_by
-        if self.match("HAVING|having") : return self._having
-        if self.match("ORDER[ ]+BY") : return self._order_by
-        if self.match("ASC|asc") : return self._asc
-        if self.match("DESC|desc") : return self._desc
-        if self.match("AND|and") : return self._and
-        if self.match("OR|or") : return self._or
-        if self.match("NOT|not") : return self._not
-        if self.match("LIKE|like") : return self._like
-        if self.match("IN|in") : return self._in
+        if self.match("select\s+distinct") : return self._select_distinct
+        if self.match("select") : return self._select
+        if self.match("from") : return self._from
+        if self.match("as") : return self._as
+        if self.match("where") : return self._where
+        if self.match("group\s+by") : return self._group_by
+        if self.match("having") : return self._having
+        if self.match("order\s+by") : return self._order_by
+        if self.match("asc") : return self._asc
+        if self.match("desc") : return self._desc
+        if self.match("and") : return self._and
+        if self.match("or") : return self._or
+        if self.match("not") : return self._not
+        if self.match("like") : return self._like
+        if self.match("in") : return self._in
 
         if self.match("[a-zA-Z0-9]+") : return self._name
         if self.match("[0-9]+") : return self._number
-        if self.match("[ ]+") : return self.get_lexeme()
+        if self.match("\s+") : return self.get_lexeme()

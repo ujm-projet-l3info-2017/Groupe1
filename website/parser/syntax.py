@@ -18,9 +18,8 @@ class SyntaxParser():
         print("lookahead: "+str(self.lookahead))
 
     def parse_error(self):
-        print("Parsing error")
-        raise Exception()
-        return None 
+        print("parsing error")
+        raise NameError("Erreur d'analyse")
 
     def parse(self):
         raise NotImplementedError

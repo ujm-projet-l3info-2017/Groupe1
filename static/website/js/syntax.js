@@ -46,7 +46,7 @@ function SQLSyntaxParser(sentence) {
 		this.query_list_next();
 	    }
 	    else {
-		return this.parse_error();
+		this.parse_error();
 	    }
 	} else {
 	    this.query();
@@ -60,6 +60,8 @@ function SQLSyntaxParser(sentence) {
 	    this.color();
 	    this.shift();
 	    this.query_list();
+	} else {
+	    this.parse_error();
 	}
     }
 

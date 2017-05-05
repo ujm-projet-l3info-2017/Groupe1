@@ -160,17 +160,25 @@ def load_hint(request):
                 'error': error
             }
             template = loader.get_template('website/error_request.html')
-    p = SQLSyntaxParser(expected_request)
-    t1 = p.parse()
-    p = SQLSyntaxParser(user_request)
-    t2 = p.parse()
-    mapping = Mapping(t1, t2)
-    mapping.compare()
-    context = {
-        'hint': mapping.hint
-    }
-    template = loader.get_template('website/hint.html')
-    return HttpResponse(template.render(context, request))
+    try:
+        p = SQLSyntaxParser(expected_request)
+        t1 = p.parse()
+        p = SQLSyntaxParser(user_request)
+        t2 = p.parse()
+        mapping = Mapping(t1, t2)
+        mapping.compare()
+        context = {
+            'hint': mapping.hint
+        }
+        template = loader.get_template('website/hint.html')
+        return HttpResponse(template.render(context, request))
+    except Exception as e:
+        error = str(e)
+        context= {
+            'error': error
+        }
+        template = loader.get_template('website/error_request.html')
+        return HttpResponse(template.render(context, request))
     
     
             

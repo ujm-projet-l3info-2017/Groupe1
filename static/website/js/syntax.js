@@ -22,6 +22,7 @@ function SQLSyntaxParser(sentence) {
 
     this.parse_error = function() {
 	while(this.lookahead != -1) {
+	    console.log("Hohoho: "+this.lexical.text);
 	    this.highlighting.push([this.lexical.text, "black"]);
 	    this.shift();
 	}

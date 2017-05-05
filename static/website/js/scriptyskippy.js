@@ -146,30 +146,32 @@ function color(){
     var p = new SQLSyntaxParser(sentence);
     var last_letter = sentence[sentence.length-1];
     l = get_length();
+
+    if(sentence.length != 1 && last_letter == '\n') {
+	try{
+	    p.parse();
+	}catch(e){}
     
-    try{
-	p.parse();
-    }catch(e){}
-    
-    var tabcolor = p.highlighting;
-    input_text.innerHTML = "";
-    console.log(tabcolor);
-    for(var i=0; i< tabcolor.length; i++){
-	var span = document.createElement("span");
-	span.innerText = tabcolor[i][0];
-	span.style.color = tabcolor[i][1];
-	input_text.appendChild(span);
-	if(i < tabcolor.length-1) {
+	var tabcolor = p.highlighting;
+	console.log(tabcolor);
+	input_text.innerHTML = "";
+	console.log(tabcolor);
+	for(var i=0; i< tabcolor.length; i++){
 	    var span = document.createElement("span");
-	    span.innerHTML = "&nbsp;";
+	    span.innerText = tabcolor[i][0];
+	    span.style.color = tabcolor[i][1];
 	    input_text.appendChild(span);
+	    if(i < tabcolor.length-1) {
+		var span = document.createElement("span");
+		span.innerHTML = " ";
+		input_text.appendChild(span);
+	    }
 	}
-    }
-    if(last_letter == '\n') {
+    //if(last_letter == '\n') {
 	var span = document.createElement("span");
 	span.innerHTML = "&nbsp;";
 	input_text.appendChild(span);
-    }
     
-    set_cursor(l);
+	set_cursor(l);
+    }
 }

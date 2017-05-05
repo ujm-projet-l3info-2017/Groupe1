@@ -4,12 +4,14 @@ function LexicalParser(sentence) {
     this.text = "";
 
     this.match = function(regex) {
-	var m = this.sentence.match(new RegExp('^'+regex));
+	var m = this.sentence.toLowerCase().match(new RegExp('^'+regex));
 	if(m == null) {
 	    return null;
 	} else {
 	    m = m[0];
 	}
+	console.log("sentence: "+this.sentence);
+	console.log("m: "+m);
 	this.length = m.length;
 	this.text = m;
 	this.shift(this.length);
@@ -21,7 +23,7 @@ function LexicalParser(sentence) {
     }
 
     this.get_text = function() {
-	return this.text.toLowerCase();
+	return this.text;
     }
 }
 
@@ -82,25 +84,25 @@ function SQLLexicalParser(sentence) {
         if (this.match("<")) { return this._less; }
         if (this.match(">")) { return this._greater; }
 
-        if (this.match("(SELECT|select)[ ]+(DISTINCT|distinct)")) { return this._select_distinct; }
-        if (this.match("SELECT|select")) { return this._select; }
-        if (this.match("FROM|from")) { return this._from; }
-        if (this.match("AS|as")) { return this._as; }
-        if (this.match("WHERE|where")) { return this._where; }
-        if (this.match("(GROUP|group)[ ]+(BY|by)")) { return this._group_by; }
-        if (this.match("HAVING|having")) { return this._having; }
-        if (this.match("ORDER[ ]+BY")) { return this._order_by; }
-        if (this.match("ASC|asc")) { return this._asc; }
-        if (this.match("DESC|desc")) { return this._desc; }
-        if (this.match("AND|and")) { return this._and; }
-        if (this.match("OR|or")) { return this._or; }
-        if (this.match("NOT|not")) { return this._not; }
-        if (this.match("LIKE|like")) { return this._like; }
-        if (this.match("IN|in")) { return this._in; }
+        if (this.match("select\\s+distinct")) { return this._select_distinct; }
+        if (this.match("select")) { return this._select; }
+        if (this.match("from")) { return this._from; }
+        if (this.match("as")) { return this._as; }
+        if (this.match("where")) { return this._where; }
+        if (this.match("group\\s+by")) { return this._group_by; }
+        if (this.match("having")) { return this._having; }
+        if (this.match("order\\s+by")) { return this._order_by; }
+        if (this.match("asc")) { return this._asc; }
+        if (this.match("desc")) { return this._desc; }
+        if (this.match("and")) { return this._and; }
+        if (this.match("or")) { return this._or; }
+        if (this.match("not")) { return this._not; }
+        if (this.match("like")) { return this._like; }
+        if (this.match("in")) { return this._in; }
 
         if (this.match("[a-zA-Z0-9]+")) { return this._name; }
         if (this.match("[0-9]+")) { return this._number; }
-        if (this.match("[ ]+")) { return this.get_lexeme(); }
+        if (this.match("\\s+")) { return this.get_lexeme(); }
 	return -1;
     }
 }

@@ -13,52 +13,53 @@
   </head>
 
   <body>
-    <div id="header">
-      
-      <span id="exercise" class="custom-dropdown custom-dropdown--white">
-	{{exercice | safe}}
-      </span>
-
-      <span id="question" class="custom-dropdown custom-dropdown--white">
-	{{question | safe}}
-      </span>
-      
-      <div id="question_label">
-	{{label | safe}}
+      <div id="header">
+      <table>
+      <tr>
+          <td id="exercise">
+	          {{exercice | safe}}
+	        </td>
+          <td id="question">
+		        {{question | safe}}
+	        </td>
+        </tr>
+  
+        <tr>
+	        <td id="question_label" colspan="2">
+	          {{label | safe}}
+	        </td>
+	      </tr>
+      </table>
       </div>
+      <div id="table_body">
+	    <table>
+        <tr>
+	    	  <td id="input">
+	          <form>
+	            <div id="input_text" contenteditable="true" onkeyup="color()">Tapez votre requete ici ...</div>
+              <div id="input_predict"></div>
+	            <input type="button" onclick="get_request(); get_hint()" value="Envoyer" />
+              <input type="button" onclick="reset_tables()" value="Reset BDD" />
+	          </form>
+	        </td>
+	        <td id="output_request">
+	          <p>La reponse</p>
+	        </td>
+	    	</tr>
 
-    </div>
+        <tr>
+          <td id="hint">
+		        Un conseil !
+	        </td>
 
-    
-    <div id="input">
-      <div id="input_text" contenteditable="true" onkeyup="color()">Tapez votre requete ici ...</div>
-      
-      <form id="form_submit">
-	<input type="button" onclick="get_request(); get_hint()" value="Envoyer" /> 
-	<input type="button" onclick="reset_tables()" value="Reset BDD" />
-      </form>
-      
-      <div id="hint">
-	Un conseil !
-      </div>
-
-      
-    </div>
-    <div id="display_request">
-
-
-      <div id="output_request">
-	<p>La reponse</p>
-      </div>
-      <hr>
-      <div id="expected_request">
-	{{expected_request |safe }}
-      </div>
-    </div>
-
-    <div id="tables">
-	{{tables | safe}}
-    </div>
+          <td id="expected_request">
+	          {{expected_request |safe }}
+	        </td>
+	      </tr>
+       </table> 
+       </div>
+        <div id="tables">
+          {{tables | safe}}
+	      </div>
   </body>
-
 </html> 

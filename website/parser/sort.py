@@ -1,17 +1,23 @@
 def concat_0(self):
-    #concat of -FROM- attributes
+    """
+    Concatenate the first node
+    """
     if (self != None):
         return str(self.element)+concat(self.left)
     
 def concat(self):
-    #concat of each attribute with their sons(left) and brothers(right)
+    """
+    Concatenation of each attribute with their sons(left) and brothers(right)
+    """
     if (self != None):
         return str(self.element)+concat(self.left)+concat(self.right)
     else:
         return ''
     
 def brothers(self):
-    #counts the number(size) of brothers(right) 
+    """
+    Count the number(size) of brothers(right) 
+    """
     count = 0
     tmp = self
     while (tmp != None):
@@ -20,18 +26,24 @@ def brothers(self):
     return count
 
 def node(self,index):
-    #returns the index-nth brother of self
+    """
+    Return the index-nth brother of self
+    """
     if( index==0):
         return self
     else :
         return node(self.right,index-1)
 
 def order(element1, element2):
-    #compares two elements based on lexicographic order
+    """
+    Compare two elements based on lexicographic order
+    """
     return(element1<element2)
 
-def sort(self, size):
-    #bubble sort on each of self's brothers, after they are turned into strings
+def sort_element(self, size):
+    """
+    Bubble sort on each of self's brothers, after they are turned into strings
+    """
     if (size>=2):
         for i in range (size, 1,-1):
             is_sorted = True
@@ -47,7 +59,7 @@ def sort(self, size):
                     if (is_sorted):
                         break
 
-def sort_from(self):
-    #executing bubble sort on the -FROM- branch of the query tree
+def sort(self):
+    #Execute bubble sort on the branch of the query tree
     if (self.get_son() != None):
-        sort(self.get_son(),brothers(self.get_son()))
+        sort_element(self.get_son(),brothers(self.get_son()))

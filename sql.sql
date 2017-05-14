@@ -32,10 +32,11 @@ INSERT INTO website_table (nom,attribut,remplissage) VALUES
 (
 	"fournisseurs",
 	'(NOFOUR INTEGER PRIMARY KEY AUTOINCREMENT, NOMFOUR VARCHAR(50), ADRFOUR VARCHAR(100), VILLEFOUR VARCHAR(50) );',
-	'(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Point P","20 rue paumee","Lyon");  
+	'(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Point P","20 rue paumee","Lyon"); 
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Karibou","52 avenue uneva","Marseille");  
-	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Asus","5685 rue jeanmarie","Washington"); 
-	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Carrefour","30 rue de la République","Paris"); 
+	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Asus","5685 rue Jeanne d'Arc","Washington"); 
+	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Carrefour","30 rue de la République","Paris");
+	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Decathlon ","2 impasse du calvaire","Lyon");
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Ikea","6 place des babouches","Brest");' 
 );
 

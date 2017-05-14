@@ -98,111 +98,114 @@ function color() {
 function predict(predict_set) {
   input_predict = document.getElementById("input_predict");
   input_predict.innerHTML = "";
-  var ul = document.createElement("ul");
+  var table = document.createElement("table");
+  var tr = document.createElement("tr");
+   table.appendChild(tr);
+
   for(var i=0; i<predict_set.length; i++) {
-    var li = document.createElement("li");
-    ul.appendChild(li);
+    var td = document.createElement("td");
+    tr.appendChild(td);
     p = new SQLLexicalParser("");
     
     switch(predict_set[i]) {
       case p._query:
-        li.innerText = "Requete";
+        td.innerText = "Requete";
         break;
       case p._opening:
-        li.innerText = "(";
+        td.innerText = "(";
         break;
       case p._closing:
-        li.innerText = ")";
+        td.innerText = ")";
         break;
       case p._star:
-        li.innerText = "*";
+        td.innerText = "*";
         break;
       case p._dot:
-        li.innerText = ".";
+        td.innerText = ".";
         break;
       case p._comma:
-        li.innerText = ",";
+        td.innerText = ",";
         break;
       case p._quote:
-        li.innerText = "\'";
+        td.innerText = "\'";
         break;
       case p._double_quote:
-        li.innerText = "\"";
+        td.innerText = "\"";
         break;
       
       case p._equal:
-        li.innerText = "=";
+        td.innerText = "=";
         break;
       case p._not_equal:
-        li.innerText = "!=";
+        td.innerText = "!=";
         break;
       case p._less_e:
-        li.innerText = "<=";
+        td.innerText = "<=";
         break;
       case p._greater_e:
-        li.innerText = ">=";
+        td.innerText = ">=";
         break;
       case p._less:
-        li.innerText = "<";
+        td.innerText = "<";
         break;
       case p._greater:
-        li.innerText = ">";
+        td.innerText = ">";
         break;
 
       case p._select_distinct:
-        li.innerText = "SELECT DISTINCT";
+        td.innerText = "SELECT DISTINCT";
         break;
       case p._select:
-        li.innerText = "SELECT";
+        td.innerText = "SELECT";
         break;
       case p._from:
-        li.innerText = "FROM";
+        td.innerText = "FROM";
         break;
       case p._as:
-        li.innerText = "AS";
+        td.innerText = "AS";
         break;
       case p._where: 
-        li.innerText = "WHERE";
+        td.innerText = "WHERE";
         break;
       case p._group_by:
-        li.innerText = "GROUP BY";
+        td.innerText = "GROUP BY";
         break;
       case p._having:
-        li.innerText = "HAVING";
+        td.innerText = "HAVING";
         break;
       case p._order_by:
-        li.innerText = "ORDER BY";
+        td.innerText = "ORDER BY";
         break;
       case p._asc:
-        li.innerText = "ASC";
+        td.innerText = "ASC";
         break;
       case p._desc:
-        li.innerText = "DESC";
+        td.innerText = "DESC";
         break;
       case p._and:
-        li.innerText = "AND";
+        td.innerText = "AND";
         break;
       case p._or:
-        li.innerText = "OR";
+        td.innerText = "OR";
         break;
       case p._not:
-        li.innerText = "NOT";
+        td.innerText = "NOT";
         break;
       case p._like:
-        li.innerText = "LIKE";
+        td.innerText = "LIKE";
         break;
       case p._in:
-        li.innerText = "IN";
+        td.innerText = "IN";
         break;
       case p._name:
-        li.innerText = "Texte";
+        td.innerText = "Texte";
         break;
       case p._number:
-        li.innerText = "Nombre";
+        td.innerText = "Nombre";
         break;
       default:
         li.innerText = "Autre";
     }
   }
-  input_predict.appendChild(ul);
+  input_predict.appendChild(table);
 }

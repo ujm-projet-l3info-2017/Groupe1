@@ -1,6 +1,6 @@
 {% if row %}
 <form>
-    <select id="exercise_selection" onchange="get_question();  get_label(); get_expected_request(); get_tables();">
+    <select id="exercise_selection" class="custom-dropdown__select custom-dropdown__select--white" onchange="get_question();  get_label(); get_expected_request(); get_tables();">
   {% for line in row %}  
   {% for value in line %}
   <option value={{value}}>Exercice {{value}}</option>

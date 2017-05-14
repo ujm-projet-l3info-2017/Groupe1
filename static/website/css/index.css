@@ -1,16 +1,9 @@
 body {
     background: #FFFFFF;
+    margin:0;
 }
 
-#input_output table {
-    margin: 0 auto;
-}
-
-table, th, td {
-    border: 1px solid black;
-}
-	 
-#noBorder {
+.noBorder {
     border: None;
 }
 
@@ -25,3 +18,204 @@ table, th, td {
 .color-2 {
     background: red;
 }
+
+#header{
+    padding-top:20px;
+    height:100px;
+    background:blue;
+    text-align:center;
+}
+#question_label{
+    margin: auto;
+    vertical-align:middle;
+    display:block;
+    background:white;
+    height:35px;
+    line-height:2.2em;
+    min-width:100px;
+}
+
+#input{
+    width:50%;
+    background:green;
+    min-height:500px;
+    position:absolute;
+}
+
+#input_text{
+    position:relative;
+    margin-top:30px;
+    margin-right:30px;
+    float:right;
+    height:150px;
+    background:white;
+    min-width:500px;
+}
+
+#display_request{
+    display:block;
+    float:right;
+    width:50%;
+    background:yellow;
+    min-height:500px;
+}
+#form_submit{
+    clear:right;
+    float:right;
+    margin-top:10px;
+    margin-right:30px;
+}
+
+#hint{
+    min-height:150px;
+    margin-top:30px;
+    margin-right:30px;
+    clear:right;
+    float:right;
+}
+
+#output_request{
+    margin-top:30px;
+    margin-left:30px;
+    margin-bottom:30px;
+    min-height:200px;
+    background:purple;
+}
+#expected_request{
+    margin-top:30px;
+    margin-left:30px;
+    
+    min-height:200px;
+    background:chartreuse;
+}
+
+#tables{
+    margin:auto;
+    margin-bottom:0;
+    background:pink;
+}
+
+
+
+
+/* http://red-team-design.developpez.com/tutoriels/css/donner-style-listes-deroulantes/ */
+
+.custom-dropdown--large {
+    font-size: 1.5em;
+}
+
+.custom-dropdown--small {
+    font-size: .7em;
+}
+
+.custom-dropdown__select{
+    font-size: inherit; /* inherit size from .custom-dropdown */
+    padding: .5em; /* add some space*/
+    margin: 0; /* remove default margins */
+}
+
+.custom-dropdown__select--white {
+    background-color: #fff;
+    color: #444;
+    width:125px;
+}
+
+@supports (pointer-events: none) and
+((-webkit-appearance: none) or
+ (-moz-appearance: none) or
+ (appearance: none)) {
+
+    .custom-dropdown {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .custom-dropdown__select {
+        padding-right: 2.5em; /* accommodate with the pseudo elements for the dropdown arrow */
+        border: 0;
+        border-radius: 3px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;    
+    }
+
+    .custom-dropdown::before,
+    .custom-dropdown::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .custom-dropdown::after { /*  Custom dropdown arrow */
+        content: "\25BC";
+        height: 1em;
+        font-size: .625em;
+        line-height: 1;
+        right: 1.2em;
+        top: 50%; margin-top: -.5em;
+    }
+
+    .custom-dropdown::before { /*  Custom dropdown arrow cover */
+        width: 2em;
+        right: 0; top: 0; bottom: 0;
+        border-radius: 0 3px 3px 0;
+    }
+
+    .custom-dropdown__select[disabled] {
+        color: rgba(0,0,0,.3);
+    }
+
+    .custom-dropdown.custom-dropdown--disabled::after {
+        color: rgba(0,0,0,.1);
+    }
+
+    /* White dropdown style */
+    .custom-dropdown--white::before {
+        top: .5em; bottom: .5em;
+        background-color: #fff;
+        border-left: 1px solid rgba(0,0,0,.1);
+    }
+
+    .custom-dropdown--white::after {
+        color: rgba(0,0,0,.9);
+    }
+
+    /* FF only temp fix */
+    @-moz-document url-prefix() {
+        .custom-dropdown__select              { padding-right: .9em }
+        .custom-dropdown--large .custom-dropdown__select { padding-right: 1.3em }
+        .custom-dropdown--small .custom-dropdown__select { padding-right: .5em }
+    }
+}
+
+
+/* https://www.xul.fr/css/table.php */
+table {
+    border-collapse:collapse;
+    width:100%;
+    max-width:700px;
+    min-width:400px;
+    text-align:center;
+}
+
+caption {
+    caption-side:bottom;
+    font-weight:bold;
+    font-style:italic;
+    margin:4px;
+}
+
+table, td {
+    border: 1px solid gray;
+}
+
+td {
+    height: 24px;
+    padding:4px;
+    vertical-align:middle;
+    
+    text-align:center;
+    margin:auto;
+}
+

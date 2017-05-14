@@ -1,13 +1,13 @@
 {% if tables  %}
-<table id="noBorder">
+<table class="noBorder">
   <tr >
     {% for n in name %}
-    <td id="noBorder"> {{ n }} </td>
+    <td class="noBorder"> {{ n }} </td>
     {% endfor %}
   </tr>
   <tr>
     {% for tab in tables  %}
-    <td id="noBorder">
+    <td class="noBorder">
     <table>
       <tr>
 	{% for cn in tab.0 %}

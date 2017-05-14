@@ -91,4 +91,118 @@ function color() {
 	}
   /* And we set the cursor at the right place */
   set_cursor(l);
+
+  predict(p.predict);
+}
+
+function predict(predict_set) {
+  input_predict = document.getElementById("input_predict");
+  input_predict.innerHTML = "";
+  var ul = document.createElement("ul");
+  for(var i=0; i<predict_set.length; i++) {
+    var li = document.createElement("li");
+    ul.appendChild(li);
+    p = new SQLLexicalParser("");
+    
+    switch(predict_set[i]) {
+      case p._query:
+        li.innerText = "Requete";
+        break;
+      case p._opening:
+        li.innerText = "(";
+        break;
+      case p._closing:
+        li.innerText = ")";
+        break;
+      case p._star:
+        li.innerText = "*";
+        break;
+      case p._dot:
+        li.innerText = ".";
+        break;
+      case p._comma:
+        li.innerText = ",";
+        break;
+      case p._quote:
+        li.innerText = "\'";
+        break;
+      case p._double_quote:
+        li.innerText = "\"";
+        break;
+      
+      case p._equal:
+        li.innerText = "=";
+        break;
+      case p._not_equal:
+        li.innerText = "!=";
+        break;
+      case p._less_e:
+        li.innerText = "<=";
+        break;
+      case p._greater_e:
+        li.innerText = ">=";
+        break;
+      case p._less:
+        li.innerText = "<";
+        break;
+      case p._greater:
+        li.innerText = ">";
+        break;
+
+      case p._select_distinct:
+        li.innerText = "SELECT DISTINCT";
+        break;
+      case p._select:
+        li.innerText = "SELECT";
+        break;
+      case p._from:
+        li.innerText = "FROM";
+        break;
+      case p._as:
+        li.innerText = "AS";
+        break;
+      case p._where: 
+        li.innerText = "WHERE";
+        break;
+      case p._group_by:
+        li.innerText = "GROUP BY";
+        break;
+      case p._having:
+        li.innerText = "HAVING";
+        break;
+      case p._order_by:
+        li.innerText = "ORDER BY";
+        break;
+      case p._asc:
+        li.innerText = "ASC";
+        break;
+      case p._desc:
+        li.innerText = "DESC";
+        break;
+      case p._and:
+        li.innerText = "AND";
+        break;
+      case p._or:
+        li.innerText = "OR";
+        break;
+      case p._not:
+        li.innerText = "NOT";
+        break;
+      case p._like:
+        li.innerText = "LIKE";
+        break;
+      case p._in:
+        li.innerText = "IN";
+        break;
+      case p._name:
+        li.innerText = "Texte";
+        break;
+      case p._number:
+        li.innerText = "Nombre";
+        break;
+      default:
+        li.innerText = "Autre";
+    }
+  }
+  input_predict.appendChild(ul);
 }

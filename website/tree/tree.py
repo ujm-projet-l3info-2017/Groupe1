@@ -1,9 +1,13 @@
 class Tree():
-    # We have a binary tree
-    # with a left tree and a right tree
-    # We have an element on the tree
-
+    """
+    We have a binary tree
+    with a left tree and a right tree
+    We have an element on the tree
+    """
     def __init__(self, element):
+        """
+        Initialize a node of the tree
+        """
         self.element = element
         self.left = None
         self.right = None
@@ -11,6 +15,9 @@ class Tree():
         self.bijection = None
         
     def height(self):
+        """
+        Compute the height of a tree
+        """
         # If the tree is empty, the height will be 0
         if(self == None):
             return 0
@@ -34,12 +41,18 @@ class Tree():
             return height_right
 
     def create_node_list(self):
+        """
+        Create a list which is composed of the node of the tree
+        """
         node_list = list()
         node_list.append(None)
         self.create_node_list_bis(node_list)
         return node_list
 
     def create_node_list_bis(self, node_list):
+        """
+        The bis function of create_node_list
+        """
         node_list.append(self)
         if(self.left != None):
             self.left.create_node_list_bis(node_list)
@@ -47,9 +60,15 @@ class Tree():
             self.right.create_node_list_bis(node_list)
     
     def compute_depth(self):
+        """
+        Compute the depth of the tree
+        """
         self.compute_depth_bis(0)
 
     def compute_depth_bis(self, n):
+        """
+        The bis function of compute_depth
+        """
         self.depth = n
         if(self.right != None):
             self.right.compute_depth_bis(n)
@@ -57,9 +76,15 @@ class Tree():
             self.left.compute_depth_bis(n+1)
 
     def compute_bijection(self):
+        """
+        Create a bijection Tree -> N
+        """
         self.compute_bijection_bis(1)
 
     def compute_bijection_bis(self, n):
+        """
+        The bis function of compute_bijection
+        """
         self.bijection = n
         if(self.left != None):
             n = self.left.compute_bijection_bis(n+1)

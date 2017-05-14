@@ -3,22 +3,35 @@ from .graph import Edge
 from ..tree.tree import Tree
 
 class SimilarityGraph(Graph):
+    """
+    The similarity Graph is a special graph to find the mapping
+    """
     def __init__(self, T1, T2):
+        """
+        Initialize the similarity graph and keep the expected tree and the user tree
+        """
         super().__init__()
         self.T1 = T1
         self.T2 = T2
 
     def get_error(self, T1, T2):
+        """
+        The error function for the graph
+        """
         if(str(T1.text) == str(T2.text)):
             return 0
         return 1
 
     def create_graph(self):
+        """
+        Create the graph thanks to the depth of nodes
+        """
         T1_list = self.T1.create_node_list()
         T2_list = self.T2.create_node_list()
 
         for i in range(1, len(T1_list)):
             for j in range(1, len(T2_list)):
+                # Test the depth and create the edge 
                 if(T1_list[i].depth == T2_list[j].depth):
                     error = self.get_error(T1_list[i], T2_list[j])
                     edge = Edge(error, (T1_list[i-1], T2_list[j-1]), (T1_list[i], T2_list[j]))
@@ -32,6 +45,10 @@ class SimilarityGraph(Graph):
                     self.insert_edge(edge)
 
     def mapping(self):
+        """
+        Map the two trees in order to compare the trees
+        """
+        # We create a list of nodes
         T1_list = self.T1.create_node_list()
         T2_list = self.T2.create_node_list()
         
@@ -40,11 +57,14 @@ class SimilarityGraph(Graph):
 
         gr = Graph()
         la = list()
+
+        # We insert the node of the trees in the graph
         for node in T1_list:
             gr.insert_vertex(node)
         for node in T2_list:
             gr.insert_vertex(node)
-        
+
+        # We insert the edge in the graph
         for i in range (1,len(L)):
             tmpCouple = L[i-1]
             currentCouple = L[i]

@@ -2,8 +2,12 @@ from ..graph.similarity_graph import SimilarityGraph
 from ..parser.lexical import SQLLexicalParser
 
 class Mapping():
-
+    """
+    The class Mapping is the mapping of the two trees.
+    We compare the mapping to know where the user make mistakes
+    """
     def __init__(self, tree_expected, tree_user):
+        """ Create the mapping with the tree of the user and the expected tree """
         self.hint = []
         self.tree_expected = tree_expected
         self.tree_user = tree_user
@@ -11,24 +15,24 @@ class Mapping():
         self.sim.create_graph()
         _, self.edge_list = self.sim.mapping()
 
-    # Add hints which are in the list joined
     def add_hint_added(self, join):
+        """ Add hints (the hind "added") which are in the list joined  """
         for sentence in join:
             h = ""
             for tree in sentence:
                 h += tree.text+" "
             self.hint.append("<b>"+h+"</b>doit etre ajoute")
 
-    # Add hints which are in the list joined
     def add_hint_removed(self, join):
+        """ Add hints (the hind "removed") which are in the list joined """
         for sentence in join:
             h = ""
             for tree in sentence:
                 h += tree.text+" "
             self.hint.append("<b>"+h+"</b>doit etre supprime")
 
-    # Sort the tree list with the elements (Bubble sort)
-    def sort_tree_element(self, l):        
+    def sort_tree_element(self, l):
+        """ Sort the tree list in terms of the elements (Bubble sort) """
         for i in range (len(l)-1, 0,-1):
             for j in range (0, i):
                 if str(l[j+1].element) < str(l[j].element):
@@ -40,23 +44,23 @@ class Mapping():
                     l[j+1] = l[j]
                     l[j] = tmp
 
-    # Sort the tree list with the bijection
     def sort_tree_bijection(self, l):
+        """ Sort the tree list in terms of the bijection """
         for i in range (len(l)-1, 0,-1):
             for j in range (0, i):
                 if l[j+1].bijection < l[j].bijection:
                     tmp = l[j+1]
                     l[j+1] = l[j]
                     l[j] = tmp
-
-    # Remove an element in the tree list in comparing the element 
+  
     def remove_tree_element(self, l, e):
+        """  Remove an element in the tree list in comparing the element """
         for e_l in l:
             if str(e_l.element) == str(e.element) and str(e_l.text) == str(e.text):
                 l.remove(e_l)
 
-    # Join some elements to improve the printing 
     def join_tree_element(self, l):
+        """ Join some elements to improve the printing """
         join = list()
         # We take the longer join in the list
         while(l):
@@ -74,8 +78,8 @@ class Mapping():
             join.append(max_sub)
         return join
 
-    # We join some elements after the WHERE
     def join_tree_op_bis(self, l, e, sub):
+        """ Join some elements after the WHERE """
         find_left = False
         find_left_right = False
         if(e.left != None and (e.left.element != SQLLexicalParser._equal and e.left.element != SQLLexicalParser._not_equal and e.left.element != SQLLexicalParser._less_e and e.left.element != SQLLexicalParser._greater_e and e.left.element != SQLLexicalParser._less and e.left.element != SQLLexicalParser._greater)):
@@ -91,15 +95,15 @@ class Mapping():
             if e.left.right in l:
                 sub.append(e.left.right)
 
-     # We join in comparing the element in the tree list
     def join_tree_element_bis(self, l, e, sub):
+        """ Join in comparing the element in the tree list """
         if(e.element == SQLLexicalParser._equal or e.element == SQLLexicalParser._not_equal or e.element == SQLLexicalParser._less_e or e.element == SQLLexicalParser._greater_e or e.element == SQLLexicalParser._less or e.element == SQLLexicalParser._greater):
             self.join_tree_op_bis(l, e, sub)
         else:
             sub.append(e)
 
-    # We compare elements which are added, removed and swapped
     def compare_added(self, l_t1, l_t2):
+        """  Compare elements which are added, removed and swapped """
         l_added = list()
         l_removed = list()
         # We copy l_t1 and l_t2 to compare if elements are swapped 
@@ -170,8 +174,8 @@ class Mapping():
         self.add_hint_added(join_added)
         self.add_hint_removed(join_removed)
 
-    # We compare the mapping !
     def compare(self):
+        """ Compare the mapping """
         # We create the list of the tree expected and the user tree
         T1_list = self.tree_expected.create_node_list()
         T2_list = self.tree_user.create_node_list()
@@ -194,11 +198,11 @@ class Mapping():
                 offset_j = 1
 
             if(offset_i == 1 and offset_j == 1 and edge.weight == 0):
-                # Ff there are a mapping and no errors
+                # If there are a mapping and no errors
                 # It's similar
                 pass
             elif(offset_i == 1 and offset_j == 1 and edge.weight == 1):
-                # Ff there are a mapping and but errors
+                # If there are a mapping and but errors
                 # The two elements are mapped together but are not similar
                 # So we have to add this two elements in the tree list
                 if edge.start not in l_t1:

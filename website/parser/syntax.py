@@ -5,33 +5,58 @@ from .bdd import *
 import re
 
 class SyntaxParser():
-    
+    """
+    Create a syntaxical parser
+    """
     def __init__(self, sentence):
+        """
+        Initialize the parser with a sentence and initialize the lexical parser
+        """
         self.lexical = LexicalParser(sentence)
         self.lookahead = None
         
     def get_lookahead(self):
+        """
+        Get the lookahead
+        """
         return self.lookahead
 
     def shift(self):
+        """
+        Shift: get the lexeme 
+        """
         self.lookahead = self.lexical.get_lexeme()
-        print("lookahead: "+str(self.lookahead))
+        #print("lookahead: "+str(self.lookahead))
 
     def parse_error(self):
-        print("parsing error")
+        """
+        The parse error function
+        """
+        #print("parsing error")
         raise NameError("Erreur d'analyse")
 
     def parse(self):
+        """
+        The parse function which is not implemented for the general parser 
+        """
         raise NotImplementedError
 
 class SQLSyntaxParser(SyntaxParser):
-
+    """
+    SQL Parser
+    """
     def __init__(self, sentence):
+        """
+        Initialize a SQL parser with a sentence 
+        """
         self.lexical = SQLLexicalParser(sentence)
         self.select_column = []
         self.table_tree = None
         
     def parse(self):
+        """
+        Parse the sentence
+        """
         self.shift()
         tree =  self.query_list()
         tree.compute_depth()
@@ -39,6 +64,9 @@ class SQLSyntaxParser(SyntaxParser):
         return tree
 
     def query_list(self):
+        """
+        <QUERY_LIST> ::= <QUERY> <QUERY_LIST_NEXT> | opening <QUERY> closing <QUERY_LIST_NEXT>
+        """
         if(self.get_lookahead() == self.lexical._opening):
             tree = AbstractTree(self.lexical._query,"")
             self.shift()
@@ -60,6 +88,9 @@ class SQLSyntaxParser(SyntaxParser):
             return tree
 
     def query_list_next(self):
+        """
+        <QUERY_LIST_NEXT> ::= [ name <QUERY_LIST> ]
+        """
         if(self.get_lookahead() == self.lexical._name):
             tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
             self.shift()
@@ -68,6 +99,9 @@ class SQLSyntaxParser(SyntaxParser):
             return tree
 
     def query(self):
+        """
+        <QUERY> ::= <SELECT_MODE> <SELECT> from <COLUMN_LIST> <QUERY_NEXT>
+        """
         tree = self.select_mode()
         tree_select = self.select()
         tree.concatenate_father_son(tree_select)
@@ -76,16 +110,14 @@ class SQLSyntaxParser(SyntaxParser):
             self.shift()
             tree_name = self.name_list()
 
+            # Check if the table is not an admin table 
             check_table=tree_name
-            print(tree_name)
             while(check_table!=None):
-                print("Check: "+check_table.element)
                 m = re.match(r"^auth.+|^django.+|^website.*",check_table.element)
                 if(m != None):
                     return self.parse_error()
                 check_table=check_table.get_brother()
             
-            print("TESTFFF")
                 
             # We have to create the tree of tables
             tables = []
@@ -111,6 +143,9 @@ class SQLSyntaxParser(SyntaxParser):
             return self.parse_error()
 
     def select_mode(self):
+        """
+        <SELECT_MODE> ::= select | select_distinct
+        """
         if(self.get_lookahead() == self.lexical._select_distinct):
             tree_mode = AbstractTree(self.lexical._select_distinct, self.lexical.get_text())
             self.shift()
@@ -123,6 +158,9 @@ class SQLSyntaxParser(SyntaxParser):
             return self.parse_error()
 
     def select(self):
+        """
+        <SELECT> ::= star | <COLUMN_SELECT_LIST>
+        """
         if(self.get_lookahead() == self.lexical._star):
             tree_star = AbstractTree(self.lexical._star, self.lexical.get_text())
             self.shift()
@@ -139,6 +177,9 @@ class SQLSyntaxParser(SyntaxParser):
             return tree
 
     def column(self):
+        """
+        <COLUMN> ::= name <COLUMN_NEXT>
+        """
         if(self.get_lookahead() == self.lexical._name):
             tree = AbstractTree(self.lexical.get_text(), self.lexical.get_text())
             self.shift()
@@ -157,6 +198,9 @@ class SQLSyntaxParser(SyntaxParser):
             return self.parse_error()
 
     def column_next(self):
+        """
+        <COLUMN_NEXT> ::= [dot name | opening <COLUMN> closing]
+        """
         if(self.get_lookahead() == self.lexical._dot):
             tree_dot = AbstractTree(self.lexical._dot, self.lexical.get_text())
             self.shift()
@@ -176,6 +220,9 @@ class SQLSyntaxParser(SyntaxParser):
                 return self.parse_error()
 
     def column_select_list(self):
+        """
+        <COLUMN_SELECT_LIST> ::= <COLUMN> <COLUMN_AS> <COLUMN_SELECT_LIST_NEXT>
+        """
         tree_column = self.column()
         tree_as = self.column_as()
         tree_select = self.column_select_list_next()
@@ -184,6 +231,9 @@ class SQLSyntaxParser(SyntaxParser):
         return tree_column
 
     def column_as(self):
+        """
+        <COLUMN_AS> ::= [as name];
+        """
         if(self.get_lookahead() == self.lexical._as):
             tree_as = AbstractTree(self.lexical._as, self.lexical.get_text())
             self.shift()
@@ -195,18 +245,25 @@ class SQLSyntaxParser(SyntaxParser):
                 return self.parse_error()
 
     def column_select_list_next(self):
+        """
+        <COLUMN_SELECT_LIST_NEXT> ::= [comma <COLUMN_SELECT_LIST>]
+        """
         if(self.get_lookahead() == self.lexical._comma):
             self.shift()
             tree = self.column_select_list()
             return tree
 
     def column_list(self):
+        """
+        <COLUMN_LIST> ::= <COLUMN> <COLUMN_LIST_NEXT>
+        """
         tree_column = self.column()
         tree_list = self.column_list_next()
         tree_column.concatenate_father_brother(tree_list)
         return tree_column
 
     def column_list_next(self):
+        
         if(self.get_lookahead() == self.lexical._comma):
             self.shift()
             tree = self.column_list()

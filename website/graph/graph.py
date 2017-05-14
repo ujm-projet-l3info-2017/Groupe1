@@ -1,9 +1,15 @@
 class Edge():
+    """
+    An Egde (with a start, an end and a weight)
+    """
     start = None
     end = None
     weight = None
 
     def __init__(self, w, s, e):
+        """
+        Initialize an edge with a weight, a start and an end
+        """
         self.weight = w
         self.start = s
         self.end = e
@@ -14,26 +20,47 @@ class Edge():
 
 
 class Graph():
+    """
+    The class Graph represent ... a graph
+    """
     matrix = None
 
     def __init__(self):
+        """
+        Initialize a matrix
+        """
         self.matrix = dict()
 
     def insert_vertex(self, vertex):
+        """
+        Insert a vertex in the graph
+        """
+        # If the vertex doesn't exist in the graph
         if not(vertex in self.matrix):
+            # We create a row for this vertex in the matrix
             self.matrix[vertex] = {key:-1 for key in self.matrix.keys()}
+            # And the extend columns for the other vertex
             for key in self.matrix.keys():
                 self.matrix[key][vertex] = -1
         
     def insert_edge(self, edge):
+        """
+        We insert an edge in the graph
+        """
         self.insert_vertex(edge.start)
         self.insert_vertex(edge.end)
         self.matrix[edge.start][edge.end] = edge
 
     def delete_edge(self, edge):
+        """
+        We delete an edge in the graph
+        """
         self.matrix[edge.start][edge.end] = -1
 
     def successor(self, vertice):
+        """
+        Compute the successors of a vertex 
+        """
         succ = []
         for i in self.matrix[vertice].keys():
             if(self.matrix[vertice][i] != -1):
@@ -41,12 +68,18 @@ class Graph():
         return succ
 
     def all_vertices(self):
+        """
+        Get the vertices
+        """
         return self.matrix.keys()
 
     def __len__():
         return len(self.matrix.keys())
 
     def dijkstra(self, start, end):
+        """
+        Compute the shortest path in the graph
+        """
         # vertices we need to test
         v = [key for key in self.matrix.keys()]
         dist = {key: float("inf") for key in self.matrix.keys()}
@@ -95,10 +128,11 @@ class Graph():
         # always square matrix
         return len(self.matrix)
 
-
-# argmin for a dict which contains integers
-# Note: the element in l must be in s
 def argmin(l, s):
+    """
+    Compute the argmin for a dict which contains integers
+    Note: the element in l must be in s
+    """
     m = float("inf")
     arg = None
     for key in l.keys():

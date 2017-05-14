@@ -1,34 +1,55 @@
 import re
 
 class LexicalParser():
-
+    """
+    Create the lexical parser
+    """
+    
     sentence = ""
     length = 0
     text = ""
     
     def __init__(self, sentence):
+        """
+        Initialize the parser with a sentence
+        """
         self.sentence = sentence
         
     def match(self, regex):
+        """
+        Match the beginning of the sentence with a regex 
+        """
         m = re.match(r"^"+regex, self.sentence.lower())
         if(m == None):
             return None
+        # Set the parameter of the parser
         self.length = len(m.group(0))
         self.text = m.group(0)
         self.shift(self.length)
         return m.group(0)
 
     def shift(self, length):
+        """
+        Shift: we forgot the self.length first letter of the sentece
+        """
         self.sentence = self.sentence[self.length:]
 
     def get_text(self):
+        """
+        Get the text matched
+        """
         return self.text
     
     def get_lexeme(self):
+        """
+        Get lexeme isn't implemented for the general class
+        """
         raise NotImplementedError
 
 class SQLLexicalParser(LexicalParser):
-
+    """
+    The SQL lexical Parser
+    """
     _query = 0
     _opening = 1
     _closing = 2
@@ -64,6 +85,9 @@ class SQLLexicalParser(LexicalParser):
     _number = 30
     
     def get_lexeme(self):
+        """
+        Get the next lexeme of the sentence 
+        """
         if self.match("\(") : return self._opening
         if self.match("\)") : return self._closing
         if self.match("\*") : return self._star

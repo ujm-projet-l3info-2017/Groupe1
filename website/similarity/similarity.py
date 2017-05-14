@@ -5,8 +5,10 @@ ORANGE = 1
 RED = 2
 
 class Element():
-    # An Element is composed of the content of the line (value) and where the content is
-    # (with an array of numbers of line). 
+    """
+    An Element is composed of the content of the line (value) and where the content is
+    (with an array of numbers of line). 
+    """
     value = ""
     line = []
     
@@ -15,9 +17,11 @@ class Element():
         self.line = line
 
     def __lt__(self, other):
-        # We introduce the order of the element:
-        # we test here if self < other
-
+        """
+        We introduce the order of the element:
+        we test here if self < other
+        """
+        
         # If other is a string 
         if(isinstance(other, str)):
             return self.value < other
@@ -26,9 +30,10 @@ class Element():
             return self.value < other.value
 
     def __eq__(self, other):
-        # We continue to introduce the order:
-        # we test here the equality
-        
+        """
+        We introduce the order of the element:
+        we test here the equality
+        """
         if(isinstance(other, str)):
             return self.value == other
         if(isinstance(other, Element)):
@@ -38,12 +43,16 @@ class Element():
         return str(self.value)+"("+str(self.line)+")"
     
     def add_line(self, line):
-        # If the element exists in the tree, we have to add the number of the line
-        # in the array of the object
+        """
+        If the element exists in the tree, we have to add the number of the line
+        in the array of the object
+        """
         self.line.append(line)
 
     def exist_line(self, number):
-        # Test if the number of the line is in the list
+        """
+        Test if the number of the line is in the list
+        """
         try:
             if(self.line.index(number) >= 0):
                 return True
@@ -55,7 +64,9 @@ class Element():
         return self.line
     
 def convert_column_tree(column):
-    # Convert a column in a single tree (an AVL tree)
+    """
+    Convert a column in a single tree (an AVL tree)
+    """
     tree = AVL(Element(column[0], [0]))
     for i in range(1, len(column)):
         element = tree[column[i]]
@@ -68,7 +79,9 @@ def convert_column_tree(column):
     return tree
 
 def convert_table_tree(rows, column_name):
-    # Convert a table in a dictionary of trees
+    """
+    Convert a table in a dictionary of trees
+    """
     table = {}
     for i in range(len(column_name)):
         column = [line[i] for line in rows]
@@ -76,6 +89,9 @@ def convert_table_tree(rows, column_name):
     return table
 
 def compare_line(table_expected, table_result, column_expected, column_result, color_column, trees, number_line):
+    """
+    Compare a line in the expected table and in the user table
+    """ 
     if(len(table_expected) > len(table_result)):
         count_line = [0 for i in range(len(table_expected))]
     else:
@@ -131,6 +147,9 @@ def compare_line(table_expected, table_result, column_expected, column_result, c
         return RED
 
 def compare_table(table_expected, table_result, column_expected, column_result):
+    """
+    Color the user table
+    """
     length_expected = len(column_expected)
     color_column = []
     color_table = []
@@ -152,7 +171,9 @@ def compare_table(table_expected, table_result, column_expected, column_result):
     return color_table
                  
 def compare_column(table_expected, table_result, column_expected, column_result, color_column, trees, number_line):
-    # Attribute a color at each cellule of the table
+    """
+    Attribute a color at each cell of the table
+    """
     color_table_row = []
     for j in range(len(column_result)):
         elem = table_result[number_line][j]

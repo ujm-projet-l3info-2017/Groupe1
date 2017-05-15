@@ -1,3 +1,12 @@
+TRUNCATE TABLE website_exercice;
+TRUNCATE TABLE website_contient_exercice_table;
+TRUNCATE TABLE website_contient_exercice_question;
+TRUNCATE TABLE website_table;
+TRUNCATE TABLE website_question;
+
+
+
+
 INSERT INTO website_exercice (titre, numero) VALUES ("Exo1",1);
 INSERT INTO website_exercice (titre, numero) VALUES ("Exo2",2);
 
@@ -20,7 +29,7 @@ INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2
 INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 (
 	"article",
-	'(NOART INTEGER PRIMARY KEY AUTOINCREMENT, LIBELLE VARCHAR(50), STOCK INTEGER, PRIXINVENT INTEGER);',
+	'(NOART INTEGER NOT NULL AUTO_INCREMENT, LIBELLE VARCHAR(50), STOCK INTEGER, PRIXINVENT INTEGER, PRIMARY KEY (NOART));',
 	'(LIBELLE,STOCK,PRIXINVENT) VALUES("Dentifrice",32,2); 
 	(LIBELLE,STOCK,PRIXINVENT) VALUES("Tapioca",2,23);  
 	(LIBELLE,STOCK,PRIXINVENT) VALUES("Ananas",5,5); 
@@ -31,7 +40,7 @@ INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 INSERT INTO website_table (nom,attribut,remplissage) VALUES
 (
 	"fournisseurs",
-	'(NOFOUR INTEGER PRIMARY KEY AUTOINCREMENT, NOMFOUR VARCHAR(50), ADRFOUR VARCHAR(100), VILLEFOUR VARCHAR(50) );',
+	'(NOFOUR INTEGER NOT NULL AUTO_INCREMENT, NOMFOUR VARCHAR(50), ADRFOUR VARCHAR(100), VILLEFOUR VARCHAR(50), PRIMARY KEY (NOFOUR));',
 	'(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Point P","20 rue paumee","Lyon");  
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Karibou","52 avenue uneva","Marseille");  
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Asus","5685 rue jeanmarie","Washington"); 
@@ -42,13 +51,13 @@ INSERT INTO website_table (nom,attribut,remplissage) VALUES
 INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 (
 	"acheter",
-	'(NOFOUR integer,NOART integer,PRIXACHAT integer,DELAI integer,FOREIGN KEY(NOFOUR) REFERENCES fournisseurs(NOFOUR),FOREIGN KEY(NOART) REFERENCES article(NOART) );',
-	'VALUES(1,1,2,5);
-	VALUES(1,2,1,46);
-	VALUES(5,4,13,2);
-	VALUES(3,3,1,250);
-	VALUES(4,2,99,2);
-	VALUES(2,5,5,5);'
+	'(NOACHAT INTEGER NOT NULL AUTO_INCREMENT, NOFOUR integer,NOART integer,PRIXACHAT integer,DELAI integer, PRIMARY KEY (NOACHAT));',
+	'(NOFOUR, NOART, PRIXACHAT, DELAI) VALUES(1,1,2,5);
+	 (NOFOUR, NOART, PRIXACHAT, DELAI) VALUES(1,2,1,46);
+   (NOFOUR, NOART, PRIXACHAT, DELAI) VALUES(5,4,13,2);
+   (NOFOUR, NOART, PRIXACHAT, DELAI) VALUES(3,3,1,250);
+	 (NOFOUR, NOART, PRIXACHAT, DELAI) VALUES(4,2,99,2);
+	 (NOFOUR, NOART, PRIXACHAT, DELAI) VALUES(2,5,5,5);'
 );
 
 

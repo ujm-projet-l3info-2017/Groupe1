@@ -214,26 +214,25 @@ def load_tables(request):
                 tableau[1]=str(tableau[1]) # NOM de la table
                 tableau[2]=str(tableau[2]) # attributs de creation
                 tableau[3]=str(tableau[3]) # Insert into
-                cursor.execute('create table '+tableau[1]+' '+tableau[2])
+                cursor.execute('CREATE TABLE '+tableau[1]+' '+tableau[2])
                 tableau[3]=tableau[3].split('\n')
                 for insertline in tableau[3]:
                     cursor.execute('INSERT INTO '+tableau[1]+" "+insertline)
-        except:
-            print("Erreur: la table existe deja !")
+        except Exception as e:
+            print("Erreur: "+str(e))
 
 
 def drop_tables(request):
     #supprime toutes les tables de l'exo, une amelio serait de chopper l'ancien num d'exo
-    print("JE DROP")
     with connection.cursor() as cursor:
         try:
             cursor.execute("SELECT nom FROM website_table")
             row=cursor.fetchall()
             for line in row:
                 for l in line:
-                    cursor.execute('drop table if exists '+str(l))
-        except:
-            print("Erreur: drop table a foire !")
+                    cursor.execute('DROP TABLE IF EXISTS '+str(l))
+        except Exception as e:
+            print("Erreur: "+str(e))
             return HttpResponse(status=400)
     #je charge les bonnes tables maintenant
     load_tables(request)

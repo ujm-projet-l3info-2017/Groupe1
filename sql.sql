@@ -15,9 +15,8 @@ INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,1);
 INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,2);
 INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,3);
 
-INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,1);
-INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,2);
-INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,3);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,7);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (2,8);
 
 INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (3,4);
 INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (3,5);
@@ -27,8 +26,8 @@ INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,2);
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,3);
 
-INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,1); 
-INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,3);
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,8); 
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,9);
 
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3,4); 
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3,5);
@@ -75,7 +74,7 @@ INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 INSERT INTO website_table (nom, attribut, remplissage) VALUES
 (
 	"films",
-	'(NOFILM INTEGER NOT NULL AUTO_INCREMENT, TITRE VARCHAR(50), ANNEE INTEGER, RECETTES INTEGER, PRIMARY KEY (NOFILM));',
+	'(NOFILM INTEGER NOT NULL AUTO_INCREMENT, TITRE VARCHAR(50), ANNEE INTEGER, RECETTES BIGINT, PRIMARY KEY (NOFILM));',
 	'(TITRE,ANNEE,RECETTES) VALUES("Avatar ",2009,2787965087);
 	(TITRE,ANNEE,RECETTES) VALUES("Titanic ",1997,2186772302);
 	(TITRE,ANNEE,RECETTES) VALUES("Star Wars:The Force Awakens",2015,2068223624);
@@ -171,6 +170,32 @@ INSERT INTO website_table (nom, attribut, remplissage) VALUES
 	(NOFILM, NOACTEUR) VALUES(13,29);'
 );	
 
+
+INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
+(
+	"consommateurs",
+	'(NUMU INTEGER NOT NULL AUTO_INCREMENT, PRENOM VARCHAR(50), NOM VARCHAR(50), PRIMARY KEY (NUMU));',
+	'(PRENOM,NOM) VALUES("Jean","Jugnot"); 
+	(PRENOM,NOM) VALUES("Jeanne","Jugna");  
+	(PRENOM,NOM) VALUES("Jannot","Jon"); 
+	(PRENOM,NOM) VALUES("Jade","Jedi"); 
+	(PRENOM,NOM)  VALUES("Jeannette","Jhin");'
+);
+
+
+
+INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
+(
+	"consommationeau",
+	'(NUMU INTEGER NOT NULL, CONS INT(50),PRIMARY KEY (NUMU,CONS));',
+	'(NUMU,CONS) VALUES(1,50); 
+	(NUMU,CONS) VALUES(2,60);  
+	(NUMU,CONS) VALUES(3,70); 
+	(NUMU,CONS) VALUES(4,56); 
+	(NUMU,CONS) VALUES(5,55);'
+);
+
+
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	1,
@@ -193,6 +218,10 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 	"Liste des fournisseurs qui se situent a Lyon ?",
 	"SELECT * FROM fournisseurs WHERE VILLEFOUR='Lyon';"
 );
+
+
+
+
 
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
@@ -220,4 +249,20 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 	4,
 	"Liste des films?",
 	"SELECT * FROM films"
+);
+
+
+INSERT INTO website_question (numero,intitule,requete) VALUES
+(
+	1,
+	"Liste des prenoms des consommateurs et de leur consommation d\'eau par ordre croissant?",
+	"SELECT PRENOM,CONS FROM consommateurs,consommationeau WHERE consommateurs.NUMU=consommationeau.NUMU order by CONS ASC"
+);
+
+
+INSERT INTO website_question (numero,intitule,requete) VALUES
+(
+	2,
+	"Nom prenom du plus petit consommateur deau",
+	"SELECT NOM,PRENOM FROM consommateurs,consommationeau WHERE consommateurs.NUMU=consommationeau.NUMU AND CONS<=(SELECT MIN(CONS) from consommationeau)"
 );

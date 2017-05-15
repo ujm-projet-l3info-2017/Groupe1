@@ -43,8 +43,8 @@ INSERT INTO website_table (nom,attribut,remplissage) VALUES
 	'(NOFOUR INTEGER NOT NULL AUTO_INCREMENT, NOMFOUR VARCHAR(50), ADRFOUR VARCHAR(100), VILLEFOUR VARCHAR(50), PRIMARY KEY (NOFOUR));',
 	'(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Point P","20 rue paumee","Lyon");  
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Karibou","52 avenue uneva","Marseille");  
-	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Asus","5685 rue jeanmarie","Washington"); 
-	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Carrefour","30 rue de la République","Paris"); 
+	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Asus","5685 rue jeanmarie","Washington");
+	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Carrefour","30 rue de la République","Paris");
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Ikea","6 place des babouches","Brest");' 
 );
 
@@ -65,7 +65,7 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	1,
 	"numéros et libellés des articles dont le stock est inférieur à 10 ?",
-	"SELECT NOART, LIBELLE FROM ARTICLE WHERE STOCK<10;"
+	"SELECT NOART, LIBELLE FROM article WHERE STOCK<10;"
 );
 
 
@@ -73,7 +73,7 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	2,
 	"Liste des articles dont le prix d'inventaire est inferieur a 300 ?",
-	"SELECT * FROM ARTICLE WHERE PRIXINVENT<300;"
+	"SELECT * FROM article WHERE PRIXINVENT<300;"
 );
 
 
@@ -81,7 +81,7 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	3,
 	"Liste des fournisseurs qui se situent a Lyon ?",
-	"SELECT * FROM FOURNISSEURS WHERE VILLEFOUR='Lyon';"
+	"SELECT * FROM fournisseurs WHERE VILLEFOUR='Lyon';"
 );
 
 

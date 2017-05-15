@@ -167,11 +167,15 @@ def load_tables(request):
                 tableau[1]=str(tableau[1]) # NOM de la table
                 tableau[2]=str(tableau[2]) # attributs de creation
                 tableau[3]=str(tableau[3]) # Insert into
+                print('CREATE TABLE '+tableau[1]+' '+tableau[2])
                 cursor.execute('CREATE TABLE '+tableau[1]+' '+tableau[2])
+                print("CEST FAIIIIT")
                 tableau[3]=tableau[3].split('\n')
                 for insertline in tableau[3]:
+                    print('INSERT INTO '+tableau[1]+" "+insertline)
                     cursor.execute('INSERT INTO '+tableau[1]+" "+insertline)
-        except:
+                    print("INSERT FAIT")
+        except Exception as e:
             print("Erreur: "+str(e))
 
 

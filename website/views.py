@@ -167,12 +167,12 @@ def load_tables(request):
                 tableau[1]=str(tableau[1]) # NOM de la table
                 tableau[2]=str(tableau[2]) # attributs de creation
                 tableau[3]=str(tableau[3]) # Insert into
-                cursor.execute('create table '+tableau[1]+' '+tableau[2])
+                cursor.execute('CREATE TABLE '+tableau[1]+' '+tableau[2])
                 tableau[3]=tableau[3].split('\n')
                 for insertline in tableau[3]:
                     cursor.execute('INSERT INTO '+tableau[1]+" "+insertline)
         except:
-            print("Erreur: Probleme chargement table !")
+            print("Erreur: "+str(e))
 
 
 def drop_tables(request):
@@ -184,9 +184,9 @@ def drop_tables(request):
             row=cursor.fetchall()
             for line in row:
                 for l in line:
-                    cursor.execute('drop table if exists '+str(l))
-        except:
-            print("Erreur: drop table fail !")
+                    cursor.execute('DROP TABLE IF EXISTS '+str(l))
+        except Exception as e:
+            print("Erreur: "+str(e))
             return HttpResponse(status=400)
         
     # Now we load the right tables (associated to the current chosen exercise)

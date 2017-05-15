@@ -78,6 +78,9 @@ function get_question() {
 	  success : function(data, status) {
 	    if (status ==="success")
 		    $("#question").html( data );
+        get_expected_request();
+        get_label();
+        get_tables();
 	  }
   });   
 }

@@ -54,7 +54,7 @@ INSERT INTO website_table (nom,attribut,remplissage) VALUES
 	'(NOFOUR INTEGER NOT NULL AUTO_INCREMENT, NOMFOUR VARCHAR(50), ADRFOUR VARCHAR(100), VILLEFOUR VARCHAR(50), PRIMARY KEY (NOFOUR));',
 	'(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Point P","20 rue paumee","Lyon");  
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Karibou","52 avenue uneva","Marseille");  
-	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Asus","5685 rue Jeanne d'Arc","Washington"); 
+	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Asus","5685 rue Jeanne Arc","Washington"); 
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Carrefour","30 rue de la République","Paris");
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Decathlon ","2 impasse du calvaire","Lyon");
 	(NOMFOUR,ADRFOUR,VILLEFOUR) Values("Ikea","6 place des babouches","Brest");' 
@@ -75,7 +75,7 @@ INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 INSERT INTO website_table (nom, attribut, remplissage) VALUES
 (
 	"films",
-	'(NOFILM INTEGER PRIMARY KEY AUTO_INCREMENT, TITRE VARCHAR(50), ANNEE INTEGER, RECETTES INTEGER) );',
+	'(NOFILM INTEGER NOT NULL AUTO_INCREMENT, TITRE VARCHAR(50), ANNEE INTEGER, RECETTES INTEGER, PRIMARY KEY (NOFILM));',
 	'(TITRE,ANNEE,RECETTES) VALUES("Avatar ",2009,2787965087);
 	(TITRE,ANNEE,RECETTES) VALUES("Titanic ",1997,2186772302);
 	(TITRE,ANNEE,RECETTES) VALUES("Star Wars:The Force Awakens",2015,2068223624);
@@ -95,7 +95,7 @@ INSERT INTO website_table (nom, attribut, remplissage) VALUES
 INSERT INTO website_table(nom, attribut, remplissage) VALUES
 (
 	"acteurs",
-	'(NOACTEUR INTEGER PRIMARY KEY AUTO_INCREMENT, NOM VARCHAR(50), PRENOM VARCHAR(50), ANNEENAISS INTEGER) );',
+	'(NOACTEUR INTEGER AUTO_INCREMENT, NOM VARCHAR(50), PRENOM VARCHAR(50), ANNEENAISS INTEGER, PRIMARY KEY(NOACTEUR) );',
 	'(NOM, PRENOM, ANNEENAISS) VALUES ("Worthington","Sam",1976); 
 	(NOM, PRENOM, ANNEENAISS) VALUES ("Lang","Stephen",1952);
 	(NOM, PRENOM, ANNEENAISS) VALUES ("Weaver","Sigourney",1949);
@@ -130,7 +130,7 @@ INSERT INTO website_table(nom, attribut, remplissage) VALUES
 INSERT INTO website_table (nom, attribut, remplissage) VALUES
 (
 	"joueDans",
-	'(NOJOUEDANS INTEGER PRIMARY KEY AUTO_INCREMENT,NOFILM INTEGER, NOACTEUR INTEGER);',
+	'(NOJOUEDANS INTEGER AUTO_INCREMENT ,NOFILM INTEGER, NOACTEUR INTEGER, PRIMARY KEY(NOJOUEDANS));',
 	'(NOFILM, NOACTEUR) VALUES(1,1);
 	(NOFILM, NOACTEUR) VALUES(1,2);
 	(NOFILM, NOACTEUR) VALUES(1,3);
@@ -175,15 +175,15 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	1,
 	"numéros et libellés des articles dont le stock est inférieur à 10 ?",
-	"SELECT NOART, LIBELLE FROM ARTICLE WHERE STOCK<10;"
+	"SELECT NOART, LIBELLE FROM article WHERE STOCK<10;"
 );
 
 
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	2,
-	"Liste des articles dont le prix d'inventaire est inferieur a 300 ?",
-	"SELECT * FROM ARTICLE WHERE PRIXINVENT<300;"
+	"Liste des articles dont le prix inventaire est inferieur a 300 ?",
+	"SELECT * FROM article WHERE PRIXINVENT<300;"
 );
 
 
@@ -191,33 +191,33 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	3,
 	"Liste des fournisseurs qui se situent a Lyon ?",
-	"SELECT * FROM FOURNISSEURS WHERE VILLEFOUR='Lyon';"
+	"SELECT * FROM fournisseurs WHERE VILLEFOUR='Lyon';"
 );
 
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
-	4,
+	1,
 	"Liste des films sortis avant 2000 ?",
 	"SELECT * FROM films WHERE ANNEE < 2000;"
 );
 
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
-	5,
+	2,
 	"Liste des films dans lesquels Emma Watson a joué ?",
-	"SELECT films.NOFILM, films.TITRE, films.ANNEE, films.RECETTES FROM films, acteurs, joueDans WHERE films.NOFILM=joueDans.NOFILM AND acteurs.NOACTEUR=joueDans.NOACTEUR AND acteur.NOM = 'Watson' AND acteur.PRENOM='Emma';"
+	"SELECT films.NOFILM, films.TITRE, films.ANNEE, films.RECETTES FROM films, acteurs, joueDans WHERE films.NOFILM=joueDans.NOFILM AND acteurs.NOACTEUR=joueDans.NOACTEUR AND acteurs.NOM = 'Watson' AND acteurs.PRENOM='Emma';"
 );
 
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
-	6,
-	"Liste des films ayant engrangé moins de 1.5 milliard de dollars de recettes ?",
+	3,
+	"Liste des films ayant engrangé moins de 15 milliard de dollars de recettes ?",
 	"SELECT * FROM films WHERE RECETTES<1500000000;"
 );
 
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
-	7,
+	4,
 	"Liste des films?",
 	"SELECT * FROM films"
 );

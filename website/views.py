@@ -205,7 +205,7 @@ def load_label(request):
     question_no  = request.POST.get('question_no')
     if(question_no == None):
         question_no = "1"
-    requete = "SELECT intitule FROM website_question,website_contient_exercice_question,website_exercice WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND website_exercice.id ="+exercice_no+" AND website_question.id ="+question_no
+    requete = "SELECT intitule FROM website_question,website_contient_exercice_question,website_exercice WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND website_exercice.numero ="+exercice_no+" AND website_question.numero ="+question_no
     with connection.cursor() as cursor:
         try:
             cursor.execute(requete)

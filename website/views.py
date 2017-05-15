@@ -39,7 +39,7 @@ def request(request):
     
     column_expected, table_expected = expected_request(request)
     template = loader.get_template('website/request.html')
-    
+
     try:
         p = SQLSyntaxParser(requete)
         t2 = p.parse()
@@ -79,10 +79,10 @@ def load_hint(request):
     # We take the expected request
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
-        exercice_no = "(SELECT id FROM website_exercice ORDER BY id ASC LIMIT 1)"
+        exercice_no = "(SELECT numero FROM website_exercice ORDER BY numero ASC LIMIT 1)"
     question_no  = request.POST.get('question_no')
     if(question_no == None):
-        question_no = "(SELECT id FROM website_question ORDER BY id ASC LIMIT 1)"
+        question_no = "(SELECT numero FROM website_question ORDER BY numero ASC LIMIT 1)"
     with connection.cursor() as cursor:
         try:
             cursor.execute("select requete from website_question,website_contient_exercice_question,website_exercice where website_question.numero="+question_no+" AND website_question.id=idQuestion AND idExercice=website_exercice.id AND website_exercice.numero="+exercice_no)
@@ -137,11 +137,11 @@ def load_label(request):
     """
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
-        exercice_no = "(SELECT id FROM website_exercice ORDER BY id ASC LIMIT 1)"
+        exercice_no = "(SELECT numero FROM website_exercice ORDER BY numero ASC LIMIT 1)"
     question_no  = request.POST.get('question_no')
     if(question_no == None):
-        question_no = "(SELECT id FROM website_question ORDER BY id ASC LIMIT 1)"
-    requete = "SELECT intitule FROM website_question,website_contient_exercice_question,website_exercice WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND website_exercice.id ="+exercice_no+" AND website_question.id ="+question_no
+        question_no = "(SELECT numero FROM website_question ORDER BY numero ASC LIMIT 1)"
+    requete = "SELECT intitule FROM website_question,website_contient_exercice_question,website_exercice WHERE website_question.id = website_contient_exercice_question.idQuestion AND website_exercice.id = website_contient_exercice_question.idExercice AND website_exercice.numero ="+exercice_no+" AND website_question.numero ="+question_no
     with connection.cursor() as cursor:
         try:
             cursor.execute(requete)
@@ -163,13 +163,13 @@ def load_question(request):
     template = loader.get_template('website/question.html')
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
-        exercice_no = "1"
+        exercice_no = "(SELECT numero FROM website_exercice ORDER BY numero ASC LIMIT 1)"
     requete = "SELECT website_question.numero FROM website_contient_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no
 
 
-    # We drop the other tables
+    # We delete the old tables
     drop_tables(request)
-    # We load the exercise tables
+    # and load the new ones
     
     with connection.cursor() as cursor:
         try:
@@ -219,7 +219,7 @@ def load_tables_exercise(request):
     template = loader.get_template('website/tables_exercise.html')
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
-        exercice_no = "(SELECT id FROM website_exercice ORDER BY id ASC LIMIT 1)"
+        exercice_no = "(SELECT numero FROM website_exercice ORDER BY numero ASC LIMIT 1)"
     requete = "SELECT website_table.nom FROM website_table, website_exercice, website_contient_exercice_table WHERE website_contient_exercice_table.idExercice=website_exercice.numero AND website_contient_exercice_table.idtable=website_table.id AND numero="+exercice_no
    
     with connection.cursor() as cursor:
@@ -269,10 +269,9 @@ def drop_tables(request):
             print("Erreur: "+str(e))
             return HttpResponse(status=400)
 
-    # And we load the tables
+    # Now we load the right tables (associated to the current chosen exercise)
     load_tables(request)
     return HttpResponse(status=200)
-
 
 def load_tables(request):
     """
@@ -280,7 +279,7 @@ def load_tables(request):
     """
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
-        exercice_no = "(SELECT id FROM website_exercice ORDER BY id ASC LIMIT 1)"
+        exercice_no = "(SELECT numero FROM website_exercice ORDER BY numero ASC LIMIT 1)"
 
     with connection.cursor() as cursor:
         try:
@@ -291,8 +290,8 @@ def load_tables(request):
                 for l in line:
                     tableau.append(l)
                 tableau[0]=str(tableau[0])
-                tableau[1]=str(tableau[1]) # NOM de la table
-                tableau[2]=str(tableau[2]) # attributs de creation
+                tableau[1]=str(tableau[1]) # Name of the table
+                tableau[2]=str(tableau[2]) # Creation Attributes
                 tableau[3]=str(tableau[3]) # Insert into
                 cursor.execute('CREATE TABLE '+tableau[1]+' '+tableau[2])
                 tableau[3]=tableau[3].split('\n')
@@ -301,17 +300,16 @@ def load_tables(request):
         except Exception as e:
             print("Erreur: "+str(e))
             
-
 def expected_request(request):
     """
     Get the expected request according to the exercise number and the question number
     """
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
-        exercice_no = "(SELECT id FROM website_exercice ORDER BY id ASC LIMIT 1)"
+        exercice_no = "(SELECT numero FROM website_exercice ORDER BY numero ASC LIMIT 1)"
     question_no  = request.POST.get('question_no')
     if(question_no == None):
-        question_no = "(SELECT id FROM website_question ORDER BY id ASC LIMIT 1)"
+        question_no = "(SELECT numero FROM website_question ORDER BY numero ASC LIMIT 1)"
     with connection.cursor() as cursor:
         try:
             cursor.execute("select requete from website_question,website_contient_exercice_question,website_exercice where website_question.numero="+question_no+" AND website_question.id=idQuestion AND idExercice=website_exercice.id AND website_exercice.numero="+exercice_no)
@@ -349,7 +347,7 @@ def check_table(request):
     
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
-        exercice_no = "(SELECT id FROM website_exercice ORDER BY id ASC LIMIT 1)"
+        exercice_no = "(SELECT numero FROM website_exercice ORDER BY numero ASC LIMIT 1)"
 
     with connection.cursor() as cursor:
         try:
@@ -371,3 +369,6 @@ def check_table(request):
         if item not in table_list:
             return 0
     return 1
+
+
+

@@ -8,7 +8,6 @@ from .parser.syntax import SQLSyntaxParser
 # Create your views here.
 
 def index(request):
-    #load_tables()
     template = loader.get_template('website/index.html')
     exercice = load_exercise(request).content
     question = load_question(request).content
@@ -25,23 +24,14 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 def request(request):
-    # Ajouter un argument "contenu requete"
-    # Recupere a l'envoi de la requete par l'utilisateur
+    # Add an argument to the "request content"
+    # Retrieve argument at user's request
 
     requete = request.POST.get('query')
     
     column_expected, table_expected = expected_request(request)
     template = loader.get_template('website/request.html')
 
-    
-    #check=check_table(request)
-    #if (check==0) :
-    #    context= {   
-    #        'error': "no such table"
-    #    }
-    #    template = loader.get_template('website/error_request.html')
-#    return HttpResponse(template.render(context, request))
-    
     try:
         p = SQLSyntaxParser(requete)
         t2 = p.parse()
@@ -72,40 +62,6 @@ def request(request):
         
     return HttpResponse(template.render(context, request))
 
-
-def check_table(request):
-    # Returns 1 if all tables are accessible in the request
-    requete = request.POST.get('query')
-    requete = requete.lower()
-
-    requete = requete.replace(";","")
-    
-    exercice_no  = request.POST.get('exercise_no')
-    if(exercice_no == None):
-        exercice_no = "1"
-
-    with connection.cursor() as cursor:
-        try:
-            cursor.execute("SELECT nom FROM website_table,website_exercice,website_contient_exercice_table WHERE website_exercice.numero="+exercice_no+" AND website_exercice.id=idExercice AND idTable=website_table.id")
-            row = cursor.fetchall()
-            table_list=[]
-            for line in row:
-                for l in line:
-                    table_list.append(str(l))
-                    print(str(l))
-        except:
-            print("Probleme check table")
-
-    first_split=requete.split("from")
-    second_split=first_split[1].split("where")
-    second_split[0]=second_split[0].replace(" ","")
-    tables=second_split[0].split(",")
-
-    for item in tables:
-        print(" TEST: "+item)
-        if item not in table_list:
-            return 0
-    return 1
 
 def expected_request(request):
     exercice_no  = request.POST.get('exercise_no')
@@ -193,14 +149,11 @@ def load_expected_request(request):
     return HttpResponse(template.render(context, request))
 
 def load_tables(request):
-    # On charge les donnees de l'exercice > a passer en argument POST (formulaire)
+    # We load exercice's data (tables)
     
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
         exercice_no = "1"
-
-    print("DAns load tables: "+exercice_no)
-
         
     with connection.cursor() as cursor:
         try:
@@ -214,28 +167,29 @@ def load_tables(request):
                 tableau[1]=str(tableau[1]) # NOM de la table
                 tableau[2]=str(tableau[2]) # attributs de creation
                 tableau[3]=str(tableau[3]) # Insert into
-                cursor.execute('create table '+tableau[1]+' '+tableau[2])
+                cursor.execute('CREATE TABLE '+tableau[1]+' '+tableau[2])
                 tableau[3]=tableau[3].split('\n')
                 for insertline in tableau[3]:
                     cursor.execute('INSERT INTO '+tableau[1]+" "+insertline)
         except:
-            print("Erreur: la table existe deja !")
+            print("Erreur: "+str(e))
 
 
 def drop_tables(request):
-    #supprime toutes les tables de l'exo, une amelio serait de chopper l'ancien num d'exo
-    print("JE DROP")
+    # Delete all exercises tables
+
     with connection.cursor() as cursor:
         try:
             cursor.execute("SELECT nom FROM website_table")
             row=cursor.fetchall()
             for line in row:
                 for l in line:
-                    cursor.execute('drop table if exists '+str(l))
-        except:
-            print("Erreur: drop table a foire !")
+                    cursor.execute('DROP TABLE IF EXISTS '+str(l))
+        except Exception as e:
+            print("Erreur: "+str(e))
             return HttpResponse(status=400)
-    #je charge les bonnes tables maintenant
+        
+    # Now we load the right tables (associated to the current chosen exercise)
     load_tables(request)
 
     return HttpResponse(status=200)
@@ -270,16 +224,9 @@ def load_question(request):
     requete = "SELECT website_question.numero FROM website_contient_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no
 
 
-    # On enleve les autres tables
+    # We delete the old tables
     drop_tables(request)
-    # On charge les tables de l'exercice
-
-    #######################################################################################################
-    #
-    # /!\ CHARGE 2 FOIS toutes les fonctions: au clic du menu deroulant, au clic du choix
-    # > Devrait faire qu'au choix.
-    #
-    #######################################################################################################
+    # and load the new ones
     
     with connection.cursor() as cursor:
         try:

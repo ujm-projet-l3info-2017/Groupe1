@@ -91,4 +91,121 @@ function color() {
 	}
   /* And we set the cursor at the right place */
   set_cursor(l);
+
+  predict(p.predict);
+}
+
+function predict(predict_set) {
+  input_predict = document.getElementById("input_predict");
+  input_predict.innerHTML = "";
+  var table = document.createElement("table");
+  var tr = document.createElement("tr");
+   table.appendChild(tr);
+
+  for(var i=0; i<predict_set.length; i++) {
+    var td = document.createElement("td");
+    tr.appendChild(td);
+    p = new SQLLexicalParser("");
+    
+    switch(predict_set[i]) {
+      case p._query:
+        td.innerText = "Requete";
+        break;
+      case p._opening:
+        td.innerText = "(";
+        break;
+      case p._closing:
+        td.innerText = ")";
+        break;
+      case p._star:
+        td.innerText = "*";
+        break;
+      case p._dot:
+        td.innerText = ".";
+        break;
+      case p._comma:
+        td.innerText = ",";
+        break;
+      case p._quote:
+        td.innerText = "\'";
+        break;
+      case p._double_quote:
+        td.innerText = "\"";
+        break;
+      
+      case p._equal:
+        td.innerText = "=";
+        break;
+      case p._not_equal:
+        td.innerText = "!=";
+        break;
+      case p._less_e:
+        td.innerText = "<=";
+        break;
+      case p._greater_e:
+        td.innerText = ">=";
+        break;
+      case p._less:
+        td.innerText = "<";
+        break;
+      case p._greater:
+        td.innerText = ">";
+        break;
+
+      case p._select_distinct:
+        td.innerText = "SELECT DISTINCT";
+        break;
+      case p._select:
+        td.innerText = "SELECT";
+        break;
+      case p._from:
+        td.innerText = "FROM";
+        break;
+      case p._as:
+        td.innerText = "AS";
+        break;
+      case p._where: 
+        td.innerText = "WHERE";
+        break;
+      case p._group_by:
+        td.innerText = "GROUP BY";
+        break;
+      case p._having:
+        td.innerText = "HAVING";
+        break;
+      case p._order_by:
+        td.innerText = "ORDER BY";
+        break;
+      case p._asc:
+        td.innerText = "ASC";
+        break;
+      case p._desc:
+        td.innerText = "DESC";
+        break;
+      case p._and:
+        td.innerText = "AND";
+        break;
+      case p._or:
+        td.innerText = "OR";
+        break;
+      case p._not:
+        td.innerText = "NOT";
+        break;
+      case p._like:
+        td.innerText = "LIKE";
+        break;
+      case p._in:
+        td.innerText = "IN";
+        break;
+      case p._name:
+        td.innerText = "Texte";
+        break;
+      case p._number:
+        td.innerText = "Nombre";
+        break;
+      default:
+        li.innerText = "Autre";
+    }
+  }
+  input_predict.appendChild(table);
 }

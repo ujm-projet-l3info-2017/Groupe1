@@ -24,8 +24,8 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 def request(request):
-    # Ajouter un argument "contenu requete"
-    # Recupere a l'envoi de la requete par l'utilisateur
+    # Add an argument to the "request content"
+    # Retrieve argument at user's request
 
     requete = request.POST.get('query')
     
@@ -149,14 +149,11 @@ def load_expected_request(request):
     return HttpResponse(template.render(context, request))
 
 def load_tables(request):
-    # On charge les donnees de l'exercice > a passer en argument POST (formulaire)
+    # We load exercice's data (tables)
     
     exercice_no  = request.POST.get('exercise_no')
     if(exercice_no == None):
         exercice_no = "1"
-
-    print("DAns load tables: "+exercice_no)
-
         
     with connection.cursor() as cursor:
         try:
@@ -175,12 +172,12 @@ def load_tables(request):
                 for insertline in tableau[3]:
                     cursor.execute('INSERT INTO '+tableau[1]+" "+insertline)
         except:
-            print("Erreur: la table existe deja !")
+            print("Erreur: Probleme chargement table !")
 
 
 def drop_tables(request):
-    #supprime toutes les tables de l'exo, une amelio serait de chopper l'ancien num d'exo
-    print("JE DROP")
+    # Delete all exercises tables
+
     with connection.cursor() as cursor:
         try:
             cursor.execute("SELECT nom FROM website_table")
@@ -189,9 +186,10 @@ def drop_tables(request):
                 for l in line:
                     cursor.execute('drop table if exists '+str(l))
         except:
-            print("Erreur: drop table a foire !")
+            print("Erreur: drop table fail !")
             return HttpResponse(status=400)
-    #je charge les bonnes tables maintenant
+        
+    # Now we load the right tables (associated to the current chosen exercise)
     load_tables(request)
 
     return HttpResponse(status=200)
@@ -226,16 +224,9 @@ def load_question(request):
     requete = "SELECT website_question.numero FROM website_contient_exercice_question,website_question,website_exercice WHERE website_exercice.id=website_contient_exercice_question.idExercice AND website_question.id=website_contient_exercice_question.idQuestion AND website_exercice.numero="+exercice_no
 
 
-    # On enleve les autres tables
+    # We delete the old tables
     drop_tables(request)
-    # On charge les tables de l'exercice
-
-    #######################################################################################################
-    #
-    # /!\ CHARGE 2 FOIS toutes les fonctions: au clic du menu deroulant, au clic du choix
-    # > Devrait faire qu'au choix.
-    #
-    #######################################################################################################
+    # and load the new ones
     
     with connection.cursor() as cursor:
         try:

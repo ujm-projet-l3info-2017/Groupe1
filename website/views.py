@@ -8,7 +8,6 @@ from .parser.syntax import SQLSyntaxParser
 # Create your views here.
 
 def index(request):
-    #load_tables()
     template = loader.get_template('website/index.html')
     exercice = load_exercise(request).content
     question = load_question(request).content
@@ -33,15 +32,6 @@ def request(request):
     column_expected, table_expected = expected_request(request)
     template = loader.get_template('website/request.html')
 
-    
-    #check=check_table(request)
-    #if (check==0) :
-    #    context= {   
-    #        'error': "no such table"
-    #    }
-    #    template = loader.get_template('website/error_request.html')
-#    return HttpResponse(template.render(context, request))
-    
     try:
         p = SQLSyntaxParser(requete)
         t2 = p.parse()
@@ -72,40 +62,6 @@ def request(request):
         
     return HttpResponse(template.render(context, request))
 
-
-def check_table(request):
-    # Returns 1 if all tables are accessible in the request
-    requete = request.POST.get('query')
-    requete = requete.lower()
-
-    requete = requete.replace(";","")
-    
-    exercice_no  = request.POST.get('exercise_no')
-    if(exercice_no == None):
-        exercice_no = "1"
-
-    with connection.cursor() as cursor:
-        try:
-            cursor.execute("SELECT nom FROM website_table,website_exercice,website_contient_exercice_table WHERE website_exercice.numero="+exercice_no+" AND website_exercice.id=idExercice AND idTable=website_table.id")
-            row = cursor.fetchall()
-            table_list=[]
-            for line in row:
-                for l in line:
-                    table_list.append(str(l))
-                    print(str(l))
-        except:
-            print("Probleme check table")
-
-    first_split=requete.split("from")
-    second_split=first_split[1].split("where")
-    second_split[0]=second_split[0].replace(" ","")
-    tables=second_split[0].split(",")
-
-    for item in tables:
-        print(" TEST: "+item)
-        if item not in table_list:
-            return 0
-    return 1
 
 def expected_request(request):
     exercice_no  = request.POST.get('exercise_no')

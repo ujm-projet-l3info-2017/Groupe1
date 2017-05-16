@@ -38,8 +38,8 @@ INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3,6);
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3,7);
 
-INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,10); 
-INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,11);
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (4,10); 
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (4,11);
 
 
 
@@ -310,7 +310,7 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 (
 	1,
 	"Liste des auteurs anglais?",
-	"SELECT NOM,PRENOM FROM auteur WHERE auteur.NATIONALITE=anglais"
+	"SELECT NOM,PRENOM FROM auteur WHERE auteur.NATIONALITE='anglais'"
 );
 
 INSERT INTO website_question (numero,intitule,requete) VALUES

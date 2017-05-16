@@ -10,6 +10,7 @@ TRUNCATE TABLE website_question;
 INSERT INTO website_exercice (titre, numero) VALUES ("Exo1",1);
 INSERT INTO website_exercice (titre, numero) VALUES ("Exo2",2);
 INSERT INTO website_exercice (titre, numero) VALUES ("Exo3",3);
+INSERT INTO website_exercice (titre, numero) VALUES ("Exo4",4);
 
 INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,1);
 INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (1,2);
@@ -22,6 +23,9 @@ INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (3,4);
 INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (3,5);
 INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (3,6);
 
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (4,9);
+INSERT INTO website_contient_exercice_table (idExercice,idTable) VALUES (4,10);
+
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,1);
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,2);
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (1,3);
@@ -33,6 +37,9 @@ INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3,5);
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3,6);
 INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (3,7);
+
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,10); 
+INSERT INTO website_contient_exercice_question (idExercice,idQuestion) VALUES (2,11);
 
 
 
@@ -195,6 +202,38 @@ INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
 	(NUMU,CONS) VALUES(5,55);'
 );
 
+INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
+(
+	"livres",
+	'(NUMLI INTEGER NOT NULL AUTO_INCREMENT, TITRE VARCHAR(80), SORTIE INT(4), AUTEUR INT(50), PRIMARY KEY (NUMLI));',
+	'(TITRE,SORTIE,AUTEUR) VALUES("The Hunger Game",2008,1); 
+	(TITRE,SORTIE,AUTEUR) VALUES("The Hunger Games - Catching fire",2009,1);  
+	(TITRE,SORTIE,AUTEUR) VALUES("The Hunger Games - MockingJay",2010,1); 
+	(TITRE,SORTIE,AUTEUR) VALUES("Harry Potter et la pierre philosophale",1997,2); 
+	(TITRE,SORTIE,AUTEUR) VALUES("Harry Potter et la chambre des secrets",1998,2);
+	(TITRE,SORTIE,AUTEUR) VALUES("Harry Potter et le prisonnier dAzkaban",1999,2);
+	(TITRE,SORTIE,AUTEUR) VALUES("Harry Potter et la coupe de feu",2000,2);
+	(TITRE,SORTIE,AUTEUR) VALUES("Harry Potter et lordre du phoenix",2003,2);
+	(TITRE,SORTIE,AUTEUR) VALUES("Harry Potter et le prince de sang mêlé",2005,2);
+	(TITRE,SORTIE,AUTEUR) VALUES("Harry Potter et les reliques de la mort",2007,2);
+	(TITRE,SORTIE,AUTEUR) VALUES("Le monde de Narnia - Le Lion, la Sorcière blanche et lArmoire magique",1950,3);
+	(TITRE,SORTIE,AUTEUR) VALUES("Le monde de Narnia - Le Prince Caspian",1951,3);
+	(TITRE,SORTIE,AUTEUR) VALUES("Le monde de Narnia - LOdysée du passeur daurore",1952,3);
+	(TITRE,SORTIE,AUTEUR) VALUES("Le monde de Narnia - Le Fauteuil dargent",1953,3);
+	(TITRE,SORTIE,AUTEUR) VALUES("Le monde de Narnia - Le Cheval et son écuyer",1954,3);
+	(TITRE,SORTIE,AUTEUR) VALUES("Le monde de Narnia - Le Neveu du magicien",1955,3);
+	(TITRE,SORTIE,AUTEUR) VALUES("Le monde de Narnia - La Denière Bataille",1950,3);'
+);
+
+INSERT INTO website_table  (nom,attribut,remplissage)  VALUES
+(
+	"auteur",
+	'(NUMAU INTEGER NOT NULL AUTO_INCREMENT, NOM VARCHAR(50), PRENOM VARCHAR(50), NATIONALITE VARCHAR(50), PRIMARY KEY (NUMAU));',
+	'(NOM,PRENOM,NATIONALITE) VALUES("Collins","Suzanne","américain"); 
+	(NOM,PRENOM,NATIONALITE) VALUES("Rowling","Joanne","anglais");
+	(NOM,PRENOM,NATIONALITE) VALUES("Lewis","Clive Staples","anglais");'
+);
+
 
 INSERT INTO website_question (numero,intitule,requete) VALUES
 (
@@ -265,4 +304,18 @@ INSERT INTO website_question (numero,intitule,requete) VALUES
 	2,
 	"Nom prenom du plus petit consommateur deau",
 	"SELECT NOM,PRENOM FROM consommateurs,consommationeau WHERE consommateurs.NUMU=consommationeau.NUMU AND CONS<=(SELECT MIN(CONS) from consommationeau)"
+);
+
+INSERT INTO website_question (numero,intitule,requete) VALUES
+(
+	1,
+	"Liste des auteurs anglais?",
+	"SELECT NOM,PRENOM FROM auteur WHERE auteur.NATIONALITE=anglais"
+);
+
+INSERT INTO website_question (numero,intitule,requete) VALUES
+(
+	2,
+	"Liste des livres sortie après 1953 écrit par un auteur anglais?",
+	"SELECT TITRE FROM auteur,livres WHERE livres.AUTEUR=auteur.NUMAU AND livres.SORTIE >= 1953"
 );
